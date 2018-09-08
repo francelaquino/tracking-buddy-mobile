@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "705198378916",
+    "firebase_url": "https://trackingbuddyv3.firebaseio.com",
+    "project_id": "trackingbuddyv3",
+    "storage_bucket": "trackingbuddyv3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:705198378916:android:ec2c91276c1ee020",
+        "android_client_info": {
+          "package_name": "com.trackingbuddyv3"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "705198378916-4fbqq0h84hg7lvhe0s7b9ns4a9a3uoaj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVEMWguq29-SEaXqoA83tzN1gMYZSevag"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
