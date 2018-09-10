@@ -132,6 +132,27 @@ export const saveLocation = (coords) => async dispatch => {
     }
 };
 
+
+
+export const getAddress = (coords) => async dispatch => {
+    try {
+        console.log(coords)
+        await axios.get("https://maps.googleapis.com/maps/api/geocode/json?latlng=" + coords.latitude + "," + coords.longitude + "&sensor=false&key=AIzaSyCHZ-obEHL8TTP4_8vPfQKAyzvRrrlmi5Q")
+            .then(function (res) {
+                if (res.data.status == "OK") {
+                    dispatch({
+                        type: SAVE_LOCATION_ONLINE,
+                        payload: res.data.results[0].formatted_address
+                    });
+                }
+            }).catch(function (error) {
+            });
+
+    } catch (e) {
+        console.log(e)
+    }
+};
+
 export const saveLocationOnline=()=> async dispatch=> {
     let userid = await AsyncStorage.getItem("userid");
    

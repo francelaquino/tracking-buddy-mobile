@@ -1,6 +1,6 @@
 ﻿
 import React, { Component } from 'react';
-import { TouchableOpacity, Platform, StyleSheet, Text, View, ScrollView, TextInput, ToastAndroid, Image, FlatList, Dimensions } from 'react-native';
+import { TouchableOpacity, Platform, StyleSheet, Text, View, ScrollView, TextInput, ToastAndroid, Image, FlatList, Dimensions, Animated } from 'react-native';
 import { Separator, Root, Container, Header, Body, Title, Item, Input, Label, Button, Icon, Content, List, Left, Right, ListItem, Footer, FooterTab, Segment } from 'native-base';
 import { connect } from 'react-redux';
 import DatePicker from 'react-native-datepicker'
@@ -25,8 +25,10 @@ const screen = Dimensions.get('window');
 const ASPECT_RATIO = screen.width / screen.height;
 const LATITUDE_DELTA = .05;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
-
-
+const LATITUDE = 27.141473
+const LONGITUDE = 49.563482
+const centerOffset = { x: 0.5, y: 1 };
+const anchor = { x: 0.5, y: 0.1 };
 class LocationPlaces extends Component {
     constructor(props) {
         super(props)
@@ -35,6 +37,10 @@ class LocationPlaces extends Component {
         this.maptrack = null;
         this.markers = [];
         this.state = {
+            coordinate: new MapView.AnimatedRegion({
+                latitude: LATITUDE,
+                longitude: LONGITUDE,
+            }),
             polyline: [],
             trackpolyline: [],
             route: [],
@@ -57,6 +63,8 @@ class LocationPlaces extends Component {
         this.setState({  busy: true })
         this.initialize();
     }
+
+   
         
     initialize() {
        
@@ -135,6 +143,35 @@ class LocationPlaces extends Component {
                 }
             }, 1500);
         
+    }
+     animate() {
+        let self = this;
+        let i = 0;
+
+         plot = setInterval(function myTimer() {
+
+            const newCoordinate = {
+                latitude: self.props.locationsmap[i].coordinates.latitude,
+                longitude: self.props.locationsmap[i].coordinates.longitude,
+            };
+
+
+            if (Platform.OS === 'android') {
+                if (self.marker) {
+                     self.marker._component.animateMarkerToCoordinate(newCoordinate, 300);
+                }
+            } else {
+                 self.state.coordinate.timing(newCoordinate).start();
+            }
+             i++;
+
+            
+            if (i >= self.props.locationsmap.length) {
+                clearInterval(plot);
+            }
+        }, 500);
+
+       
     }
 
     stopRoute() {
@@ -340,16 +377,23 @@ class LocationPlaces extends Component {
             <View style={styles.mainContainer}>
                
             <View style={styles.mapContainer}>
-                <Image style={{opacity:0}}
-                    source={require('../../images/markercircle.png')} />
+               
                 <MapView ref={map => { this.map = map }} mapType={this.state.mapMode}
                     style={styles.map}>
-                        {markers}
+                        <MapView.Marker.Animated ref={marker => { this.marker = marker; }}
+                            coordinate={this.state.coordinate}
+                            anchor={{ x: 0.5, y: 1 }}
+                            centerOffset={{ x: 0.5, y: 1 }}
+                        >
+                            <View style={{ backgroundColor: 'red', width: 12, height: 12, borderRadius: 6, opacity:.5 }}></View>
+                        </MapView.Marker.Animated>
+
+                       
                     <MapView.Polyline 
                         style={{ zIndex: 99999 }}
                         coordinates={this.state.polyline}
-                        strokeWidth={1}
-                        strokeColor="#932424" />
+                        strokeWidth={2}
+                            strokeColor="#1785f9" />
                    
                    
 
@@ -376,13 +420,14 @@ class LocationPlaces extends Component {
                
                 
             {this.props.locationsmap.length > 0 &&
-                <View style={styles.addressContainer} >
+                    <View style={styles.addressContainer} >
+                   
                     <View style={{ height: 30, flex: 1, flexDirection: 'row', alignItems: 'center' }} >
                         <TouchableOpacity style={{ flex: 1, alignItems: 'center', borderRightWidth: 1, borderRightColor: '#eff0f1', width: 50 }} onPress={() => this.centerToMarker('B')}>
                             <Ionicons style={{ fontSize: 30, color: '#16a085' }} name='ios-arrow-dropleft' />
                             <Text style={{ color: '#434343', fontSize: 13 }}>Back</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={{ flex: 1, alignItems: 'center', borderRightWidth: 1, borderRightColor: '#eff0f1', width: 50 }} onPress={() => this.centerToMarker('S')}>
+                        <TouchableOpacity style={{ flex: 1, alignItems: 'center', borderRightWidth: 1, borderRightColor: '#eff0f1', width: 50 }} onPress={() => this.animate()}>
                             <EvilIcons style={{ fontSize: 40, color: '#16a085' }} name='play' />
                             <Text style={{ color: '#434343', fontSize: 13 }}>Start</Text>
                         </TouchableOpacity>
@@ -491,7 +536,7 @@ class LocationPlaces extends Component {
     ready(){
         
         return (
-            <View style={styles.mainContainer}>
+            <View style={styles.mainContainer} pointerEvents="box-none">
                 <Segment style={{ backgroundColor: '#16a085' }}>
                     <Button first active={this.state.pageStyle == "map"} style={{ width: 90 }} onPress={() => this.changePageStyle('map')}>
                         <Text style={{ width: 90, textAlign: 'center' }}>Map</Text>

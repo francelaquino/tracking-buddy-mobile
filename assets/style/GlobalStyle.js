@@ -204,19 +204,20 @@ module.exports = StyleSheet.create({
         top:10
     },
     listAvatarContainer:{
-        borderRadius: 25,
+        borderRadius: 22,
         backgroundColor: 'white',
-        padding:2,
-        width:50,
-        height: 50,
+        width:46,
+        height: 46,
         alignItems: 'center',
         justifyContent: 'center',
         borderColor: '#383939',
-        borderWidth:1,
+        borderWidth: 1,
+        position: 'absolute',
+        top:2,
     },
     listAvatar:{
-        width:43,
-        height: 43,
+        width:40,
+        height: 40,
         
     },
     listItemSmall:{

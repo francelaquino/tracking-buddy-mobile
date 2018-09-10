@@ -15,8 +15,7 @@ import OfflineNotice  from '../shared/OfflineNotice';
 import { connect } from 'react-redux';
 import Moment from 'moment';
 import { displayHomeMember, displayMember, addMember } from '../../redux/actions/memberActions';
-import { saveLocationOnline, pushLocationOnline, saveLocationOffline, saveLocation } from '../../redux/actions/locationActions';
-import axios from 'axios';
+import {  getAddress } from '../../redux/actions/locationActions';
 import BackgroundGeolocation from "react-native-background-geolocation";
 var settings = require('../../components/shared/Settings');
 var screenHeight = Dimensions.get('window').height; 
@@ -48,8 +47,8 @@ class HomePlaces extends Component {
             isLoading: false,
             memberReady: false,
             memberModal: false,
-            locationModal: false,
-            fitToMap:true,
+            fitToMap: true,
+            address:'',
             region: {
                 latitude: LATITUDE,
                 longitude: LONGITUDE,
@@ -65,127 +64,57 @@ class HomePlaces extends Component {
 
 
     componentWillMount() {
-
+        let self = this;
         BackgroundGeolocation.ready({
             // Geolocation Config
             desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
             distanceFilter: 10,
             //locationUpdateInterval: 1000,
-            allowIdenticalLocations: false,
             // Activity Recognition
             // Application config
             debug: true, // <-- enable this hear sounds for background-geolocation life-cycle.
-            logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
             stopOnTerminate: false,   // <-- Allow the background-service to continue tracking when user closes the app.
             startOnBoot: true,        // <-- Auto start tracking when device is powered-up.
             // HTTP / SQLite config
-            url: 'http://tracking.findplace2stay.com/index.php/api/place/saveofflinelocation',
+            url: 'http://tracking.findplace2stay.com/index.php/api/place/savelocation',
             method: 'POST',
             batchSync: false,       // <-- [Default: false] Set true to sync locations to server in a single HTTP request.
             autoSync: true,         // <-- [Default: true] Set true to sync each location to server as it arrives.
             params: {               // <-- Optional HTTP params
-                "auth_token": "maybe_your_server_authenticates_via_token_YES?"
+                "useruid": userdetails.userid,
             }
         }).then(state => {
             if (!state.enabled) {
-                ////
-                // 3. Start tracking!
-                //
                 BackgroundGeolocation.start(function () {
-                    console.log("- Start success");
                 });
 
-                BackgroundGeolocation.setConfig({
-                    logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE, function() {
-                        console.log("Changed logLevel success");
-                    }
-                })
-                BackgroundGeolocation.getLog(function (log) {
-                    console.log(log);
-                });
+               
+               
 
 
 
 
             }
         }).catch(error => {
-            console.log('- BackgroundGeolocation error: ', error);
-            });
+        });
 
-
-        ////
-        // 1.  Wire up event-listeners
-        //
-        // This handler fires whenever bgGeo receives a location update.
-        BackgroundGeolocation.on('location', this.onLocation, this.onError);
-
-        BackgroundGeolocation.on('http', function (response) {
-            console.log('res: ', response);
-        }, function (response) {
-            var status = response.status;
-            var responseText = response.responseText;
-            console.log("- HTTP failure: ", status, responseText);
-        })
-
-
-        // This handler fires when movement states changes (stationary->moving; moving->stationary)
-        BackgroundGeolocation.on('motionchange', this.onMotionChange);
-
-        // This event fires when a change in motion activity is detected
-        BackgroundGeolocation.on('activitychange', this.onActivityChange);
-
-        // This event fires when the user toggles location-services authorization
-        BackgroundGeolocation.on('providerchange', this.onProviderChange);
-       
         
+
+       
+        BackgroundGeolocation.getCurrentPosition((location) => {
+            self.props.getAddress(location.coords);
+        }, (error) => {
+        }, { samples: 1, persist: false });
+
 
         
        
     }
 
-    // You must remove listeners when your component unmounts
     componentWillUnmount() {
         BackgroundGeolocation.removeListeners();
     }
-    onLocation(location) {
-        /*axios({
-            method: 'post',
-            url: settings.baseURL + 'place/savelocation',
-            timeout: 20000,
-            data: {
-                latitude: location.coords.latitude,
-                longitude: location.coords.longitude,
-                useruid: "useruid",
-                source: "source",
-                dateadded: Moment().format('YYYY-MM-DD HH:mm:ss'),
-            }
-        })
-            .then(function (response) {
-            })
-            .catch(function (error) {
-               
-            });*/
-        /*
-         axios.post(settings.baseURL + 'place/saveofflinelocation', {
-            locations: location,
-        }).then(function (res) {
-        }).catch(function (error) {
-            console.log(error)
-        });*/
-        console.log('- [event] location: ', location);
-    }
-    onError(error) {
-        console.warn('- [event] location error ', error);
-    }
-    onActivityChange(activity) {
-        console.log('- [event] activitychange: ', activity);  // eg: 'on_foot', 'still', 'in_vehicle'
-    }
-    onProviderChange(provider) {
-        console.log('- [event] providerchange: ', provider);
-    }
-    onMotionChange(location) {
-        console.log('- [event] motionchange: ', location.isMoving, location);
-    }
+    
 
 
     async fitToMap() {
@@ -636,6 +565,6 @@ const mapStateToProps = state => ({
   
   
   
-HomePlaces = connect(mapStateToProps, { displayHomeMember, displayMember, addMember, saveLocationOffline,  saveLocation, saveLocationOnline, pushLocationOnline})(HomePlaces);
+HomePlaces = connect(mapStateToProps, { displayHomeMember, displayMember, addMember, getAddress})(HomePlaces);
   
 export default HomePlaces;

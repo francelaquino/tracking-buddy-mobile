@@ -52,7 +52,7 @@ class LocationsMember extends Component {
                 data={this.props.members}
                 renderItem={({ item }) => (
 
-                    <ListItem key={item.uid} button avatar style={globalStyle.listItem} onPress={() => { this.props.navigation.navigate("LocationPlaces", { uid: item.uid, name: item.firstname })}}>
+                    <ListItem key={item.uid} icon button avatar style={globalStyle.listItem} onPress={() => { this.props.navigation.navigate("LocationPlaces", { uid: item.uid, name: item.firstname })}}>
                             <Left style={globalStyle.listLeft}>
                                 <View style={globalStyle.listAvatarContainer} >
                                
@@ -90,7 +90,7 @@ class LocationsMember extends Component {
                         <ScrollView  contentContainerStyle={{flexGrow: 1}} keyboardShouldPersistTaps={"always"}>
                             <View style={globalStyle.container}>
                         <List>
-                            <ListItem button avatar style={globalStyle.listItem} onPress={() => { this.props.navigation.navigate("LocationPlaces", { uid: userdetails.userid, name: userdetails.firstname }) }}>
+                            <ListItem icon button avatar style={globalStyle.listItem} onPress={() => { this.props.navigation.navigate("LocationPlaces", { uid: userdetails.userid, name: userdetails.firstname }) }}>
                                 <Left style={globalStyle.listLeft}>
                                     <View style={globalStyle.listAvatarContainer} >
 
