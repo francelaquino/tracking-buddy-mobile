@@ -66,34 +66,30 @@ class HomePlaces extends Component {
     componentWillMount() {
         let self = this;
         BackgroundGeolocation.ready({
-            // Geolocation Config
-            desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
-            distanceFilter: 10,
-            //locationUpdateInterval: 1000,
-            // Activity Recognition
-            // Application config
-            debug: true, // <-- enable this hear sounds for background-geolocation life-cycle.
-            stopOnTerminate: false,   // <-- Allow the background-service to continue tracking when user closes the app.
-            startOnBoot: true,        // <-- Auto start tracking when device is powered-up.
-            // HTTP / SQLite config
+            locationAuthorizationAlert: {
+                titleWhenNotEnabled: "Yo, location-services not enabled",
+                titleWhenOff: "Yo, location-services OFF",
+                instructions: "You must enable 'Always' in location-services, buddy",
+                cancelButton: "Cancel",
+                settingsButton: "Settings"
+            },
+            allowIdenticalLocations :true,
+            debug: false,
+            stationaryRadius:5,
+            maxDaysToPersist:3,
+            stopOnTerminate: false, 
+            startOnBoot: true, 
             url: 'http://tracking.findplace2stay.com/index.php/api/place/savelocation',
             method: 'POST',
-            batchSync: false,       // <-- [Default: false] Set true to sync locations to server in a single HTTP request.
-            autoSync: true,         // <-- [Default: true] Set true to sync each location to server as it arrives.
-            params: {               // <-- Optional HTTP params
+            batchSync: false,       
+            autoSync: true,       
+            params: {             
                 "useruid": userdetails.userid,
             }
         }).then(state => {
             if (!state.enabled) {
                 BackgroundGeolocation.start(function () {
                 });
-
-               
-               
-
-
-
-
             }
         }).catch(error => {
         });
@@ -104,7 +100,7 @@ class HomePlaces extends Component {
         BackgroundGeolocation.getCurrentPosition((location) => {
             self.props.getAddress(location.coords);
         }, (error) => {
-        }, { samples: 1, persist: false });
+        }, { samples: 3, persist: false,desiredAccuracy: 10,timeout: 30,maximumAge: 5000 });
 
 
         
