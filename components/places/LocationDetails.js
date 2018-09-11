@@ -14,31 +14,23 @@ import { updatePlace, displayPlaces  } from '../../redux/actions/locationActions
 import { displayMember  } from '../../redux/actions/memberActions' ;
 import Loading  from '../shared/Loading';
 import OfflineNotice  from '../shared/OfflineNotice';
-const LATITUDE_DELTA = 0.01;
-const LONGITUDE_DELTA = 0.01;
-
-
+const LATITUDE_DELTA = 0.005;
+const LONGITUDE_DELTA = 0.005;
 
 var globalStyle = require('../../assets/style/GlobalStyle');
 var userdetails = require('../../components/shared/userDetails');
 
 
-class PlaceView extends Component {
+class LocationDetails extends Component {
     constructor(props) {
         super(props)
         this.map = null;
 
         this.state = {
-            id:'',
             loading:true,
-            place:'',
-            region: {
-                  latitude: -37.78825,
-                  longitude: -122.4324,
-                  latitudeDelta: 0.0922,
-                  longitudeDelta: 0.0421,
-                },
-            mapSnapshot: '',
+            address: '',
+            datemovement: '',
+            activity:'',
         };
 
       }
@@ -47,40 +39,19 @@ class PlaceView extends Component {
     
 
       
-
-    fitToMap() {
-        setTimeout(() => {
-            this.map.animateToRegion({
-                latitude: this.state.region.latitude,
-                longitude: this.state.region.longitude,
-                latitudeDelta: this.state.region.latitudeDelta,
-                longitudeDelta: this.state.region.longitudeDelta
-            })
-        },50)
-
-    }
-
     componentWillMount() {
         this.initialize();
     }
             
     async initialize() {
-       
         await this.setState({
-            id:this.props.navigation.state.params.place.id,
-            place:this.props.navigation.state.params.place.place,
-            region:{
-                latitude: this.props.navigation.state.params.place.latitude,
-                longitude: this.props.navigation.state.params.place.longitude,
-                latitudeDelta: this.props.navigation.state.params.place.latitudedelta,
-                longitudeDelta: this.props.navigation.state.params.place.longitudedelta,
-            },
+            address: this.props.navigation.state.params.location.address,
+            datemovement: this.props.navigation.state.params.location.datemovement,
+            activity: this.props.navigation.state.params.location.activitytype,
+            loading: false,
            
         })
-        this.props.displayMember().then(res => {
-            this.setState({ loading: false })
-            this.fitToMap();
-        });
+       //this.fitToMap();
     }
 
 
@@ -94,43 +65,24 @@ class PlaceView extends Component {
 
     
     ready() {
-        const members = this.props.members.map(member => (
-            <ListItem key={member.id} avatar button style={globalStyle.listItem} onPress={() => { this.props.navigation.navigate("PlaceAlert", { place: this.state.place, placeid: this.state.id, userid: member.uid, firstname: member.firstname, region: this.state.region }) }}>
-                <Left style={globalStyle.listLeft}>
-
-                    <View style={globalStyle.listAvatarContainer} >
-                        {member.emptyphoto === "1" ? <Ionicons size={46} style={{ color: '#2c3e50' }} name="ios-person" /> :
-                            <Thumbnail style={globalStyle.listAvatar} source={{ uri: member.avatar }} />
-                        }
-
-                    </View>
-                </Left>
-                <Body style={globalStyle.listBody} >
-                    <Text style={globalStyle.listHeading}>{member.firstname}</Text>
-                </Body>
-                <Right style={globalStyle.listRight} >
-                    <SimpleLineIcons style={globalStyle.listRightOptionIcon} name='arrow-right' />
-                </Right>
-            </ListItem>
-        ));
-
+       
 
         return (
 
             <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps={"always"}>
                 <View style={styles.mainContainer}>
                     <View style={styles.mapContainer}>
-                        <Image style={globalStyle.marker}
+                        <Image style={[globalStyle.marker, { opacity:0 }]}
                             source={require('../../images/placemarker.png')} />
                         <MapView ref={map => { this.map = map }}
                             zoomEnabled={true}
-                            onLayout={() => this.fitToMap()}
+                            region={{ latitude: this.props.navigation.state.params.location.coordinates.latitude, longitude: this.props.navigation.state.params.location.coordinates.longitude, latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA }}
                             style={StyleSheet.absoluteFill}
                             textStyle={{ color: '#bc8b00' }}
                             loadingEnabled={true}
                             showsMyLocationButton={false}>
 
-                            <MapView.Marker coordinate={this.state.region} >
+                            <MapView.Marker coordinate={{ latitude: this.props.navigation.state.params.location.coordinates.latitude, longitude: this.props.navigation.state.params.location.coordinates.longitude }} >
                                 <Image style={globalStyle.marker}
                                     source={require('../../images/placemarker.png')} />
                             </MapView.Marker>
@@ -146,17 +98,21 @@ class PlaceView extends Component {
 
 
                     <View style={styles.footerContainer}>
-                        <List style={{ height: 35 }}>
-                            <Separator bordered>
-                                <Text style={{ height: 35, textAlignVertical: 'center' }}>Notification</Text>
-                            </Separator>
-                        </List>
 
                         <Content padder>
-                            <List>
-                                {members}
-                            </List>
-
+                            <Item stackedLabel>
+                                <Label style={globalStyle.label} >Address</Label>
+                                <Text numberOfLines={1} style={[globalStyle.textinput, { width:'100%' }]}>{this.state.address}</Text>
+                            </Item>
+                            
+                            <Item stackedLabel>
+                                <Label style={globalStyle.label} >Activity</Label>
+                                <Text numberOfLines={1} style={[globalStyle.textinput, { width: '100%' }]}>{this.state.activity}</Text>
+                            </Item>
+                            <Item stackedLabel style={{ borderBottomWidth:0 }}>
+                                <Label style={globalStyle.label} >Date/Time</Label>
+                                <Text numberOfLines={1} style={[globalStyle.textinput, { width: '100%' }]}>{this.state.datemovement}</Text>
+                            </Item>
                         </Content>
 
                     </View>
@@ -188,13 +144,10 @@ class PlaceView extends Component {
                             </Button>
                         </Left>
                         <Body style={globalStyle.headerBody} >
-                            <Title>{this.state.place}</Title>
+                            <Title>Location Details</Title>
                         </Body>
                         <Right style={globalStyle.headerRight}  >
-                            <Button transparent onPress={() => this.props.navigation.navigate("EditCreatePlace", { place: this.props.navigation.state.params.place })}>
-                                <MaterialIcons size={30} style={{ color: 'white' }} name='edit' />
-                            </Button>
-
+                           
                         </Right>
                     </Header>
 
@@ -228,7 +181,8 @@ const styles = StyleSheet.create({
       },
 
     mapContainer: {
-        height:200,
+        flex: 1,
+        
         justifyContent: 'center',
         alignItems: 'center',
         padding:0,
@@ -236,7 +190,7 @@ const styles = StyleSheet.create({
     },
 
     footerContainer: {
-        flex: 1,
+        height: 230,
         
       },
   });
@@ -244,12 +198,6 @@ const styles = StyleSheet.create({
   
   
 
-const mapStateToProps = state => ({
-    members: state.fetchMember.members,
-    isLoading:state.fetchMember.isLoading,
-  })
   
-PlaceView=connect(mapStateToProps,{displayPlaces,updatePlace,displayMember})(PlaceView);
-  
-export default PlaceView;
+export default LocationDetails;
 

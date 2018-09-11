@@ -114,7 +114,7 @@ module.exports = StyleSheet.create({
     textinput:{
         flex: 1,
         padding:5,
-        height: 50,
+        height: 20,
         fontSize: 15,
         textAlign: 'left',
     },
@@ -168,11 +168,12 @@ module.exports = StyleSheet.create({
        
     },
     listLeft:{
-        width:55,
+        width: 55,
+        height: 55,
         justifyContent: 'center',
         alignItems: 'center',
         paddingLeft:0,
-        marginLeft:3
+        marginLeft: 3,
     },
     listBody:{
         borderBottomWidth:0,
@@ -196,7 +197,11 @@ module.exports = StyleSheet.create({
     },
     listRightOptionIcon:{
         fontSize:20,
-        color:'silver',
+        color: 'silver',
+        position: 'absolute',
+        right: 0,
+        top:10,
+       
 
     },
     listRightTouchable:{
@@ -360,9 +365,9 @@ module.exports = StyleSheet.create({
     },
     marker: {
         alignSelf: 'center',
-        width: 55,
-        height: 65,
-        margin: 0, padding: 0
+        width: 45,
+        height: 55,
+        margin: 0, padding: 0,
     },
     /*Modal Design Start*/
     modalWrapper:{

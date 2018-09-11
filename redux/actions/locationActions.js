@@ -566,7 +566,7 @@ export const getPlaceNotification = (placeid, userid) => async dispatch => {
 export const displayLocationsList = (useruid,date) => dispatch => {
     return new Promise(async (resolve) => {
         try {
-            await axios.get(settings.baseURL + 'place/getLocationHistoryList/' + useruid +'/'+date)
+            await axios.get(settings.baseURL + 'place/getLocationHistoryMap/' + useruid +'/'+date)
                 .then(function (res) {
                                 dispatch({
                                     type: DISPLAY_LOCATION_LIST,
@@ -624,6 +624,7 @@ export const displayLocationsMap = (useruid, date) => dispatch => {
                                 label: label,
                                 address: data.address,
                                 datemovement: data.datemovement,
+                                activitytype: data.activitytype,
                                 coordinates: {
                                     longitude: data.longitude,
                                     latitude: data.latitude
