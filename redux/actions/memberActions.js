@@ -553,6 +553,7 @@ export const displayHomeMember = () => async dispatch => {
                         if (res.data.status == "202") {
                             count = res.data.results.length;
                             let x = 0;
+                            console.log(res.data.results)
                             if (count > 0) {
                                 res.data.results.forEach(data => {
 

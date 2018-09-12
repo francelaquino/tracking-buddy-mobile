@@ -45,20 +45,6 @@ class SavePlace extends Component {
 
     
 
-      
-    fitToMap() {
-
-        setTimeout(() => {
-            this.map.animateToRegion({
-                latitude: this.state.region.latitude,
-                longitude: this.state.region.longitude,
-                latitudeDelta: this.state.region.latitudeDelta,
-                longitudeDelta: this.state.region.longitudeDelta
-            })
-        }, 0);
-
-
-    }
     onSubmit() {
         
         if (this.state.placename == "") {
@@ -150,7 +136,7 @@ class SavePlace extends Component {
                             
                                 <MapView ref={map => {this.map = map}}
                                     zoomEnabled = {true}
-                                    onLayout = {() => this.fitToMap()} 
+                                        region={{ latitude: this.props.navigation.state.params.region.latitude, longitude: this.props.navigation.state.params.region.longitude, latitudeDelta: this.props.navigation.state.params.region.latitudeDelta, longitudeDelta: this.props.navigation.state.params.region.longitudeDelta }}
                                     style={StyleSheet.absoluteFill}
                                     textStyle={{ color: '#bc8b00' }}
                                     loadingEnabled={true}
@@ -166,18 +152,12 @@ class SavePlace extends Component {
                                     
                             </View>
 
-                                <View style={{padding:5}}>
-                             <Item stackedLabel>
-                                    <Label style={globalStyle.label} >Latitude</Label>
-                                    <Input numberOfLines={1} style={globalStyle.textinput} value={this.state.region.latitude.toString() } editable={false} />
-                                </Item>
-                                <Item stackedLabel>
-                                    <Label style={globalStyle.label} >Longitude</Label>
-                                    <Input numberOfLines={1} style={globalStyle.textinput} value={this.state.region.longitude.toString() } editable={false} />
-                                </Item>
-                            <Item stackedLabel >
-                                <Label style={globalStyle.label} >Address</Label>
-                                    <Input numberOfLines={1} style={globalStyle.textinput} value={this.state.address} editable={false} />
+                                <View style={{ padding: 5 }}>
+                                    <Item stackedLabel>
+                                        <Label style={globalStyle.label} >Address</Label>
+                                        <Text numberOfLines={1} style={[globalStyle.textinput, { width: '100%' }]}>{this.state.address}</Text>
+
+                           
                                 </Item>
                                 <Item stackedLabel >
                                     <Label style={globalStyle.label} >Place</Label>
@@ -225,7 +205,7 @@ const styles = StyleSheet.create({
         flexDirection:'column'
     },
     mapContainer: {
-        height: 200,
+        height: 400,
         borderBottomColor:'silver',
         borderBottomWidth:.5,
         justifyContent: 'center',

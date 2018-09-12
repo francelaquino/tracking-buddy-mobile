@@ -46,20 +46,6 @@ class PlaceView extends Component {
 
     
 
-      
-
-    fitToMap() {
-        setTimeout(() => {
-            this.map.animateToRegion({
-                latitude: this.state.region.latitude,
-                longitude: this.state.region.longitude,
-                latitudeDelta: this.state.region.latitudeDelta,
-                longitudeDelta: this.state.region.longitudeDelta
-            })
-        },50)
-
-    }
-
     componentWillMount() {
         this.initialize();
     }
@@ -79,7 +65,6 @@ class PlaceView extends Component {
         })
         this.props.displayMember().then(res => {
             this.setState({ loading: false })
-            this.fitToMap();
         });
     }
 
@@ -124,7 +109,7 @@ class PlaceView extends Component {
                             source={require('../../images/placemarker.png')} />
                         <MapView ref={map => { this.map = map }}
                             zoomEnabled={true}
-                            onLayout={() => this.fitToMap()}
+                            region={{ latitude: this.props.navigation.state.params.place.latitude, longitude: this.props.navigation.state.params.place.longitude, latitudeDelta: this.props.navigation.state.params.place.latitudedelta, longitudeDelta: this.props.navigation.state.params.place.latitudedelta }}
                             style={StyleSheet.absoluteFill}
                             textStyle={{ color: '#bc8b00' }}
                             loadingEnabled={true}

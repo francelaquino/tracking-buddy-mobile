@@ -38,13 +38,6 @@ import  { createStackNavigator }  from 'react-navigation';
 
 export const Stack = createStackNavigator({
 
-    LocationPlaces: {
-        screen: LocationPlaces,
-        headerMode: 'none',
-        navigationOptions: {
-            header: null
-        }
-    },
 
     Home: {
         screen: Home,
@@ -54,6 +47,15 @@ export const Stack = createStackNavigator({
             gesturesEnabled: false,
         }
     },
+
+    LocationPlaces: {
+        screen: LocationPlaces,
+        headerMode: 'none',
+        navigationOptions: {
+            header: null
+        }
+    },
+
 
 
     LocationDetails: {

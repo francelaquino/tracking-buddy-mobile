@@ -22,17 +22,21 @@ var settings = require('../../components/shared/Settings');
 var globalStyle = require('../../assets/style/GlobalStyle');
 const screen = Dimensions.get('window');
 const ASPECT_RATIO = screen.width / screen.height;
-const LATITUDE_DELTA = .05;
-const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+
 const LATITUDE = 27.141473
 const LONGITUDE = 49.563482
 const centerOffset = { x: 0.5, y: 1 };
 const anchor = { x: 0.5, y: 0.1 };
+
+var LATITUDE_DELTA = .005;
+var LONGITUDE_DELTA = .005;
+var cnt = 0;
+var plot;
+var coordinates = [];
 class LocationPlaces extends Component {
     constructor(props) {
         super(props)
         this.map = null;
-        let plot;
         this.markers = [];
         this.state = {
             useruid: '',
@@ -47,7 +51,7 @@ class LocationPlaces extends Component {
             address: '',
             datemovement: '',
             activitytype:'',
-            routestart:'',
+            route:'',
             pageStyle:'map',
             loading: true,
             mapMode: 'standard',
@@ -61,19 +65,17 @@ class LocationPlaces extends Component {
    
     async componentWillMount() {
         
-        //this.setState({ busy: true, useruid: this.props.navigation.state.params.uid, name: this.props.navigation.state.params.name })
-        await this.setState({ busy: true, useruid: 'H32d1lOQZFZ8YKAR4ddPDCHre3f2',name: 'Francel' })
+        await this.setState({ busy: true, useruid: this.props.navigation.state.params.uid, name: this.props.navigation.state.params.name })
+        //await this.setState({ busy: true, useruid: 'H32d1lOQZFZ8YKAR4ddPDCHre3f2', name: 'Francel' })
         await this.initialize();
     }
 
-   
         
     initialize() {
        
 
         this.props.displayLocationsMap(this.state.useruid, this.state.dateFilter).then(res => {
             this.setState({ loading: false, busy: false })
-            alert(this.props.locationsmap.length)
             setTimeout(() => {
                 this.fitToMap();
                 }, 100);
@@ -88,7 +90,12 @@ class LocationPlaces extends Component {
 
     
     async changePageStyle(style) {
-       
+        if (style == "list") {
+            coordinates = [];
+            this.setState({ polyline: coordinates, address: '', route:'' })
+            clearInterval(plot);
+        } 
+
         await this.setState({ pageStyle: style, busy: true });
         this.props.displayLocationsList(this.state.useruid, this.state.dateFilter).then(res => {
             this.setState({ busy: false })
@@ -113,45 +120,85 @@ class LocationPlaces extends Component {
     }
     
     startRoute() {
-        let i = 0;
-        var coordinates = [];
+       
+        
         let self = this;
-        this.setState({  routestart: '0' });
+        this.setState({  route: 'play' });
             plot = setInterval(function myTimer() {
 
                 const coord = {
-                    id: i,
+                    id: this.cnt,
                     coordinates: {
-                        latitude: self.props.locationsmap[i].coordinates.latitude,
-                        longitude: self.props.locationsmap[i].coordinates.longitude,
+                        latitude: self.props.locationsmap[cnt].coordinates.latitude,
+                        longitude: self.props.locationsmap[cnt].coordinates.longitude,
                         latitudeDelta: LATITUDE_DELTA,
                         longitudeDelta: LONGITUDE_DELTA,
                     }
                 }
                 coordinates = coordinates.concat(coord.coordinates);
 
-                self.setState({ polyline: coordinates, address: self.props.locationsmap[i].address, datemovement: self.props.locationsmap[i].datemovement, activitytype: self.props.locationsmap[i].activitytype  })
+                self.setState({ polyline: coordinates, address: self.props.locationsmap[cnt].address, datemovement: self.props.locationsmap[cnt].datemovement, activitytype: self.props.locationsmap[cnt].activitytype  })
 
                 self.map.animateToRegion({
-                    latitude: self.props.locationsmap[i].coordinates.latitude,
-                    longitude: self.props.locationsmap[i].coordinates.longitude,
-                    latitudeDelta: 0.005,
-                    longitudeDelta: 0.005
+                    latitude: self.props.locationsmap[cnt].coordinates.latitude,
+                    longitude: self.props.locationsmap[cnt].coordinates.longitude,
+                    latitudeDelta: LATITUDE_DELTA,
+                    longitudeDelta: LONGITUDE_DELTA,
                 })
 
-                i++;
-                if (i >= self.props.locationsmap.length) {
+                cnt++;
+                if (cnt >= self.props.locationsmap.length) {
+                    cnt = 0;
                     clearInterval(plot);
-                    self.setState({ routestart: '' });
+                    coordinates = [];
+                    self.setState({ route: '' });
                 }
             }, 1000);
         
     }
     
-
-    stopRoute() {
+    goBack() {
+        this.props.navigation.goBack()
         clearInterval(plot);
-        this.setState({ routestart: '' });
+        cnt = 0;
+        coordinates = [];
+    }
+    endRoute() {
+        if (this.state.route == "play") {
+            clearInterval(plot);
+        }
+        let self = this;
+        var coordinates = [];
+        let i = 0;
+        for (i = 0; i < this.props.locationsmap.length; i++) {
+
+            const coord = {
+                id: i,
+                coordinates: {
+                    latitude: self.props.locationsmap[i].coordinates.latitude,
+                    longitude: self.props.locationsmap[i].coordinates.longitude,
+                    latitudeDelta: LATITUDE_DELTA,
+                    longitudeDelta: LONGITUDE_DELTA,
+                }
+            }
+            coordinates = coordinates.concat(coord.coordinates);
+
+            self.setState({ polyline: coordinates })
+
+
+        }
+        cnt = 0;
+        coordinates = [];
+        this.setState({ route: '',address:'' });
+    }
+
+    pauseRoute() {
+
+        if (this.state.route == "play") {
+            clearInterval(plot);
+            this.setState({ route: '' });
+        }
+        
     }
     loading(){
         return (
@@ -167,8 +214,8 @@ class LocationPlaces extends Component {
              this.map.animateToRegion({
                  latitude: this.props.locationsmap[0].coordinates.latitude,
                  longitude: this.props.locationsmap[0].coordinates.longitude,
-                 latitudeDelta: 0.005,
-                 longitudeDelta: 0.005
+                 latitudeDelta: .005,
+                 longitudeDelta: .005
              })
 
          } else if (this.props.locationsmap.length > 1) {
@@ -178,8 +225,8 @@ class LocationPlaces extends Component {
                      coordinates: {
                          latitude: this.props.locationsmap[i].coordinates.latitude,
                          longitude: this.props.locationsmap[i].coordinates.longitude,
-                         latitudeDelta: LATITUDE_DELTA,
-                         longitudeDelta: LONGITUDE_DELTA,
+                         latitudeDelta: .005,
+                         longitudeDelta: .005
                      }
                  }
 
@@ -197,10 +244,21 @@ class LocationPlaces extends Component {
 
 
     
-
+    zoomIn() {
+        if (LATITUDE_DELTA > 0) {
+            LATITUDE_DELTA = LATITUDE_DELTA - .005;
+            LONGITUDE_DELTA = LONGITUDE_DELTA - .005;
+        }
+    }
+    zoomOut() {
+        if (LATITUDE_DELTA < 15) {
+            LATITUDE_DELTA = LATITUDE_DELTA + .005;
+            LONGITUDE_DELTA = LONGITUDE_DELTA + .005;
+        }
+    }
     renderLocation(){
         return (
-            <View>
+            <View style={styles.mainContainer}>
            
             <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps={"always"}>
                 <Content padder>
@@ -295,6 +353,19 @@ class LocationPlaces extends Component {
                             </View>
                             <Text style={globalStyle.mapMenuLabel}>Map Style</Text>
                         </TouchableOpacity>
+                        <TouchableOpacity onPress={() => this.zoomIn()}>
+                            <View style={globalStyle.mapMenuCircle} >
+                                <MaterialIcons size={25} style={{ color: '#2c3e50' }} name="zoom-in" />
+                            </View>
+                            <Text style={globalStyle.mapMenuLabel}>Zoom In</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => this.zoomOut()}>
+                            <View style={globalStyle.mapMenuCircle} >
+                                <MaterialIcons size={25} style={{ color: '#2c3e50' }} name="zoom-out" />
+                            </View>
+                            <Text style={globalStyle.mapMenuLabel}>Zoom Out</Text>
+                        </TouchableOpacity>
+                       
 
 
 
@@ -302,36 +373,38 @@ class LocationPlaces extends Component {
                     </View>
                 </View>
                
-                
-            {this.props.locationsmap.length > 0 &&
+               
+                {this.state.address !== '' &&
                     <View style={styles.addressContainer} >
-                   
-                    <View style={{ height: 30, flex: 1, flexDirection: 'row', alignItems: 'center' }} >
-                        <View style={{ flex: 3, alignItems: 'center', borderRightWidth: 1, borderRightColor: '#ecedef', height: 50 }}>
-                            {this.state.address !== '' &&
-                                <View style={{ width: '100%' }}>
-                                <Text numberOfLines={1} style={{ color:'#4e4e4e',fontSize: 13, height: 30, textAlignVertical: 'center', padding: 5, width: '98%', textAlign:'center' }}>{this.state.address}</Text>
-                                <Text numberOfLines={1} style={{ fontSize: 12, width: '98%', textAlign: 'center' }}>{this.state.datemovement} / {this.state.activitytype} </Text>
-                                </View>
-                                }
+                        <View style={{ flex: 1,padding:5 }}>
+                            <Text numberOfLines={1} style={{ fontSize: 13, color: 'white', marginBottom: 5 }}> {this.state.address}</Text>
+                            <Text numberOfLines={1} style={{ fontSize: 13, color: 'white', }}>{this.state.datemovement} / {this.state.activitytype} </Text>
                         </View>
-                        <View style={{ flex: 1, alignItems: 'center', height: 50 }}>
-                            {this.state.routestart == '' ?
-                                <TouchableOpacity onPress={() => this.startRoute()} style={{ top: 10 }}>
-                                    <FontAwesome style={{ fontSize: 30, color: '#16a085' }} name='play' />
-                                </TouchableOpacity> :
-                                <TouchableOpacity onPress={() => this.stopRoute()} style={{ top: 10 }}>
-                                    <FontAwesome style={{ fontSize: 30, color: '#16a085' }} name='stop' />
+                    </View>
+                }
+                
+                <View style={styles.controlContainer} >
+                    {this.props.locationsmap.length > 0 &&
+                        <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }} >
+                            {this.state.route == '' &&
+                                <TouchableOpacity onPress={() => this.startRoute()} style={{ width: 60, alignItems: 'center' }}>
+                                    <Image style={{ width: 35, height: 35 }}
+                                        source={require('../../images/play.png')} />
                                 </TouchableOpacity>
                             }
+                            {this.state.route == 'play' &&
+                            <TouchableOpacity onPress={() => this.pauseRoute()} style={{ width: 60, alignItems: 'center' }}>
+                                    <Image style={{ width: 35, height: 35 }}
+                                        source={require('../../images/pause.png')} />
+                                </TouchableOpacity>
+                            }
+                            <TouchableOpacity onPress={() => this.endRoute()} style={{ width: 60, alignItems: 'center' }}>
+                                <Image style={{ width: 35, height: 35 }}
+                                    source={require('../../images/end.png')} />
+                            </TouchableOpacity>
                         </View>
-                        
-                        
-
-
-                    </View >
+                    }
                 </View>
-            }
             </View >
 
             )
@@ -416,7 +489,7 @@ class LocationPlaces extends Component {
                     <Loader loading={this.state.busy} />
                     <Header style={globalStyle.header} hasSegment>
                         <Left style={globalStyle.headerLeft} >
-                            <Button transparent onPress={() => { this.props.navigation.goBack() }} >
+                            <Button transparent onPress={() => { this.goBack(); }} >
                                 <Ionicons size={30} style={{ color: 'white' }} name='ios-arrow-back' />
 
                             </Button>
@@ -504,16 +577,28 @@ const styles = StyleSheet.create({
         borderBottomColor:'#efebef',
         
     },
-    addressContainer: {
-        height: 55,
+    controlContainer: {
+        height: 60,
         width: '100%',
         paddingTop: 6,
         alignItems: 'center',
         //bottom: 0,
         flexDirection: 'row',
         //position: 'absolute',
-        backgroundColor: '#fbfbfb',
+        backgroundColor: 'white',
         alignItems: 'center', padding: 5,
+        borderTopWidth: 1,
+        borderTopColor: '#ecf0f1',
+    },
+    addressContainer: {
+        height: 55,
+        width: '100%',
+        alignItems: 'center',
+        //bottom: 0,
+        flexDirection: 'row',
+        //position: 'absolute',
+        backgroundColor: '#2ecc71',
+        alignItems: 'center',
         borderTopWidth: 1,
         borderTopColor:'#ecf0f1',
 

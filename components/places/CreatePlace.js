@@ -103,7 +103,7 @@ class CreatePlace extends Component {
                       lng: position.coords.longitude,
               };
                   let self = this;
-                  await axios.get("http://maps.googleapis.com/maps/api/geocode/json?latlng=" + position.coords.latitude + "," + position.coords.longitude + "&sensor=false&key=AIzaSyCHZ-obEHL8TTP4_8vPfQKAyzvRrrlmi5Q")
+                  await axios.get("https://maps.googleapis.com/maps/api/geocode/json?latlng=" + position.coords.latitude + "," + position.coords.longitude + "&sensor=false&key=AIzaSyCHZ-obEHL8TTP4_8vPfQKAyzvRrrlmi5Q")
                       .then(async function (res) {
                           if (res.data.results.length > 0) {
                               self.setState({

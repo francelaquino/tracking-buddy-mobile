@@ -14,7 +14,7 @@ import Loader  from '../shared/Loader';
 import OfflineNotice  from '../shared/OfflineNotice';
 import { connect } from 'react-redux';
 import Moment from 'moment';
-import { displayHomeMember, displayMember, addMember } from '../../redux/actions/memberActions';
+import { displayHomeMember, displayMember } from '../../redux/actions/memberActions';
 import {  getAddress } from '../../redux/actions/locationActions';
 import BackgroundGeolocation from "react-native-background-geolocation";
 var settings = require('../../components/shared/Settings');
@@ -65,18 +65,24 @@ class HomePlaces extends Component {
 
     componentWillMount() {
         let self = this;
+        this.setState({ isLoading: true })
         BackgroundGeolocation.ready({
             locationAuthorizationAlert: {
-                titleWhenNotEnabled: "Yo, location-services not enabled",
-                titleWhenOff: "Yo, location-services OFF",
-                instructions: "You must enable 'Always' in location-services, buddy",
+                titleWhenNotEnabled: "Location services not enabled",
+                titleWhenOff: "Location services is off",
+                instructions: "You must enable in location services",
                 cancelButton: "Cancel",
                 settingsButton: "Settings"
             },
-            allowIdenticalLocations :true,
             debug: false,
+            logLevel: BackgroundGeolocation.LOG_LEVEL_OFF,
+            allowIdenticalLocations :true,
             stationaryRadius:5,
-            maxDaysToPersist:3,
+            maxDaysToPersist: 1,
+            foregroundService: true,
+            notificationTitle: 'Tracking Buddy',
+            notificationText: 'Using GPS',
+            notificationChannelName:'Traking Buddy',
             stopOnTerminate: false, 
             startOnBoot: true, 
             url: 'http://tracking.findplace2stay.com/index.php/api/place/savelocation',
@@ -90,6 +96,13 @@ class HomePlaces extends Component {
             if (!state.enabled) {
                 BackgroundGeolocation.start(function () {
                 });
+
+                BackgroundGeolocation.watchPosition(function (location) {
+                    self.props.getAddress(location.coords);
+                }, function (errorCode) {
+                }, {
+                        interval: 10000
+                    });
             }
         }).catch(error => {
         });
@@ -99,13 +112,23 @@ class HomePlaces extends Component {
        
         BackgroundGeolocation.getCurrentPosition((location) => {
             self.props.getAddress(location.coords);
+            self.initialize();
+           
         }, (error) => {
+            self.initialize();
         }, { samples: 3, persist: false,desiredAccuracy: 10,timeout: 30,maximumAge: 5000 });
-
 
         
        
     }
+       
+
+    onLocation(location) {
+        this.props.getAddress(location.coords);
+    }
+    onError(error) {
+    }
+
 
     componentWillUnmount() {
         BackgroundGeolocation.removeListeners();
@@ -159,11 +182,6 @@ class HomePlaces extends Component {
 
     }
 
-
-   // componentWillMount() {
-      //  this.initialize();
-
-    //}
 
     async centerToMarker(latitude, longitude,uid) {
 
@@ -237,7 +255,17 @@ class HomePlaces extends Component {
             }, 10);
         });
         setTimeout(() => {
-        this.setState({ isLoading: false })
+            this.setState({ isLoading: false })
+            if (userdetails.userid !== "" && userdetails.userid !== null) {
+                self.props.displayHomeMember().then(res => {
+                    setTimeout(async () => {
+                        if (self.state.fitToMap == true) {
+                            await self.fitToMap();
+                        }
+                        self.setState({ memberReady: true, isLoading: false })
+                    }, 10);
+                });
+            }
             /*firebase.database().ref('users/' + userdetails.userid).child('members').on("value", function (snapshot) {
                 if (userdetails.userid !== "" && userdetails.userid !== null) {
                     self.props.displayHomeMember().then(res => {
@@ -265,21 +293,6 @@ class HomePlaces extends Component {
 
 
 
-    onSubmitCode() {
-        if (this.state.invitationcode == "") {
-            return false;
-        }
-        this.setState({ loading: true })
-        this.props.addMember(this.state.invitationcode).then(async res => {
-            if (res == true) {
-                await this.props.displayMember();
-                await this.props.displayHomeMember();
-                this.setState({ invitationcode: '', loading: false, memberModal:false })
-            } else {
-                this.setState({ invitationcode: '', loading: false })
-            }
-        });
-    }
 
     renderMember() {
         return (
@@ -305,7 +318,32 @@ class HomePlaces extends Component {
     ready() {
 
 
+        const markers = this.props.members.map(marker => (
+            <MapView.Marker key={marker.uid}
+                identifier={marker.uid}
+                ref={ref => { this.markers[marker.uid] = ref }}
+                coordinate={marker.coordinates}
+                title={marker.firstname}>
+                <Image style={styles.marker}
+                    source={require('../../images/marker.png')} />
+                <Text style={styles.markerText}>{marker.firstname}</Text>
 
+                <MapView.Callout tooltip={true} onPress={() => this.props.navigation.navigate("LocationPlaces", { uid: marker.uid })} >
+                    <View style={globalStyle.callOutFix} >
+                        <View style={globalStyle.callOutContainerFix} >
+                            <Text numberOfLines={2} style={globalStyle.callOutText}>{marker.address}</Text>
+                        </View>
+                        <View style={globalStyle.callOutArrow}>
+                            <SimpleLineIcons style={{ fontSize: 13, color: '#1abc9c' }} name='arrow-right' />
+                        </View>
+
+                    </View>
+
+
+                </MapView.Callout>
+            </MapView.Marker>
+
+        ));
 
        
 
@@ -357,7 +395,7 @@ class HomePlaces extends Component {
                                 zoomEnabled={true}
                                     style={styles.map}
                             >
-                                   
+                                {markers}
 
                                 </MapView>
                                 
@@ -368,7 +406,7 @@ class HomePlaces extends Component {
 
                         <View style={globalStyle.mapMenu}>
 
-                            <TouchableOpacity onPress={() => this.setState({ memberModal: true })}>
+                            <TouchableOpacity onPress={() => this.props.navigation.navigate('NewInvite')}  >
                                 <View style={globalStyle.mapMenuCircle} >
                                     <Ionicons size={30} style={{ color: '#2c3e50' }} name="ios-person-add" />
                                 </View>
@@ -431,41 +469,7 @@ class HomePlaces extends Component {
 
 
 
-                        <Modal
-                        transparent={true}
-                        onRequestClose={() => null}
-                            visible={this.state.memberModal}>
-                        <View style={globalStyle.modalWrapper}>
-                            <View style={[globalStyle.modalContainer, { height: 230 }]}>
-                                <Text style={globalStyle.modalHeader}>
-                                        ADD MEMBER
-                                </Text>
-                                      
-                                <Item style={globalStyle.regularitem}  >
-                                    <Input style={globalStyle.textinput} name="invitationcode" autoCorrect={false}
-                                         placeholder="Enter member invitation code"
-                                                    value={this.state.invitationcode} maxLength={20} autoCapitalize="characters"
-                                                    onChangeText={invitationcode => this.setState({ invitationcode })} />
-                                            </Item>
-
-
-
-                                            
-                                    <Button disabled={!this.state.invitationcode}
-                                        onPress={() => this.onSubmitCode()}
-                                        bordered light full rounded style={ globalStyle.secondaryButton }>
-                                        <Text style={{ color: 'white' }}>Submit</Text>
-                                    </Button>
-                                    <Button
-                                    onPress={() => this.setState({ memberModal: false })}
-                                        bordered light full rounded style={globalStyle.cancelButton}>
-                                        <Text style={{ color: 'white' }}>Cancel</Text>
-                                    </Button>
-                               
-
-                                    </View>
-                            </View>
-                        </Modal>
+                        
 
                         
                     </Container>
@@ -561,6 +565,6 @@ const mapStateToProps = state => ({
   
   
   
-HomePlaces = connect(mapStateToProps, { displayHomeMember, displayMember, addMember, getAddress})(HomePlaces);
+HomePlaces = connect(mapStateToProps, { displayHomeMember, displayMember, getAddress})(HomePlaces);
   
 export default HomePlaces;
