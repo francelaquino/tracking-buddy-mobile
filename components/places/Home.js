@@ -112,13 +112,13 @@ class HomePlaces extends Component {
        
         BackgroundGeolocation.getCurrentPosition((location) => {
             self.props.getAddress(location.coords);
-            self.initialize();
+           
            
         }, (error) => {
             self.initialize();
-        }, { samples: 3, persist: false,desiredAccuracy: 10,timeout: 30,maximumAge: 5000 });
+        }, { samples: 1, persist: true,desiredAccuracy: 10,timeout: 30,maximumAge: 5000 });
 
-        
+        this.initialize();
        
     }
        

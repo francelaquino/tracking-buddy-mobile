@@ -5,7 +5,7 @@ import { Separator, Root, Container, Header, Body, Title, Item, Input, Label, Bu
 import { connect } from 'react-redux';
 import DatePicker from 'react-native-datepicker'
 import Entypo from 'react-native-vector-icons/Entypo';
-import { displayLocationsList, displayLocationsMap } from '../../redux/actions/locationActions';
+import {  displayLocationsMap } from '../../redux/actions/locationActions';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MapView, { Marker, Polyline,  PROVIDER_GOOGLE } from 'react-native-maps';
@@ -84,50 +84,45 @@ class LocationPlaces extends Component {
     }
 
     async onDateChange(date) {
-        await this.setState({ dateDisplay: Moment(date).format('MMMM DD, YYYY'), dateFilter: date }) 
-        await this.changePageStyle(this.state.pageStyle);
+        coordinates = []
+        await this.setState({ busy: true, dateDisplay: Moment(date).format('MMMM DD, YYYY'), dateFilter: date, polyline: coordinates, route:'' }) 
+        this.props.displayLocationsMap(this.state.useruid, this.state.dateFilter).then(res => {
+            this.setState({ busy: false })
+        })
     }
 
     
     async changePageStyle(style) {
-        if (style == "list") {
-            coordinates = [];
-            this.setState({ polyline: coordinates, address: '', route:'' })
-            clearInterval(plot);
-        } 
 
         await this.setState({ pageStyle: style, busy: true });
-        this.props.displayLocationsList(this.state.useruid, this.state.dateFilter).then(res => {
+        this.props.displayLocationsMap(this.state.useruid, this.state.dateFilter).then(res => {
             this.setState({ busy: false })
             if (style == "map") {
                 setTimeout(() => {
                     this.fitToMap();
                 }, 100);
+            } else {
+                if (this.state.route == "play") {
+                    clearInterval(plot);
+                    this.setState({ route: '' });
+                }
             }
         })
-      /*  if (style == "list") {
-        } else if (style == "map") {
-            this.props.displayLocationsMap(this.state.useruid, this.state.dateFilter).then(res => {
-                this.setState({ busy: false })
-                setTimeout(() => {
-                    this.fitToMap();
-
-
-                }, 100);
-            })
-       
-        }*/
+      
     }
     
     startRoute() {
-       
-        
+
+        ToastAndroid.showWithGravityAndOffset("Play", ToastAndroid.SHORT, ToastAndroid.BOTTOM, 25, 50);
         let self = this;
+        if (this.state.route == '') {
+            this.setState({ polyline: coordinates})
+        }
         this.setState({  route: 'play' });
-            plot = setInterval(function myTimer() {
+            plot = setInterval(async function myTimer() {
 
                 const coord = {
-                    id: this.cnt,
+                    id: cnt,
                     coordinates: {
                         latitude: self.props.locationsmap[cnt].coordinates.latitude,
                         longitude: self.props.locationsmap[cnt].coordinates.longitude,
@@ -137,9 +132,9 @@ class LocationPlaces extends Component {
                 }
                 coordinates = coordinates.concat(coord.coordinates);
 
-                self.setState({ polyline: coordinates, address: self.props.locationsmap[cnt].address, datemovement: self.props.locationsmap[cnt].datemovement, activitytype: self.props.locationsmap[cnt].activitytype  })
+                await self.setState({ polyline: coordinates, address: self.props.locationsmap[cnt].address, datemovement: self.props.locationsmap[cnt].datemovement, activitytype: self.props.locationsmap[cnt].activitytype  })
 
-                self.map.animateToRegion({
+                await self.map.animateToRegion({
                     latitude: self.props.locationsmap[cnt].coordinates.latitude,
                     longitude: self.props.locationsmap[cnt].coordinates.longitude,
                     latitudeDelta: LATITUDE_DELTA,
@@ -151,9 +146,9 @@ class LocationPlaces extends Component {
                     cnt = 0;
                     clearInterval(plot);
                     coordinates = [];
-                    self.setState({ route: '' });
+                    self.setState({ route: '',address:'' });
                 }
-            }, 1000);
+            }, 500);
         
     }
     
@@ -163,12 +158,14 @@ class LocationPlaces extends Component {
         cnt = 0;
         coordinates = [];
     }
-    endRoute() {
+    async endRoute() {
+        console.log(this.props.locationsmap.length)
+        ToastAndroid.showWithGravityAndOffset("End", ToastAndroid.SHORT, ToastAndroid.BOTTOM, 25, 50);
         if (this.state.route == "play") {
             clearInterval(plot);
         }
         let self = this;
-        var coordinates = [];
+        coordinates = [];
         let i = 0;
         for (i = 0; i < this.props.locationsmap.length; i++) {
 
@@ -183,17 +180,18 @@ class LocationPlaces extends Component {
             }
             coordinates = coordinates.concat(coord.coordinates);
 
-            self.setState({ polyline: coordinates })
+            
 
 
         }
+        await self.setState({ polyline: coordinates })
         cnt = 0;
         coordinates = [];
         this.setState({ route: '',address:'' });
     }
 
     pauseRoute() {
-
+        ToastAndroid.showWithGravityAndOffset("Pause", ToastAndroid.SHORT, ToastAndroid.BOTTOM, 25, 50);
         if (this.state.route == "play") {
             clearInterval(plot);
             this.setState({ route: '' });
@@ -328,43 +326,52 @@ class LocationPlaces extends Component {
                         style={styles.map}
                         provider={PROVIDER_GOOGLE}
                         customMapStyle={settings.retro}
-                        showsCompass={true}>
+                        showsCompass={false}>
 
                        
-                    <MapView.Polyline 
+                        <MapView.Polyline 
+                            miterLimit={50}
+                            geodesic={true}
                         style={{ zIndex: 99999 }}
                         coordinates={this.state.polyline}
                         strokeWidth={3}
-                            strokeColor="#1785f9" />
+                            strokeColor="#1785f9"
+                           />
                    
                    
 
                 </MapView>
                     <View style={[globalStyle.mapMenu, { top: 1 }]}>
-                        <TouchableOpacity onPress={() => this.fitToMap()}>
-                            <View style={globalStyle.mapMenuCircle} >
-                                <MaterialIcons size={25} style={{ color: '#2c3e50' }} name="zoom-out-map" />
-                            </View>
-                            <Text style={globalStyle.mapMenuLabel}>Center Map</Text>
-                        </TouchableOpacity>
                         <TouchableOpacity onPress={() => this.changeMapMode()}>
                             <View style={globalStyle.mapMenuCircle} >
                                 <Entypo size={25} style={{ color: '#2c3e50' }} name="globe" />
                             </View>
                             <Text style={globalStyle.mapMenuLabel}>Map Style</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => this.zoomIn()}>
-                            <View style={globalStyle.mapMenuCircle} >
-                                <MaterialIcons size={25} style={{ color: '#2c3e50' }} name="zoom-in" />
+                        
+                        
+                        {this.props.locationsmap.length > 0 &&
+                            <View>
+                                <TouchableOpacity onPress={() => this.fitToMap()}>
+                                    <View style={globalStyle.mapMenuCircle} >
+                                        <MaterialIcons size={25} style={{ color: '#2c3e50' }} name="zoom-out-map" />
+                                    </View>
+                                    <Text style={globalStyle.mapMenuLabel}>Center Map</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => this.zoomIn()}>
+                                    <View style={globalStyle.mapMenuCircle} >
+                                        <MaterialIcons size={25} style={{ color: '#2c3e50' }} name="zoom-in" />
+                                    </View>
+                                    <Text style={globalStyle.mapMenuLabel}>Zoom In</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => this.zoomOut()}>
+                                    <View style={globalStyle.mapMenuCircle} >
+                                        <MaterialIcons size={25} style={{ color: '#2c3e50' }} name="zoom-out" />
+                                    </View>
+                                    <Text style={globalStyle.mapMenuLabel}>Zoom Out</Text>
+                                </TouchableOpacity>
                             </View>
-                            <Text style={globalStyle.mapMenuLabel}>Zoom In</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => this.zoomOut()}>
-                            <View style={globalStyle.mapMenuCircle} >
-                                <MaterialIcons size={25} style={{ color: '#2c3e50' }} name="zoom-out" />
-                            </View>
-                            <Text style={globalStyle.mapMenuLabel}>Zoom Out</Text>
-                        </TouchableOpacity>
+                        }
                        
 
 
@@ -382,9 +389,9 @@ class LocationPlaces extends Component {
                         </View>
                     </View>
                 }
-                
-                <View style={styles.controlContainer} >
-                    {this.props.locationsmap.length > 0 &&
+                {this.props.locationsmap.length > 0 &&
+                    <View style={styles.controlContainer} >
+
                         <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }} >
                             {this.state.route == '' &&
                                 <TouchableOpacity onPress={() => this.startRoute()} style={{ width: 60, alignItems: 'center' }}>
@@ -393,7 +400,7 @@ class LocationPlaces extends Component {
                                 </TouchableOpacity>
                             }
                             {this.state.route == 'play' &&
-                            <TouchableOpacity onPress={() => this.pauseRoute()} style={{ width: 60, alignItems: 'center' }}>
+                                <TouchableOpacity onPress={() => this.pauseRoute()} style={{ width: 60, alignItems: 'center' }}>
                                     <Image style={{ width: 35, height: 35 }}
                                         source={require('../../images/pause.png')} />
                                 </TouchableOpacity>
@@ -403,8 +410,9 @@ class LocationPlaces extends Component {
                                     source={require('../../images/end.png')} />
                             </TouchableOpacity>
                         </View>
-                    }
-                </View>
+
+                    </View>
+                }
             </View >
 
             )
@@ -612,7 +620,7 @@ const mapStateToProps = state => ({
     isLoading: state.fetchLocation.isLoading,
   })
   
-LocationPlaces = connect(mapStateToProps, { displayLocationsList, displayLocationsMap})(LocationPlaces);
+LocationPlaces = connect(mapStateToProps, {  displayLocationsMap})(LocationPlaces);
   
 export default LocationPlaces;
 
