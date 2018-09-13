@@ -38,6 +38,14 @@ import  { createStackNavigator }  from 'react-navigation';
 
 export const Stack = createStackNavigator({
 
+    Splash: {
+        screen: Splash,
+        headerMode: 'none',
+        navigationOptions: {
+            header: null
+        },
+
+    },
 
     Home: {
         screen: Home,
@@ -68,14 +76,6 @@ export const Stack = createStackNavigator({
     },
 
 
-    Splash: {
-        screen: Splash,
-        headerMode: 'none',
-        navigationOptions: {
-            header: null
-        },
-
-    },
 
 
 

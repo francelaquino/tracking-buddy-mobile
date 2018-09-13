@@ -7,7 +7,7 @@ import Loader from '../shared/Loader';
 import Loading from '../shared/Loading';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import OfflineNotice  from '../shared/OfflineNotice';
-import { addMember, displayMember, displayHomeMember } from '../../redux/actions/memberActions' ;
+import { addMember, displayMember, displayHomeMember } from '../../redux/actions/memberActions';
 var globalStyle = require('../../assets/style/GlobalStyle');
 
 

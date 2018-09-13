@@ -510,6 +510,11 @@ module.exports = StyleSheet.create({
         padding: 5,
         marginLeft: 5,
     },
+    fabMenuCircle: {
+        backgroundColor: 'white',
+        borderColor: '#2c3e50',
+        borderWidth: 1,
+    },
     mapMenuCircle: {
         marginLeft: 10,
         width: 40,

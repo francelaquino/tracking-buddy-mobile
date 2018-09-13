@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react';
 import { AppState, Modal, BackHandler, AsyncStorage, NetInfo, TouchableOpacity, Platform, StyleSheet, Text, View, ScrollView, TextInput, ToastAndroid, Image, Dimensions, FlatList } from 'react-native';
-import { Root, Container, Header, Body, Title, Item, Input, Label, Button, Icon, Content, List, ListItem,Left, Right,Switch, Thumbnail,Card,CardItem } from 'native-base';
+import { Fab , Root, Container, Header, Body, Title, Item, Input, Label, Button, Icon, Content, List, ListItem,Left, Right,Switch, Thumbnail,Card,CardItem } from 'native-base';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -17,6 +17,7 @@ import Moment from 'moment';
 import { displayHomeMember, displayMember } from '../../redux/actions/memberActions';
 import {  getAddress } from '../../redux/actions/locationActions';
 import BackgroundGeolocation from "react-native-background-geolocation";
+import firebase from 'react-native-firebase';
 var settings = require('../../components/shared/Settings');
 var screenHeight = Dimensions.get('window').height; 
 
@@ -41,6 +42,7 @@ class HomePlaces extends Component {
         this.map = null;
         this.markers=[];
         this.state = {
+            active: true,
             mapMode:'standard',
             groupname: '',
             invitationcode:'',
@@ -246,27 +248,10 @@ class HomePlaces extends Component {
 
     initialize() {
         let self = this;
-        self.props.displayHomeMember().then(res => {
-            setTimeout(async () => {
-                if (self.state.fitToMap == true) {
-                    await self.fitToMap();
-                }
-                self.setState({ memberReady: true, isLoading: false })
-            }, 10);
-        });
+       
         setTimeout(() => {
             this.setState({ isLoading: false })
-            if (userdetails.userid !== "" && userdetails.userid !== null) {
-                self.props.displayHomeMember().then(res => {
-                    setTimeout(async () => {
-                        if (self.state.fitToMap == true) {
-                            await self.fitToMap();
-                        }
-                        self.setState({ memberReady: true, isLoading: false })
-                    }, 10);
-                });
-            }
-            /*firebase.database().ref('users/' + userdetails.userid).child('members').on("value", function (snapshot) {
+            firebase.database().ref('users/' + userdetails.userid).child('members').on("value", function (snapshot) {
                 if (userdetails.userid !== "" && userdetails.userid !== null) {
                     self.props.displayHomeMember().then(res => {
                         setTimeout(async () => {
@@ -274,12 +259,12 @@ class HomePlaces extends Component {
                                 await self.fitToMap();
                             }
                             self.setState({ memberReady: true, isLoading: false })
-                        }, 10);
+                        }, 500);
                     });
                 }
-            });*/
+            });
 
-           }, 500);
+           }, 1000);
     }
     loading() {
         return (
@@ -328,7 +313,7 @@ class HomePlaces extends Component {
                     source={require('../../images/marker.png')} />
                 <Text style={styles.markerText}>{marker.firstname}</Text>
 
-                <MapView.Callout tooltip={true} onPress={() => this.props.navigation.navigate("LocationPlaces", { uid: marker.uid })} >
+                <MapView.Callout tooltip={true} onPress={() => this.props.navigation.navigate("LocationPlaces", { uid: marker.uid, name: marker.firstname })} >
                     <View style={globalStyle.callOutFix} >
                         <View style={globalStyle.callOutContainerFix} >
                             <Text numberOfLines={2} style={globalStyle.callOutText}>{marker.address}</Text>
@@ -366,7 +351,7 @@ class HomePlaces extends Component {
                             <Right style={globalStyle.headerRight} >
                                
                             <TouchableOpacity onPress={() => this.props.navigation.navigate('UserProfile')}>
-                                <View style={[globalStyle.listAvatarContainerSmall, { height: 40, width: 40, marginTop: 2 }]} >
+                                <View style={[globalStyle.listAvatarContainerSmall, { height: 40, width: 40, marginTop: 2, borderWidth: 1, borderColor:'black' }]} >
                                     {userdetails.emptyphoto === "1" ? <Ionicons size={36} style={{ color: '#2c3e50' }} name="ios-person" /> :
                                         <Thumbnail style={[globalStyle.listAvatar, { height: 36, width: 36 }]} source={{ uri: userdetails.avatar }} />
                                     }
@@ -380,9 +365,10 @@ class HomePlaces extends Component {
                         </Header>
 
                         <View style={styles.mainContainer}>
+                        
 
-                            <View style={styles.mapContainer}>
-                                    <Image  style={styles.marker}
+                        <View style={styles.mapContainer}>
+                            <Image style={[styles.marker, { opacity:0 }]}
                                         source={require('../../images/marker.png')} />
                                     <MapView ref={map => { this.map = map }}
                                     provider={PROVIDER_GOOGLE}
@@ -406,50 +392,7 @@ class HomePlaces extends Component {
 
                         <View style={globalStyle.mapMenu}>
 
-                            <TouchableOpacity onPress={() => this.props.navigation.navigate('NewInvite')}  >
-                                <View style={globalStyle.mapMenuCircle} >
-                                    <Ionicons size={30} style={{ color: '#2c3e50' }} name="ios-person-add" />
-                                </View>
-                                <Text style={globalStyle.mapMenuLabel}>Add Member</Text>
-
-                            </TouchableOpacity>
-                            <TouchableOpacity onPress={() => this.allMembers()}>
-                                <View style={globalStyle.mapMenuCircle} >
-                                    <Ionicons size={30} style={{ color: '#2c3e50' }} name="ios-person" />
-                                </View>
-                                <Text style={globalStyle.mapMenuLabel}>Members</Text>
-
-                            </TouchableOpacity>
-                            <TouchableOpacity style={{ marginBottom:30 }} onPress={() => this.props.navigation.navigate('SelectGroup', { changeGroup: this.changeGroup })}>
-                                <View style={globalStyle.mapMenuCircle} >
-                                    <Ionicons size={30} style={{ color: '#2c3e50' }} name="ios-people" />
-                                </View>
-                                <Text style={globalStyle.mapMenuLabel}>Groups</Text>
-
-                            </TouchableOpacity>
-
-
-                                <TouchableOpacity onPress={() => this.centerToUserMarker()}>
-                                    <View style={globalStyle.mapMenuCircle} >
-                                        <MaterialIcons size={25} style={{ color: '#2c3e50' }} name="my-location" />
-                                        
-                                </View>
-                                
-                                <Text style={globalStyle.mapMenuLabel} >My Location</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity onPress={() => this.fitToMap()}>
-                                    <View style={globalStyle.mapMenuCircle} >
-                                        <MaterialIcons size={25} style={{ color: '#2c3e50' }} name="zoom-out-map" />
-                                </View>
-                                <Text style={globalStyle.mapMenuLabel}>Center Map</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity onPress={() => this.changeMapMode()}>
-                                    <View style={globalStyle.mapMenuCircle} >
-                                        <Entypo size={25} style={{ color: '#2c3e50' }} name="globe" />
-                                </View>
-                                <Text style={globalStyle.mapMenuLabel}>Map Style</Text>
-                            </TouchableOpacity>
-
+                            
                            
 
                            
@@ -463,7 +406,40 @@ class HomePlaces extends Component {
                                 {this.state.memberReady &&
                                     this.renderMember()
                                 }
-                            </View>
+                        </View>
+
+                        <View style={{ flex: 1 }}>
+                            <Fab
+                                active={this.state.active}
+                                direction="down"
+                                containerStyle={{ position: 'absolute',left:1 }}
+                                style={{ backgroundColor: '#34495e', width: 45, height: 45,top:4, }}
+                            position="topLeft"
+                                onPress={() => this.setState({ active: !this.state.active })}>
+                                {this.state.active === true ?
+                                    <Ionicons style={{ color: 'white' }} name="ios-close" /> :
+                                    <Ionicons style={{ color: 'white' }} name="ios-add" />
+                                }
+                                <Button style={globalStyle.fabMenuCircle} onPress={() => this.props.navigation.navigate('NewInvite')} >
+                                    <Ionicons size={30} style={{ color: '#2c3e50' }} name="ios-person-add" />
+                                </Button>
+                                <Button style={globalStyle.fabMenuCircle} onPress={() => this.allMembers()}>
+                                    <Ionicons size={30} style={{ color: '#2c3e50' }} name="ios-person" />
+                                </Button>
+                                <Button style={globalStyle.fabMenuCircle} onPress={() => this.props.navigation.navigate('SelectGroup', { changeGroup: this.changeGroup })}>
+                                    <Ionicons size={30} style={{ color: '#2c3e50' }} name="ios-people" />
+                                </Button>
+                                <Button style={globalStyle.fabMenuCircle} onPress={() => this.centerToUserMarker()}>
+                                    <MaterialIcons size={25} style={{ color: '#2c3e50' }} name="my-location" />
+                                </Button>
+                                <Button style={globalStyle.fabMenuCircle} onPress={() => this.fitToMap()}>
+                                    <MaterialIcons size={25} style={{ color: '#2c3e50' }} name="zoom-out-map" />
+                                </Button>
+                                <Button style={globalStyle.fabMenuCircle} onPress={() => this.changeMapMode()}>
+                                    <Entypo size={25} style={{ color: '#2c3e50' }} name="globe" />
+                                    </Button>
+                            </Fab>
+                        </View>
                         </View>
 
 
@@ -471,7 +447,7 @@ class HomePlaces extends Component {
 
                         
 
-                        
+                    
                     </Container>
                 </Root>
 

@@ -146,7 +146,8 @@ class LocationPlaces extends Component {
                     cnt = 0;
                     clearInterval(plot);
                     coordinates = [];
-                    self.setState({ route: '',address:'' });
+                    self.setState({ route: '', address: '' });
+                    ToastAndroid.showWithGravityAndOffset("End", ToastAndroid.SHORT, ToastAndroid.BOTTOM, 25, 50);
                 }
             }, 500);
         
@@ -159,7 +160,6 @@ class LocationPlaces extends Component {
         coordinates = [];
     }
     async endRoute() {
-        console.log(this.props.locationsmap.length)
         ToastAndroid.showWithGravityAndOffset("End", ToastAndroid.SHORT, ToastAndroid.BOTTOM, 25, 50);
         if (this.state.route == "play") {
             clearInterval(plot);
@@ -350,7 +350,7 @@ class LocationPlaces extends Component {
                         </TouchableOpacity>
                         
                         
-                        {this.props.locationsmap.length > 0 &&
+                        {this.props.locationsmap.length > 1 &&
                             <View>
                                 <TouchableOpacity onPress={() => this.fitToMap()}>
                                     <View style={globalStyle.mapMenuCircle} >
@@ -389,7 +389,7 @@ class LocationPlaces extends Component {
                         </View>
                     </View>
                 }
-                {this.props.locationsmap.length > 0 &&
+                {this.props.locationsmap.length > 1 &&
                     <View style={styles.controlContainer} >
 
                         <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }} >

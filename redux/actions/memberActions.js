@@ -1,5 +1,5 @@
 import { DISPLAY_MEMBER, INVITE_MEMBER, GET_MEMBERNOTIFICATION, GET_MEMBERGROUP, GET_INVITATIONCODE, GET_COUNTRIES, GENERATE_INVITATIONCODE, GET_MEMBER, DELETE_MEMBER, DISPLAY_HOME_MEMBER, DISPLAY_GROUP_MEMBER,CLEAR_HOME_MEMBERS } from './types';
-//import firebase from 'react-native-firebase';
+import firebase from 'react-native-firebase';
 import {  ToastAndroid } from 'react-native';
 import Moment from 'moment';
 import axios from 'axios';
@@ -25,55 +25,7 @@ export const clearHomeMembers=()=> dispatch=> {
 };
 
 
-export const getCountrries=()=> dispatch=> {
-    let countries:{
-        id: "",
-        countrycode: "",
-        country: "",
-      }
 
-      let count=0;
-      let cnt=0;
-    return new Promise((resolve) => {
-        firebase.database().ref().child('countries').orderByChild("country").once('value', async (dataSnapshot)=> {
-            let countries=[];
-            if(dataSnapshot.exists){
-                count=dataSnapshot.numChildren();
-                await dataSnapshot.forEach(function(child) {
-                    countries.push({
-                      id: child.val().id,
-                      countrycode: child.val().countrycode,
-                      country: child.val().countrycode+" "+ child.val().country
-                    })
-                    cnt++;
-                            if(cnt>=count){
-                                dispatch({ 
-                                    type: GET_COUNTRIES,
-                                    payload: countries
-                                });
-                                resolve()
-                            }
-                          
-                    
-                });
-               
-    
-            }
-        
-        })
-    }).catch(function(err) {
-        dispatch({ 
-            type: GET_COUNTRIES,
-            payload: []
-        });
-        resolve()
-    });
-
-   
-};
-
-
-//Update Code
 
 
 

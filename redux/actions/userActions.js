@@ -1,7 +1,7 @@
 import { SIGNIN_USER, REGISTRATION_USER, NO_CONNECTION, GET_PROFILE, SAVE_LOCATION_ONLINE } from './types';
 import { ToastAndroid, AsyncStorage } from 'react-native';
 import axios from 'axios';
-//import firebase from 'react-native-firebase';
+import firebase from 'react-native-firebase';
 import Moment from 'moment';
 var settings = require('../../components/shared/Settings');
 var userdetails = require('../../components/shared/userDetails');
@@ -15,22 +15,6 @@ var userdetails = require('../../components/shared/userDetails');
 
 
 
-const savelocation = async (useruid, latitude, longitude) => {
-    try {
-
-        await axios.post(settings.baseURL + 'place/saveloginlocation', {
-            latitude: latitude,
-            longitude: longitude,
-            useruid: useruid,
-            source: 'login',
-            dateadded: Moment().format('YYYY-MM-DD HH:mm:ss'),
-        }).then(async function (res) {
-            console.log(res)
-        }).catch(function (error) {
-        })
-    } catch (e) {
-    }
-}
 
 export const userLogin = (email, password) => async dispatch => {
     
@@ -70,7 +54,6 @@ export const userLogin = (email, password) => async dispatch => {
                                                         }
                                                     }).catch(function (error) {
                                                     });
-                                                await savelocation(res.user.uid, position.coords.latitude, position.coords.longitude);
 
                                                 
 
@@ -80,7 +63,7 @@ export const userLogin = (email, password) => async dispatch => {
                                             (err) => {
                                                 console.log(err)
                                             },
-                                            { enableHighAccuracy: false, timeout: 10000 }
+                                            { enableHighAccuracy: true, timeout: 10000 }
                                         );
                                     } catch (e) {
                                         console.log(e)
@@ -257,7 +240,6 @@ export const registerUser = (profile) => async dispatch => {
             let avatar = "";
 
             await firebase.auth().createUserAndRetrieveDataWithEmailAndPassword(profile.email, profile.password).then(async (res) => {
-
                 let uid = res.user.uid;
                 res.user.sendEmailVerification();
                 if (profile.avatarsource !== "") {
@@ -281,8 +263,6 @@ export const registerUser = (profile) => async dispatch => {
                                 lastname: profile.lastname,
                                 middlename: profile.middlename,
                                 mobileno: profile.mobileno,
-                                latitude: profile.latitude,
-                                longitude: profile.longitude,
                                 dateadded: Moment().format('YYYY-MM-DD HH:mm:ss'),
                                 avatar: avatar,
                             }).then(function (res) {
@@ -306,11 +286,10 @@ export const registerUser = (profile) => async dispatch => {
                         lastname: profile.lastname,
                         middlename: profile.middlename,
                         mobileno: profile.mobileno,
-                        latitude: profile.latitude,
-                        longitude: profile.longitude,
                         dateadded: Moment().format('YYYY-MM-DD HH:mm:ss'),
                         avatar: avatar,
                     }).then(function (res) {
+                        console.log(res)
                         if (res.data.status == "202") {
                             resolve(true)
                             ToastAndroid.showWithGravityAndOffset("Registration successfully completed. A message has been sent to your email with instructions to complete your registration", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
@@ -320,7 +299,7 @@ export const registerUser = (profile) => async dispatch => {
                         }
                         
                     }).catch(function (error) {
-                        
+                        console.log(error)
                         resolve(false)
                         ToastAndroid.showWithGravityAndOffset("Something went wrong. Please try again.", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
                     });
@@ -332,7 +311,7 @@ export const registerUser = (profile) => async dispatch => {
 
 
             }).catch(function (e) {
-                
+                console.log(e)
                 if (e.code === 'auth/email-already-in-use') {
                     ToastAndroid.showWithGravityAndOffset("Email aready used", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
                 } else {
@@ -341,7 +320,7 @@ export const registerUser = (profile) => async dispatch => {
                 resolve(false)
             })
         } catch (e) {
-            
+            console.log(e)
             ToastAndroid.showWithGravityAndOffset("Something went wrong. Please try again.", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
             resolve(false)
         };

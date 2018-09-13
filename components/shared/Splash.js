@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { AsyncStorage, View, Text, NetInfo, Dimensions, StyleSheet, Image } from 'react-native';
 import { connect } from 'react-redux';
 import { displayHomeMember } from '../../redux/actions/memberActions';
-import { getUserLocation, saveLocationOnline } from '../../redux/actions/locationActions';
+import { saveLocation } from '../../redux/actions/locationActions';
 const { width, height } = Dimensions.get('window');
 var userdetails = require('../shared/userDetails');
 
@@ -18,11 +18,7 @@ class Splash extends Component {
         let avatar = await AsyncStorage.getItem("avatar");
         let emptyphoto = await AsyncStorage.getItem("emptyphoto");
         
-        await NetInfo.isConnected.fetch().done(async (isConnected) => {
-            if (isConnected) {
-                this.props.saveLocationOnline();
-            }
-        });
+        
 
         await setTimeout(async () => {
             if (userid === "" || userid === null) {
@@ -34,7 +30,9 @@ class Splash extends Component {
                 userdetails.avatar = avatar;
                 userdetails.firstname = firstname;
                 userdetails.lastname = lastname;
-                setTimeout(() => {
+
+                await self.props.saveLocation();
+                await setTimeout(() => {
                     self.props.displayHomeMember();
                     self.props.navigation.navigate('Home');
                 }, 1000);
@@ -71,7 +69,7 @@ const mapStateToProps = state => ({
 
 
 
-Splash = connect(mapStateToProps, { displayHomeMember, getUserLocation, saveLocationOnline })(Splash);
+Splash = connect(mapStateToProps, { displayHomeMember, saveLocation })(Splash);
 
 export default Splash;
 

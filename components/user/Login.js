@@ -2,9 +2,8 @@
 import React, { Component } from 'react';
 import {  BackHandler, AsyncStorage, NetInfo, Platform,  StyleSheet,  Text,  View, ScrollView,TextInput, TouchableOpacity, Image,ToastAndroid, NavigationActions  } from 'react-native';
 import { Root, Container, Header, Body, Title, Item, Input, Label, Button, Icon } from 'native-base';
-//import firebase from 'react-native-firebase';
 import { connect } from 'react-redux';
-import { saveLocationOffline, saveLocationOnline  } from '../../redux/actions/locationActions' ;
+import { saveLocation  } from '../../redux/actions/locationActions' ;
 import { displayHomeMember } from '../../redux/actions/memberActions' ;
 import { userLogin } from '../../redux/actions/userActions' ;
 import Loader from '../shared/Loader';
@@ -47,8 +46,8 @@ class Login extends Component {
 
           
             if (res == true) {
-                setTimeout(() => {
-                    //this.props.saveLocationOnline();
+                setTimeout(async () => {
+                    await this.props.saveLocation();
                     setTimeout(() => {
                         this.props.displayHomeMember();
                         this.props.navigation.navigate('Home');
@@ -137,6 +136,6 @@ const mapStateToProps = state => ({
   
   
   
-  Login=connect(mapStateToProps,{saveLocationOffline,saveLocationOnline,userLogin, displayHomeMember})(Login);
+Login = connect(mapStateToProps, { saveLocation,userLogin, displayHomeMember})(Login);
   
 export default Login;

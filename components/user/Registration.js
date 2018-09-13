@@ -8,8 +8,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Loading  from '../shared/Loading';
 import ImagePicker from 'react-native-image-picker';
 import Loader from '../shared/Loader';
-//import firebase from 'react-native-firebase';
 import OfflineNotice from '../shared/OfflineNotice';
+import { saveLocation } from '../../redux/actions/locationActions';
 import { registerUser } from '../../redux/actions/userActions';
 var registrationStyle = require('../../assets/style/Registration');
 var globalStyle = require('../../assets/style/GlobalStyle');
@@ -114,35 +114,27 @@ class Register extends Component {
             return false;
         }
         this.setState({ loading: true })
-        navigator.geolocation.getCurrentPosition(
-            async (position) => {
-                let user = {
-                    email: this.state.email,
-                    password: this.state.password,
-                    firstname: this.state.firstname,
-                    lastname: this.state.lastname,
-                    middlename: this.state.middlename,
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                    mobileno: this.state.mobileno,
-                    avatarsource: this.state.avatarsource
-                }
+        let user = {
+            email: this.state.email,
+            password: this.state.password,
+            firstname: this.state.firstname,
+            lastname: this.state.lastname,
+            middlename: this.state.middlename,
+            mobileno: this.state.mobileno,
+            avatarsource: this.state.avatarsource
+        }
+
+
+        this.props.registerUser(user).then((res) => {
+            if (res == true) {
                 
-               
-                this.props.registerUser(user).then((res) => {
-                    if (res == true) {
-                        this.resetState();
-                    }
-                    this.setState({ loading: false })
-                })
+               this.props.saveLocation();
 
+                this.resetState();
+            }
+            this.setState({ loading: false })
+        })
 
-            },
-            (err) => {
-                this.setState({ loading: false })
-            },
-            { enableHighAccuracy: false, timeout: 10000, maximumAge: 3000 }
-        );
 
        
 
@@ -305,6 +297,6 @@ const mapStateToProps = state => ({
 
 
 
-Register = connect(mapStateToProps, { registerUser })(Register);
+Register = connect(mapStateToProps, { registerUser, saveLocation})(Register);
 
 export default Register;
