@@ -65,10 +65,24 @@ class HomePlaces extends Component {
     }
 
 
-    componentWillMount() {
+    async componentWillMount() {
+       
         let self = this;
-        this.setState({ isLoading: true })
-        BackgroundGeolocation.ready({
+       
+        BackgroundGeolocation.on('http', function(response) {
+            var status = response.status;
+            var success = response.success;
+            var responseText = response.responseText;
+            console.log(responseText);
+          }, function(response) {
+            var success = response.success;
+            var status = response.status;
+            var responseText = response.responseText;
+            console.log("- HTTP failure: ", status, responseText);
+          });
+       
+         
+        BackgroundGeolocation.setConfig({
             locationAuthorizationAlert: {
                 titleWhenNotEnabled: "Location services not enabled",
                 titleWhenOff: "Location services is off",
@@ -76,18 +90,12 @@ class HomePlaces extends Component {
                 cancelButton: "Cancel",
                 settingsButton: "Settings"
             },
-            enabled: true,
-            debug: false,
             stopTimeout: 1,
-            desiredAccuracy: 0,
-            distanceFilter: 10,
-            locationsOrderDirection: 'ASC',
-            locationAuthorizationRequest: 'Always',
             logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
-            fastestLocationUpdateInterval: 1000,
-            locationUpdateInterval: 10000,
-            allowIdenticalLocations :true,
-            stationaryRadius:5,
+            debug: true,
+            desiredAccuracy: 0,
+            distanceFilter: 1,
+            allowIdenticalLocations :false,
             maxDaysToPersist: 1,
             foregroundService: true,
             notificationTitle: 'Tracking Buddy',
@@ -106,36 +114,30 @@ class HomePlaces extends Component {
             if (!state.enabled) {
                 BackgroundGeolocation.start(function () {
                 });
-
-                BackgroundGeolocation.watchPosition(function (location) {
-                  
-                    self.props.getAddress(location.coords);
-                }, function (errorCode) {
-                }, {
-                        interval: 10000
-                    });
             }
         }).catch(error => {
         });
 
         
-
        
         BackgroundGeolocation.getCurrentPosition((location) => {
             self.props.getAddress(location.coords);
-            console.log(location)
            
            
         }, (error) => {
-            self.initialize();
         }, { samples: 1, persist: true,desiredAccuracy: 10,timeout: 30 });
 
         this.initialize();
+
+
+      
        
     }
        
 
-
+    componentDidmount() {
+      
+    }
 
     componentWillUnmount() {
         BackgroundGeolocation.removeListeners();
