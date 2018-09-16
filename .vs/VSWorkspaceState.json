@@ -1,0 +1,20 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\android",
+    "\\android\\app",
+    "\\android\\app\\src",
+    "\\android\\app\\src\\main",
+    "\\android\\app\\src\\main\\java",
+    "\\android\\app\\src\\main\\java\\com",
+    "\\android\\app\\src\\main\\java\\com\\trackingbuddyv3",
+    "\\android\\app\\src\\main\\res",
+    "\\android\\app\\src\\main\\res\\values",
+    "\\android\\gradle",
+    "\\android\\gradle\\wrapper",
+    "\\components",
+    "\\components\\user"
+  ],
+  "SelectedNode": "\\components\\places\\Home.js",
+  "PreviewInSolutionExplorer": false
+}

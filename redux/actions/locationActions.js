@@ -35,15 +35,12 @@ export const saveLocation = () => async dispatch => {
                     useruid: userdetails.userid,
                     dateadded: Moment().format('YYYY-MM-DD HH:mm:ss'),
                 }).then(async function (res) {
-                    console.log(res)
                 }).catch(function (error) {
-                    console.log(error)
                 })
 
 
             },
             (err) => {
-                console.log(err)
             },
             { enableHighAccuracy: true, timeout: 20000 }
         );
@@ -58,7 +55,6 @@ export const saveLocation = () => async dispatch => {
 
 
     } catch (e) {
-        console.log(e)
     }
 };
 
@@ -66,7 +62,6 @@ export const saveLocation = () => async dispatch => {
 
 export const getAddress = (coords) => async dispatch => {
     try {
-        console.log(coords)
         await axios.get("https://maps.googleapis.com/maps/api/geocode/json?latlng=" + coords.latitude + "," + coords.longitude + "&sensor=false&key=AIzaSyCHZ-obEHL8TTP4_8vPfQKAyzvRrrlmi5Q")
             .then(function (res) {
                 if (res.data.status == "OK") {
@@ -79,7 +74,6 @@ export const getAddress = (coords) => async dispatch => {
             });
 
     } catch (e) {
-        console.log(e)
     }
 };
 

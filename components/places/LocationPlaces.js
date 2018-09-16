@@ -62,11 +62,15 @@ class LocationPlaces extends Component {
 
         this.setDate = this.setDate.bind(this);
     }
+
    
+    componentWillUnmount() {
+        clearInterval(plot);
+    }
+
     async componentWillMount() {
         
         await this.setState({ busy: true, useruid: this.props.navigation.state.params.uid, name: this.props.navigation.state.params.name })
-        //await this.setState({ busy: true, useruid: 'H32d1lOQZFZ8YKAR4ddPDCHre3f2', name: 'Francel' })
         await this.initialize();
     }
 
@@ -184,10 +188,14 @@ class LocationPlaces extends Component {
 
 
         }
+        
         await self.setState({ polyline: coordinates })
         cnt = 0;
         coordinates = [];
-        this.setState({ route: '',address:'' });
+        this.setState({ route: '', address: '' });
+        setTimeout(() => {
+            self.fitToMap();
+        }, 100);
     }
 
     pauseRoute() {

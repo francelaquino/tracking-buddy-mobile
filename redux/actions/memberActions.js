@@ -143,7 +143,6 @@ export const addMember = (invitationcode) => async dispatch => {
                   
                    
                 } else {
-                    console.log(res.data)
                     resolve(false)
                     ToastAndroid.showWithGravityAndOffset("Something went wrong. Please try again.", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
                 }
@@ -239,7 +238,6 @@ export const displayMember = () => async dispatch => {
         try {
             await axios.get(settings.baseURL + 'member/getmembers/' + userdetails.userid)
                 .then(function (res) {
-                    console.log(res)
                     if (res.data.status == "202") {
                         dispatch({
                             type: DISPLAY_MEMBER,
@@ -255,7 +253,6 @@ export const displayMember = () => async dispatch => {
                         ToastAndroid.showWithGravityAndOffset("Something went wrong. Please try again.", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
                     }
                 }).catch(function (error) {
-                    console.log(error)
                     dispatch({
                         type: DISPLAY_MEMBER,
                         payload: []
@@ -265,7 +262,6 @@ export const displayMember = () => async dispatch => {
                 });
 
         } catch (e) {
-            console.log(e)
             dispatch({
                 type: DISPLAY_MEMBER,
                 payload: []
@@ -505,7 +501,6 @@ export const displayHomeMember = () => async dispatch => {
                         if (res.data.status == "202") {
                             count = res.data.results.length;
                             let x = 0;
-                            console.log(res.data.results)
                             if (count > 0) {
                                 res.data.results.forEach(data => {
 

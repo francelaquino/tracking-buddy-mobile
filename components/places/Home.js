@@ -76,8 +76,16 @@ class HomePlaces extends Component {
                 cancelButton: "Cancel",
                 settingsButton: "Settings"
             },
+            enabled: true,
             debug: false,
-            logLevel: BackgroundGeolocation.LOG_LEVEL_OFF,
+            stopTimeout: 1,
+            desiredAccuracy: 0,
+            distanceFilter: 10,
+            locationsOrderDirection: 'ASC',
+            locationAuthorizationRequest: 'Always',
+            logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
+            fastestLocationUpdateInterval: 1000,
+            locationUpdateInterval: 10000,
             allowIdenticalLocations :true,
             stationaryRadius:5,
             maxDaysToPersist: 1,
@@ -100,6 +108,7 @@ class HomePlaces extends Component {
                 });
 
                 BackgroundGeolocation.watchPosition(function (location) {
+                  
                     self.props.getAddress(location.coords);
                 }, function (errorCode) {
                 }, {
@@ -114,22 +123,18 @@ class HomePlaces extends Component {
        
         BackgroundGeolocation.getCurrentPosition((location) => {
             self.props.getAddress(location.coords);
+            console.log(location)
            
            
         }, (error) => {
             self.initialize();
-        }, { samples: 1, persist: true,desiredAccuracy: 10,timeout: 30,maximumAge: 5000 });
+        }, { samples: 1, persist: true,desiredAccuracy: 10,timeout: 30 });
 
         this.initialize();
        
     }
        
 
-    onLocation(location) {
-        this.props.getAddress(location.coords);
-    }
-    onError(error) {
-    }
 
 
     componentWillUnmount() {
@@ -254,9 +259,9 @@ class HomePlaces extends Component {
             firebase.database().ref('users/' + userdetails.userid).child('members').on("value", function (snapshot) {
                 if (userdetails.userid !== "" && userdetails.userid !== null) {
                     self.props.displayHomeMember().then(res => {
-                        setTimeout(async () => {
+                        setTimeout( () => {
                             if (self.state.fitToMap == true) {
-                                await self.fitToMap();
+                                 self.fitToMap();
                             }
                             self.setState({ memberReady: true, isLoading: false })
                         }, 500);

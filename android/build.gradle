@@ -41,23 +41,8 @@ allprojects {
     }
 }
 
-/*ext {
-    buildToolsVersion = "26.0.3"
-    minSdkVersion = 16
-    compileSdkVersion = 26
-    targetSdkVersion = 26
-    supportLibVersion = "26.1.0"
-}
-*/
-/*
-ext {
-    compileSdkVersion   = 27
-    targetSdkVersion    = 27
-    buildToolsVersion   = "27.0.3"
-    supportLibVersion   = "27.1.1"
-    playServicesVersion = "15.0.1"
-    minSdkVersion = 16
-}*/
+
+
 
 ext {
     compileSdkVersion   = 26
