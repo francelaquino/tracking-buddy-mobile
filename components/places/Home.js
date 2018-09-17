@@ -81,8 +81,8 @@ class HomePlaces extends Component {
             console.log("- HTTP failure: ", status, responseText);
           });
        
-         
-        BackgroundGeolocation.setConfig({
+
+        BackgroundGeolocation.ready({
             locationAuthorizationAlert: {
                 titleWhenNotEnabled: "Location services not enabled",
                 titleWhenOff: "Location services is off",
@@ -93,7 +93,7 @@ class HomePlaces extends Component {
             stopTimeout: 1,
             logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
             debug: true,
-            desiredAccuracy: 0,
+            desiredAccuracy: 10,
             distanceFilter: 1,
             allowIdenticalLocations :false,
             maxDaysToPersist: 1,
@@ -122,6 +122,7 @@ class HomePlaces extends Component {
        
         BackgroundGeolocation.getCurrentPosition((location) => {
             self.props.getAddress(location.coords);
+            console.log(location)
            
            
         }, (error) => {
