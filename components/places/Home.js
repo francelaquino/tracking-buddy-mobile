@@ -18,6 +18,7 @@ import { displayHomeMember, displayMember } from '../../redux/actions/memberActi
 import {  getAddress } from '../../redux/actions/locationActions';
 import BackgroundGeolocation from "react-native-background-geolocation";
 import firebase from 'react-native-firebase';
+import type {  RemoteMessage } from 'react-native-firebase';
 var settings = require('../../components/shared/Settings');
 var screenHeight = Dimensions.get('window').height; 
 
@@ -66,20 +67,32 @@ class HomePlaces extends Component {
 
 
     async componentWillMount() {
-       
+
+        firebase.messaging().getToken()
+            .then(fcmToken => {
+                userdetails.fcmtoken = fcmToken;
+                console.log(fcmToken)
+            });
+
+
         let self = this;
        
-        BackgroundGeolocation.on('http', function(response) {
+      /*  BackgroundGeolocation.on('http', function(response) {
             var status = response.status;
             var success = response.success;
             var responseText = response.responseText;
-            console.log(responseText);
           }, function(response) {
             var success = response.success;
             var status = response.status;
             var responseText = response.responseText;
-            console.log("- HTTP failure: ", status, responseText);
-          });
+            });*/
+
+        BackgroundGeolocation.on('heartbeat', function () {
+            firebase.messaging().getToken()
+                .then(fcmToken => {
+                    userdetails.fcmtoken = fcmToken;
+                });
+        });
        
 
         BackgroundGeolocation.ready({
@@ -97,6 +110,7 @@ class HomePlaces extends Component {
             distanceFilter: 1,
             allowIdenticalLocations :false,
             maxDaysToPersist: 1,
+            heartbeatInterval:120,
             foregroundService: true,
             notificationTitle: 'Tracking Buddy',
             notificationText: 'Using GPS',
@@ -109,6 +123,7 @@ class HomePlaces extends Component {
             autoSync: true,       
             params: {             
                 "useruid": userdetails.userid,
+                "fcmtoken": userdetails.fcmtoken,
             }
         }).then(state => {
             if (!state.enabled) {
@@ -122,7 +137,6 @@ class HomePlaces extends Component {
        
         BackgroundGeolocation.getCurrentPosition((location) => {
             self.props.getAddress(location.coords);
-            console.log(location)
            
            
         }, (error) => {
@@ -130,18 +144,59 @@ class HomePlaces extends Component {
 
         this.initialize();
 
-
-      
+        
        
     }
        
 
-    componentDidmount() {
-      
+    componentDidMount() {
+       
+      /*  firebase.messaging().requestPermission()
+            .then(() => {
+            })
+            .catch(error => {
+                console.log(error)
+            });
+
+        this.messageListener = firebase.messaging().onMessage((message: RemoteMessage) => {
+
+            const channel = new firebase.notifications.Android.Channel('Tracking Buddy', 'Tracking Buddy', firebase.notifications.Android.Importance.Max)
+                .setDescription('Tracking Buddy');
+
+            firebase.notifications().android.createChannel(channel);
+
+            const notificationMessage = new firebase.notifications.Notification()
+                .setNotificationId("notification._notificationId")
+                .setTitle("notification._title")
+                .android.setChannelId('Tracking Buddy');
+
+            firebase.notifications().displayNotification(notificationMessage);
+        });
+
+
+        this.notificationListener = firebase.notifications().onNotification((notification: Notification) => {
+
+
+            const channel = new firebase.notifications.Android.Channel('Tracking Buddy', 'Tracking Buddy', firebase.notifications.Android.Importance.Max)
+                .setDescription('Tracking Buddy');
+
+            firebase.notifications().android.createChannel(channel);
+
+            const notificationMessage = new firebase.notifications.Notification()
+                .setNotificationId(notification._notificationId)
+                .setTitle(notification._title)
+                .android.setChannelId('Tracking Buddy');
+
+            firebase.notifications().displayNotification(notificationMessage);
+
+
+        });*/
     }
 
     componentWillUnmount() {
         BackgroundGeolocation.removeListeners();
+        this.notificationListener();
+        this.messageListener();
     }
     
 

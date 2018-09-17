@@ -20,6 +20,10 @@
         <meta-data
       android:name="com.google.android.geo.API_KEY"
       android:value="AIzaSyDtuHG5czeE1KReuuew_aKt2osgj_YX1Z4"/>
+      <meta-data
+      android:name="com.google.firebase.messaging.default_notification_icon"
+      android:resource="@mipmap/ic_launcher" />
+        
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"
@@ -31,6 +35,23 @@
         </intent-filter>
       </activity>
       <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
+
+      <service android:name="io.invertase.firebase.messaging.RNFirebaseMessagingService">
+          <intent-filter>
+            <action android:name="com.google.firebase.MESSAGING_EVENT" />
+          </intent-filter>
+        </service>
+        <service android:name="io.invertase.firebase.messaging.RNFirebaseInstanceIdService">
+          <intent-filter>
+            <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+          </intent-filter>
+        </service>
+    
+      <service android:name="io.invertase.firebase.messaging.RNFirebaseBackgroundMessagingService" />
+     <activity
+    android:name=".SingleTaskActivity"
+    android:label="singleTask launchMode"
+    android:launchMode="singleTask"/>
     </application>
 
 </manifest>

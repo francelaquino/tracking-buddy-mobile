@@ -5,7 +5,8 @@ module.exports = {
     lastname : '',
     group :'',
     avatar: '',
-    emptyphoto:'1',
+    emptyphoto: '1',
+    fcmtoken:''
 };
 /*module.exports = {
     userid: 'dTo5S5eGfxNCm3HZRlAJqSrqo6j1',
