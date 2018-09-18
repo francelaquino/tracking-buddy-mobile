@@ -10,6 +10,7 @@ import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
 import com.airbnb.android.react.maps.MapsPackage;
 import io.invertase.firebase.storage.RNFirebaseStoragePackage;
 import io.invertase.firebase.database.RNFirebaseDatabasePackage; 
+import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
 import io.invertase.firebase.auth.RNFirebaseAuthPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -30,7 +31,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            //new ReactNativePushNotificationPackage(),
+            new ReactNativePushNotificationPackage(),
             new RNFirebasePackage(),
             new MapsPackage(),
 			new RNFirebaseStoragePackage(),
@@ -38,7 +39,9 @@ public class MainApplication extends Application implements ReactApplication {
             new RNFirebaseAuthPackage(),
            new RNBackgroundGeolocation(),
            new RNBackgroundFetchPackage(),
-		   new RNFirebaseMessagingPackage()
+		   new RNFirebaseMessagingPackage(),
+		    new RNFirebaseNotificationsPackage()
+
       );
     }
 

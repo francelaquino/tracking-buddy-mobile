@@ -21,6 +21,7 @@ import firebase from 'react-native-firebase';
 import type {  RemoteMessage } from 'react-native-firebase';
 var settings = require('../../components/shared/Settings');
 var screenHeight = Dimensions.get('window').height; 
+var PushNotification = require('react-native-push-notification');
 
 
 var globalStyle = require('../../assets/style/GlobalStyle');
@@ -60,7 +61,31 @@ class HomePlaces extends Component {
             },
         };
 
-        
+        PushNotification.configure({
+            // (optional) Called when Token is generated (iOS and Android)
+
+            // (required) Called when a remote or local notification is opened or received
+
+            // ANDROID ONLY: GCM Sender ID (optional - not required for local notifications, but is need to receive remote push notifications)
+
+            // IOS ONLY (optional): default: all - Permissions to register.
+            permissions: {
+                alert: true,
+                badge: true,
+                sound: true
+            },
+
+            // Should the initial notification be popped automatically
+            // default: true
+            popInitialNotification: true,
+
+            /**
+              * (optional) default: true
+              * - Specified if permissions (ios) and token (android and ios) will requested or not,
+              * - if not, you must call PushNotificationsHandler.requestPermissions() later
+              */
+            requestPermissions: true,
+        });
         
 
     }
@@ -151,13 +176,35 @@ class HomePlaces extends Component {
 
     componentDidMount() {
        
-      /*  firebase.messaging().requestPermission()
+       
+       
+        firebase.messaging().requestPermission()
             .then(() => {
             })
             .catch(error => {
                 console.log(error)
             });
+        /*
 
+        setTimeout(() => {
+            const channel = new firebase.notifications.Android.Channel('Tracking Buddy', 'Tracking Buddy', firebase.notifications.Android.Importance.Max)
+                .setDescription('Tracking Buddy');
+
+            firebase.notifications().android.createChannel(channel);
+
+            const notificationMessage = new firebase.notifications.Notification()
+                .setNotificationId("notification._notificationId")
+                .setTitle("notification._title")
+                .android.setPriority(firebase.notifications.Android.Priority.Max)
+                .android.setChannelId('Tracking Buddy')
+                .setData({
+                    key1: 'value1',
+                    key2: 'value2',
+                });
+
+            firebase.notifications().displayNotification(notificationMessage);
+        }, 10000);*/
+/*
         this.messageListener = firebase.messaging().onMessage((message: RemoteMessage) => {
 
             const channel = new firebase.notifications.Android.Channel('Tracking Buddy', 'Tracking Buddy', firebase.notifications.Android.Importance.Max)
@@ -173,7 +220,7 @@ class HomePlaces extends Component {
             firebase.notifications().displayNotification(notificationMessage);
         });
 
-
+        
         this.notificationListener = firebase.notifications().onNotification((notification: Notification) => {
 
 
