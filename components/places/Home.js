@@ -21,7 +21,7 @@ import firebase from 'react-native-firebase';
 import type {  RemoteMessage } from 'react-native-firebase';
 var settings = require('../../components/shared/Settings');
 var screenHeight = Dimensions.get('window').height; 
-var PushNotification = require('react-native-push-notification');
+//var PushNotification = require('react-native-push-notification');
 
 
 var globalStyle = require('../../assets/style/GlobalStyle');
@@ -34,7 +34,6 @@ const LATITUDE_DELTA = .05;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 
-
 class HomePlaces extends Component {
     constructor(props) {
         super(props)
@@ -44,6 +43,7 @@ class HomePlaces extends Component {
         this.map = null;
         this.markers=[];
         this.state = {
+            appState:AppState.currentState,
             active: true,
             mapMode:'standard',
             groupname: '',
@@ -61,45 +61,13 @@ class HomePlaces extends Component {
             },
         };
 
-        PushNotification.configure({
-            // (optional) Called when Token is generated (iOS and Android)
-
-            // (required) Called when a remote or local notification is opened or received
-
-            // ANDROID ONLY: GCM Sender ID (optional - not required for local notifications, but is need to receive remote push notifications)
-
-            // IOS ONLY (optional): default: all - Permissions to register.
-            permissions: {
-                alert: true,
-                badge: true,
-                sound: true
-            },
-
-            // Should the initial notification be popped automatically
-            // default: true
-            popInitialNotification: true,
-
-            /**
-              * (optional) default: true
-              * - Specified if permissions (ios) and token (android and ios) will requested or not,
-              * - if not, you must call PushNotificationsHandler.requestPermissions() later
-              */
-            requestPermissions: true,
-        });
-        
+       
 
     }
 
 
     async componentWillMount() {
-
-        firebase.messaging().getToken()
-            .then(fcmToken => {
-                userdetails.fcmtoken = fcmToken;
-                console.log(fcmToken)
-            });
-
-
+       
         let self = this;
        
       /*  BackgroundGeolocation.on('http', function(response) {
@@ -137,9 +105,9 @@ class HomePlaces extends Component {
             maxDaysToPersist: 1,
             heartbeatInterval:120,
             foregroundService: true,
-            notificationTitle: 'Tracking Buddy',
+            notificationTitle: 'My GPS Buddy',
             notificationText: 'Using GPS',
-            notificationChannelName:'Traking Buddy',
+            notificationChannelName:'My GPS Buddy',
             stopOnTerminate: false, 
             startOnBoot: true, 
             url: 'http://tracking.findplace2stay.com/index.php/api/place/savelocation',
@@ -173,30 +141,58 @@ class HomePlaces extends Component {
        
     }
        
-
+    haddleAppStateChange = (nextAppState) => {
+        this.setState({appState: nextAppState});
+        
+    }
     componentDidMount() {
-       
-       
-       
-        firebase.messaging().requestPermission()
-            .then(() => {
-            })
-            .catch(error => {
-                console.log(error)
-            });
-        /*
+        firebase.messaging().requestPermission();
 
-        setTimeout(() => {
-            const channel = new firebase.notifications.Android.Channel('Tracking Buddy', 'Tracking Buddy', firebase.notifications.Android.Importance.Max)
-                .setDescription('Tracking Buddy');
+        firebase.messaging().getToken()
+            .then(fcmToken => {
+                userdetails.fcmtoken = fcmToken;
+                console.log(fcmToken)
+              
+            
+            });
+            
+
+            firebase.messaging().onMessage((message) => console.log('message', message));
+
+        AppState.addEventListener('change',this.haddleAppStateChange);
+      /*  firebase.messaging().onMessage((message: RemoteMessage) => {
+            console.log("message")
+            
+        });
+*/
+       
+
+      /*  PushNotification.cancelAllLocalNotifications();
+                PushNotification.localNotificationSchedule({
+                    //... You can use all the options from localNotifications
+                    message: "My Notification Message PushNotification", // (required)
+                    number: 99,
+                    playSound: true,
+                    popInitialNotification: true,
+                    requestPermissions: true,
+                    'content-available': 1,
+                    date: new Date(Date.now() + (10 * 1000)) // in 60 secs
+                  });
+               
+        */
+      
+           
+     /*  setTimeout(() => {
+            const channel = new firebase.notifications.Android.Channel('My GPS Buddy', 'My GPS Buddy', firebase.notifications.Android.Importance.Max)
+                .setDescription('My GPS Buddy');
 
             firebase.notifications().android.createChannel(channel);
 
             const notificationMessage = new firebase.notifications.Notification()
                 .setNotificationId("notification._notificationId")
-                .setTitle("notification._title")
+                .setTitle("notification._title firebase")
                 .android.setPriority(firebase.notifications.Android.Priority.Max)
-                .android.setChannelId('Tracking Buddy')
+                .android.setChannelId('My GPS Buddy')
                 .setData({
                     key1: 'value1',
                     key2: 'value2',
@@ -205,34 +201,21 @@ class HomePlaces extends Component {
             firebase.notifications().displayNotification(notificationMessage);
         }, 10000);*/
 /*
-        this.messageListener = firebase.messaging().onMessage((message: RemoteMessage) => {
-
-            const channel = new firebase.notifications.Android.Channel('Tracking Buddy', 'Tracking Buddy', firebase.notifications.Android.Importance.Max)
-                .setDescription('Tracking Buddy');
-
-            firebase.notifications().android.createChannel(channel);
-
-            const notificationMessage = new firebase.notifications.Notification()
-                .setNotificationId("notification._notificationId")
-                .setTitle("notification._title")
-                .android.setChannelId('Tracking Buddy');
-
-            firebase.notifications().displayNotification(notificationMessage);
-        });
+       
 
         
         this.notificationListener = firebase.notifications().onNotification((notification: Notification) => {
 
 
-            const channel = new firebase.notifications.Android.Channel('Tracking Buddy', 'Tracking Buddy', firebase.notifications.Android.Importance.Max)
-                .setDescription('Tracking Buddy');
+            const channel = new firebase.notifications.Android.Channel('My GPS Buddy', 'My GPS Buddy', firebase.notifications.Android.Importance.Max)
+                .setDescription('My GPS Buddy');
 
             firebase.notifications().android.createChannel(channel);
 
             const notificationMessage = new firebase.notifications.Notification()
                 .setNotificationId(notification._notificationId)
                 .setTitle(notification._title)
-                .android.setChannelId('Tracking Buddy');
+                .android.setChannelId('My GPS Buddy');
 
             firebase.notifications().displayNotification(notificationMessage);
 
@@ -241,8 +224,9 @@ class HomePlaces extends Component {
     }
 
     componentWillUnmount() {
+        AppState.removeEventListener('change',this.haddleAppStateChange);
         BackgroundGeolocation.removeListeners();
-        this.notificationListener();
+        //this.notificationListener();
         this.messageListener();
     }
     
@@ -358,6 +342,7 @@ class HomePlaces extends Component {
 
     initialize() {
         let self = this;
+       
        
         setTimeout(() => {
             this.setState({ isLoading: false })

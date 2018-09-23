@@ -78,7 +78,7 @@ class Login extends Component {
                     <View style={registrationStyle.container}>
                         <View style={registrationStyle.logoContainer}>
                         <Image  style={registrationStyle.logo} resizeMode='contain'  source={require('../../images/logo.png')} />
-                            <Text style={{ fontSize: 15, color:'#16a085',marginTop:10}}>Tracking Buddy</Text>
+                            <Text style={{ fontSize: 15, color:'#16a085',marginTop:10}}>My GPS Buddy</Text>
                         
                         </View>
                        

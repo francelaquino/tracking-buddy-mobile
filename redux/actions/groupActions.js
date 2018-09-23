@@ -1,5 +1,5 @@
 import { CREATE_GROUP, DISPLAY_GROUP, DELETE_GROUP } from './types';
-//import firebase from 'react-native-firebase';
+import firebase from 'react-native-firebase';
 import { ToastAndroid } from 'react-native';
 import axios from 'axios';
 var settings = require('../../components/shared/Settings');
@@ -30,22 +30,23 @@ randomString = (length) => {
     return text;
 }
 
-export const createGroup = (groupname, avatarsource) => dispatch => {
+export const createGroup = (groupname, avatarsource,emptyphoto) => dispatch => {
     let avatar = "";
     let groupid = userdetails.userid +"_"+ randomString(5);
     return new Promise(async (resolve) => {
         try {
-            if (avatarsource != "") {
+            if (emptyphoto == "0") {
                 let avatarlink = groupid + ".jpg";
                  firebase.storage().ref("/group_photos/" + avatarlink).putFile(avatarsource.uri.replace("file:/", "")).then(async res => {
                     avatar = res.downloadURL;
                     await axios.post(settings.baseURL + 'group/addgroup', {
                         groupname: groupname,
                         avatar: avatar,
+                        emptyphoto:emptyphoto,
                         avatarfilename: avatarlink,
                         owner: userdetails.userid,
                     }).then(function (res) {
-                    console.log(res)
+                   
                     if (res.data.status == "202") {
                         if (res.data.isexist == "true") {
                             resolve(false)
@@ -69,9 +70,9 @@ export const createGroup = (groupname, avatarsource) => dispatch => {
                     groupname: groupname,
                     avatar: avatar,
                     owner: userdetails.userid,
+                    emptyphoto:emptyphoto,
                     avatarfilename:''
                 }).then(function (res) {
-                    console.log(res)
                     if (res.data.status == "202") {
                         if (res.data.isexist == "true") {
                             resolve(false)
@@ -91,7 +92,6 @@ export const createGroup = (groupname, avatarsource) => dispatch => {
             }
 
         } catch (e) {
-            
             ToastAndroid.showWithGravityAndOffset("Something went wrong. Please try again.", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
             resolve(false)
         }
@@ -125,14 +125,12 @@ export const createGroup = (groupname, avatarsource) => dispatch => {
                                         dateupdated: Date.now(),
                                     })
                                         .catch(function (err) {
-                                            console.log('error', err);
                                         });
 
                                     resolve("Group successfully created");
                                 }, 0);
                             })
                                 .catch(function (err) {
-                                    console.log('error', err);
 
                                 });
                         } else {
@@ -146,14 +144,12 @@ export const createGroup = (groupname, avatarsource) => dispatch => {
                                     dateupdated: Date.now(),
                                 })
                                     .catch(function (err) {
-                                        console.log('error', err);
                                     });
                                 resolve("Group successfully created");
                             }, 0);
                         }
                     }
                 }).catch(function (err) {
-                    console.log('error', err);
                     resolve("");
 
                 });
@@ -177,8 +173,7 @@ export const updateGroup = (group) => dispatch => {
         return new Promise(async (resolve) => {
             try {
                 let avatar = "";
-                console.log(group)
-                if (group.isPhotoChange == true) {
+                if (group.isPhotoChange == true && group.emptyphoto=="0") {
 
                     const ref = firebase.storage().ref("/group_photos/" + group.avatarfilename);
                     const unsubscribe = ref.putFile(group.avatarsource.uri.replace("file:/", "")).on(
@@ -194,6 +189,7 @@ export const updateGroup = (group) => dispatch => {
                             await axios.post(settings.baseURL + 'group/updategroup', {
                                 groupname: group.groupname,
                                 owner: userdetails.userid,
+                                emptyphoto: group.emptyphoto,
                                 avatar: avatar,
                                 id: group.groupid,
                             }).then(function (res) {
@@ -215,6 +211,7 @@ export const updateGroup = (group) => dispatch => {
                     await axios.post(settings.baseURL + 'group/updategroup', {
                         groupname: group.groupname,
                         owner: userdetails.userid,
+                        emptyphoto: group.emptyphoto,
                         avatar: group.avatarsource.uri,
                         id: group.groupid,
                     }).then(function (res) {

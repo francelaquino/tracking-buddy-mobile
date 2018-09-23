@@ -52,7 +52,7 @@ class Splash extends Component {
                     alignItems: 'center',
                 }}>
                     <Image style={{ height: 200, marginTop: -150 }} resizeMode='contain' source={require('../../images/logo_splash.png')} />
-                    <Text style={{ fontSize: 15, color: 'white',position:'absolute',bottom:30 }}>Tracking Buddy</Text>
+                    <Text style={{ fontSize: 15, color: 'white',position:'absolute',bottom:30 }}>My GPS Buddy</Text>
 
                 </View>
                

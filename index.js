@@ -1,6 +1,7 @@
 /** @format */
 
 import {name as appName} from './app.json';
+import bgMessaging from './bgMessaging'; 
 import  React  from 'react';
 import { AppRegistry } from 'react-native';
 import { Provider } from 'react-redux';
@@ -18,3 +19,5 @@ const tracking =()=>(
 )
 
 AppRegistry.registerComponent('trackingbuddyv3', () => tracking);
+
+AppRegistry.registerHeadlessTask('RNFirebaseBackgroundMessage', () => bgMessaging); 

@@ -87,7 +87,7 @@ class ForgotPassword extends Component {
                     <View style={registrationStyle.container}>
                         <View style={registrationStyle.logoContainer}>
                         <Image  style={registrationStyle.logo} resizeMode='contain'  source={require('../../images/logo.png')} />
-                        <Text style={{fontSize:22,color:'#303131'}}>Tracking Buddy</Text>
+                        <Text style={{fontSize:22,color:'#303131'}}>My GPS Buddy</Text>
                         
                             </View>
 

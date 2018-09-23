@@ -86,26 +86,34 @@ class AddMember extends Component {
                 data={data}
                 renderItem={({ item,index }) => (
                     <ListItem key={item.uid} avatar style={globalStyle.listItem} >
-                        <Left>
-                            <TouchableOpacity onPress={() => this.addSelectedMember(index)}>
-                                { item.ismember ===1 &&
-                                <Feather  style={{color:'#009da3'}} size={20} name="check-circle" />
-                                }
-                                { item.ismember ===0 &&
-                                <Feather  style={{color:'#009da3'}} size={20} name="circle" />
-                                }
-                                </TouchableOpacity>
+                          <Left style={globalStyle.listLeft}>
+                        <View style={globalStyle.listAvatarContainer} >
+                               
+                               {item.emptyphoto === "1" ? <Ionicons size={46} style={{ color: '#2c3e50' }} name="ios-person" /> :
+                                   <Thumbnail style={globalStyle.listAvatar} source={{ uri: item.avatar }} />
+                               }
+                               </View>
                         
                     </Left>
                     <Body style={globalStyle.listBody} >
                             <Text style={globalStyle.heading1}>{item.firstname}</Text>
                         </Body>
                         <Right style={globalStyle.listRight}>
-                            <TouchableOpacity onPress={() => { this.props.navigation.navigate("InfoMember", { memberuid: item.uid, firstname: item.firstname }) }}>
-                                <SimpleLineIcons style={globalStyle.listRightOptionIcon} name='arrow-right' />
-                            </TouchableOpacity>
+                        <TouchableOpacity style={{position:'absolute',top:10,right:1,width:60,height:30}} onPress={() => this.addSelectedMember(index)}>
+                                { item.ismember ===1 &&
+                                <Feather  style={{color:'#009da3',position:'absolute',top:1,right:1}} size={25} name="check-circle" />
+                                }
+                                { item.ismember ===0 &&
+                                <Feather  style={{color:'#009da3',position:'absolute',top:1,right:1}} size={25} name="circle" />
+                                }
+                                </TouchableOpacity>
+                            
                     </Right>
                   </ListItem>
+
+
+
+
                         ) }
                 />)
     }

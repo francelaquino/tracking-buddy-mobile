@@ -10,9 +10,6 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <permission android:name="com.trackingbuddyv3.permission.C2D_MESSAGE" android:protectionLevel="signature" />
-    <uses-permission android:name="com.trackingbuddyv3.permission.C2D_MESSAGE" />
    
     <application
       android:name=".MainApplication"
@@ -26,6 +23,7 @@
       <meta-data
       android:name="com.google.firebase.messaging.default_notification_icon"
       android:resource="@mipmap/ic_launcher" />
+        
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"
@@ -53,17 +51,7 @@
      <activity
     android:name=".SingleTaskActivity"
     android:label="singleTask launchMode"
-    android:launchMode="singleTop"/>
-      
-     <receiver android:name="io.invertase.firebase.notifications.RNFirebaseBackgroundNotificationActionReceiver" android:exported="true">
-    <intent-filter>
-      <action android:name="io.invertase.firebase.notifications.BackgroundAction"/>
-    </intent-filter>
-  </receiver>
-  <service android:name="io.invertase.firebase.notifications.RNFirebaseBackgroundNotificationActionsService"/>
-
-
-    
+    android:launchMode="singleTask"/>
     </application>
 
 </manifest>

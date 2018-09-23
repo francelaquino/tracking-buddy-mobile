@@ -4,13 +4,14 @@ import android.app.Application;
 import com.transistorsoft.rnbackgroundgeolocation.*;
 import com.transistorsoft.rnbackgroundfetch.RNBackgroundFetchPackage;
 import com.facebook.react.ReactApplication;
-import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
+//import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.messaging.RNFirebaseMessagingPackage; 
 import com.airbnb.android.react.maps.MapsPackage;
 import io.invertase.firebase.storage.RNFirebaseStoragePackage;
 import io.invertase.firebase.database.RNFirebaseDatabasePackage; 
 import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
+import com.imagepicker.ImagePickerPackage;
 import io.invertase.firebase.auth.RNFirebaseAuthPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -31,7 +32,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new ReactNativePushNotificationPackage(),
+            //new ReactNativePushNotificationPackage(),
             new RNFirebasePackage(),
             new MapsPackage(),
 			new RNFirebaseStoragePackage(),
@@ -40,7 +41,8 @@ public class MainApplication extends Application implements ReactApplication {
            new RNBackgroundGeolocation(),
            new RNBackgroundFetchPackage(),
 		   new RNFirebaseMessagingPackage(),
-		    new RNFirebaseNotificationsPackage()
+		    new RNFirebaseNotificationsPackage(),
+        new ImagePickerPackage()
 
       );
     }

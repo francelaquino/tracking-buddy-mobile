@@ -61,12 +61,10 @@ export const userLogin = (email, password) => async dispatch => {
 
                                             },
                                             (err) => {
-                                                console.log(err)
                                             },
                                             { enableHighAccuracy: true, timeout: 10000 }
                                         );
                                     } catch (e) {
-                                        console.log(e)
                                     }
 
                                     resolve(true);
@@ -96,7 +94,6 @@ export const userLogin = (email, password) => async dispatch => {
                         ToastAndroid.showWithGravityAndOffset("Invalid username or bad password", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
                 });
         } catch (e) {
-            console.log(e)
             ToastAndroid.showWithGravityAndOffset("Something went wrong. Please try again.", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
             resolve(false)
         }
@@ -113,7 +110,7 @@ export const updateProfile = (profile) => async dispatch => {
         try {
             let avatar = "";
             
-            if (profile.isPhotoChange == true && profile.emptyphoto=="1") {
+            if (profile.isPhotoChange == true && profile.emptyphoto=="0") {
                 let avatarlink = profile.email + '.jpg';
 
                 const ref = firebase.storage().ref("/member_photos/" + avatarlink);
@@ -127,7 +124,6 @@ export const updateProfile = (profile) => async dispatch => {
                     },
                     async (resUrl) => {
                         avatar = resUrl.downloadURL;
-                        console.log(avatar)
                         await axios.post(settings.baseURL + 'member/updateprofile', {
                             email: profile.email,
                             uid: userdetails.userid,
@@ -141,6 +137,14 @@ export const updateProfile = (profile) => async dispatch => {
                             
                             if (res.data.status == "202") {
                                 resolve(true)
+                                userdetails.avatar=avatar;
+                                userdetails.emptyphoto="0";
+                                userdetails.firstname = profile.firstname;
+                                userdetails.lastname = profile.lastname;
+                                AsyncStorage.setItem("emptyphoto", userdetails.emptyphoto);
+                                AsyncStorage.setItem("avatar", userdetails.avatar);
+                                AsyncStorage.setItem("firstname", userdetails.firstname);
+                                AsyncStorage.setItem("lastname", userdetails.lastname);
                                 ToastAndroid.showWithGravityAndOffset("Profile successfully updated.", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
                             } else {
                                 resolve(false)
@@ -152,7 +156,7 @@ export const updateProfile = (profile) => async dispatch => {
                         });
                     })
             } else {
-                console.log(profile)
+                console.log
                 await axios.post(settings.baseURL + 'member/updateprofile', {
                     email: profile.email,
                     uid: userdetails.userid,
@@ -167,6 +171,14 @@ export const updateProfile = (profile) => async dispatch => {
                     if (res.data.status == "202") {
                         resolve(true)
                         ToastAndroid.showWithGravityAndOffset("Profile successfully updated.", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
+                        userdetails.avatar=res.data.emptyphoto;
+                        userdetails.emptyphoto="1";
+                        userdetails.firstname = profile.firstname;
+                        userdetails.lastname = profile.lastname;
+                        AsyncStorage.setItem("emptyphoto", userdetails.emptyphoto);
+                        AsyncStorage.setItem("avatar", userdetails.avatar);
+                        AsyncStorage.setItem("firstname", userdetails.firstname);
+                        AsyncStorage.setItem("lastname", userdetails.lastname);
                     } else {
                         resolve(false)
                         ToastAndroid.showWithGravityAndOffset("Something went wrong. Please try again.", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
@@ -289,7 +301,6 @@ export const registerUser = (profile) => async dispatch => {
                         dateadded: Moment().format('YYYY-MM-DD HH:mm:ss'),
                         avatar: avatar,
                     }).then(function (res) {
-                        console.log(res)
                         if (res.data.status == "202") {
                             resolve(true)
                             ToastAndroid.showWithGravityAndOffset("Registration successfully completed. A message has been sent to your email with instructions to complete your registration", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
@@ -299,7 +310,6 @@ export const registerUser = (profile) => async dispatch => {
                         }
                         
                     }).catch(function (error) {
-                        console.log(error)
                         resolve(false)
                         ToastAndroid.showWithGravityAndOffset("Something went wrong. Please try again.", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
                     });
@@ -311,7 +321,6 @@ export const registerUser = (profile) => async dispatch => {
 
 
             }).catch(function (e) {
-                console.log(e)
                 if (e.code === 'auth/email-already-in-use') {
                     ToastAndroid.showWithGravityAndOffset("Email aready used", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
                 } else {
@@ -320,7 +329,6 @@ export const registerUser = (profile) => async dispatch => {
                 resolve(false)
             })
         } catch (e) {
-            console.log(e)
             ToastAndroid.showWithGravityAndOffset("Something went wrong. Please try again.", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
             resolve(false)
         };

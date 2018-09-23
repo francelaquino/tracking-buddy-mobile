@@ -39,6 +39,7 @@
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
 		1B4CE59AAA224EED90E84462 /* libAirMaps.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 15B49EF818D14DF0A8559B2D /* libAirMaps.a */; };
 		A7074C1CE1634EDCA357B898 /* libRNFirebase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F51192A8A5548AFAFC033FC /* libRNFirebase.a */; };
+		60B4439503964981BB03B939 /* libRCTOneSignal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D65441C9BCFA4EFB9CB31358 /* libRCTOneSignal.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -348,6 +349,8 @@
 		15B49EF818D14DF0A8559B2D /* libAirMaps.a */ = {isa = PBXFileReference; name = "libAirMaps.a"; path = "libAirMaps.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		B3DC8716AD1D4CC9A2EDB57A /* RNFirebase.xcodeproj */ = {isa = PBXFileReference; name = "RNFirebase.xcodeproj"; path = "../node_modules/react-native-firebase/ios/RNFirebase.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		6F51192A8A5548AFAFC033FC /* libRNFirebase.a */ = {isa = PBXFileReference; name = "libRNFirebase.a"; path = "libRNFirebase.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		B53E89EF05AB43229F0C5DAC /* RCTOneSignal.xcodeproj */ = {isa = PBXFileReference; name = "RCTOneSignal.xcodeproj"; path = "../node_modules/react-native-onesignal/ios/RCTOneSignal.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		D65441C9BCFA4EFB9CB31358 /* libRCTOneSignal.a */ = {isa = PBXFileReference; name = "libRCTOneSignal.a"; path = "libRCTOneSignal.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -378,6 +381,7 @@
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
 				1B4CE59AAA224EED90E84462 /* libAirMaps.a in Frameworks */,
 				A7074C1CE1634EDCA357B898 /* libRNFirebase.a in Frameworks */,
+				60B4439503964981BB03B939 /* libRCTOneSignal.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -566,6 +570,7 @@
 				139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */,
 				774130A114504625B7F0493A /* AirMaps.xcodeproj */,
 				B3DC8716AD1D4CC9A2EDB57A /* RNFirebase.xcodeproj */,
+				B53E89EF05AB43229F0C5DAC /* RCTOneSignal.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1193,11 +1198,13 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)\..\node_modules\react-native-maps\lib\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-firebase\ios\RNFirebase/**",
+					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios/**",
 				);
 			};
 			name = Debug;
@@ -1219,11 +1226,13 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)\..\node_modules\react-native-maps\lib\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-firebase\ios\RNFirebase/**",
+					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios/**",
 				);
 			};
 			name = Release;
@@ -1247,6 +1256,7 @@
 					"$(inherited)",
 					"$(SRCROOT)\..\node_modules\react-native-maps\lib\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-firebase\ios\RNFirebase/**",
+					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios/**",
 				);
 			};
 			name = Debug;
@@ -1269,6 +1279,7 @@
 					"$(inherited)",
 					"$(SRCROOT)\..\node_modules\react-native-maps\lib\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-firebase\ios\RNFirebase/**",
+					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios/**",
 				);
 			};
 			name = Release;
@@ -1299,11 +1310,13 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)\..\node_modules\react-native-maps\lib\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-firebase\ios\RNFirebase/**",
+					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios/**",
 				);
 			};
 			name = Debug;
@@ -1334,11 +1347,13 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)\..\node_modules\react-native-maps\lib\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-firebase\ios\RNFirebase/**",
+					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios/**",
 				);
 			};
 			name = Release;
@@ -1368,11 +1383,13 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)\..\node_modules\react-native-maps\lib\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-firebase\ios\RNFirebase/**",
+					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios/**",
 				);
 			};
 			name = Debug;
@@ -1402,11 +1419,13 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)\..\node_modules\react-native-maps\lib\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-firebase\ios\RNFirebase/**",
+					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios/**",
 				);
 			};
 			name = Release;

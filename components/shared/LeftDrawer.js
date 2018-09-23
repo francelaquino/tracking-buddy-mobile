@@ -59,7 +59,7 @@ class LeftDrawer extends Component<Props> {
             <Content style={{ backgroundColor: 'white', height: '100%' }}>
                 <View style={{ backgroundColor: '#1abc9c',height: 155, borderBottomWidth: 1, borderBottomColor: 'white', alignItems: 'center', flex: 1, marginBottom:20 }} >
                     <Image style={{ height: 100,marginTop:20 }} resizeMode='contain' source={require('../../images/logo_splash.png')} />
-                        <Text style={{width:'100%',fontSize:17,color:'white', textAlign:'center',marginTop:5}}>TRACKING BUDDY</Text>
+                        <Text style={{width:'100%',fontSize:17,color:'white', textAlign:'center',marginTop:5}}>My GPS Buddy</Text>
                         </View>
 
                 <List >

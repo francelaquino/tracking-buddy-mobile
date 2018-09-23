@@ -47,9 +47,9 @@ class EditGroup extends Component {
     }
     removePhoto(){
 		this.setState({
-            avatarsource:{uri:''},
-            isPhotoChange: false,
-            emptyphoto:'1',
+            //avatarsource:{uri:''},
+            isPhotoChange: true,
+            emptyphoto:1,
         });
     }
     
@@ -108,9 +108,6 @@ class EditGroup extends Component {
 
         
     }
-    removePhoto(){
-        this.setState({avatarsource:''})
-    }
     onUpdate(){
         
         if(this.state.groupname==""){
@@ -122,6 +119,7 @@ class EditGroup extends Component {
             groupid: this.state.groupid,
             avatarsource:this.state.avatarsource,
             isPhotoChange:this.state.isPhotoChange,
+            emptyphoto:this.state.emptyphoto,
         }
         this.props.updateGroup(group).then(res => {
             if(res===true){
@@ -174,7 +172,7 @@ class EditGroup extends Component {
 
 
                             <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                                <Button disabled={!this.state.groupname} style={this.state.groupname ? globalStyle.secondaryButton : globalStyle.secondaryButtonDisabled}
+                                <Button style={globalStyle.secondaryButton}
                                     onPress={() => this.onUpdate()}
                                     bordered light full  >
                                     <Text style={{ color: 'white' }}>Update Group</Text>
@@ -207,16 +205,17 @@ class EditGroup extends Component {
                     <Loader loading={this.state.loading} />
 
                     <OfflineNotice />
+                    
                     <Header style={globalStyle.header}>
                         <Left style={globalStyle.headerLeft} >
                             <Button transparent onPress={() => { this.props.navigation.goBack() }} >
                                 <Ionicons size={30} style={{ color: 'white' }} name='ios-arrow-back' />
                             </Button>
                         </Left>
-                        <Body style={globalStyle.headerRight}>
+                        <Body style={globalStyle.headerBody}>
                             <Title>{this.props.navigation.state.params.group.groupname}</Title>
                         </Body>
-                        <Right style={globalStyle.headerLeft}>
+                        <Right style={globalStyle.headerRight}>
                         </Right>
                     </Header>
 

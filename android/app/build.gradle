@@ -146,7 +146,7 @@ dependencies {
 
     implementation project(':react-native-maps')
 
-    //compile project(':react-native-image-picker')
+    implementation project(':react-native-image-picker')
     
     implementation project(':react-native-firebase')
 
@@ -157,13 +157,10 @@ dependencies {
     implementation "com.google.firebase:firebase-auth:11.8.0"
 	implementation "com.google.firebase:firebase-messaging:11.8.0"
 	implementation 'me.leolin:ShortcutBadger:1.1.21@aar' 
-	implementation(project(':react-native-push-notification')) {
-        // don't use dependencies from this project's gradle file, override instead (see below)
-        // reference
-        // https://medium.com/@suchydan/how-to-solve-google-play-services-version-collision-in-gradle-dependencies-ef086ae5c75f
+	/*implementation(project(':react-native-push-notification')) {
         exclude group: 'com.google.android.gms', module: 'play-services-gcm'
         exclude group: 'com.google.firebase', module: 'firebase-messaging'
-    }
+    }*/
 }
 
 // Run this once to be able to run the application with BUCK

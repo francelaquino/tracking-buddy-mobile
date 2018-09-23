@@ -20,10 +20,10 @@ class CreateGroup extends Component {
         this.state = {
             busy:true,
             loading: false,
-            emptyPhoto: 'https://firebasestorage.googleapis.com/v0/b/trackingbuddy-3bebd.appspot.com/o/group_photos%2Fgroup.png?alt=media&token=d1bade4b-6fee-43f7-829a-0b6f76005b40',
             groupname: '',
             avatarsource: '',
             avatar: '',
+            emptyphoto:'1',
         };
     }
 
@@ -32,7 +32,7 @@ class CreateGroup extends Component {
 	
 	
 	removePhoto(){
-		this.setState({avatarsource:''});
+		this.setState({emptyphoto:'1'});
 	}
 
     selectPhoto() {
@@ -46,7 +46,6 @@ class CreateGroup extends Component {
         };
 
         ImagePicker.showImagePicker(options, (response) => {
-            console.log(response)
             if (response.didCancel) {
             }
             else if (response.error) {
@@ -57,7 +56,8 @@ class CreateGroup extends Component {
                 let source = { uri: response.uri };
 
                 this.setState({
-                    avatarsource: source
+                    avatarsource: source,
+                    emptyphoto:'0'
                 });
             }
         });
@@ -74,7 +74,7 @@ class CreateGroup extends Component {
             return false;
         }
         this.setState({ loading: true })
-        this.props.createGroup(this.state.groupname, this.state.avatarsource).then(res => {
+        this.props.createGroup(this.state.groupname, this.state.avatarsource,this.state.emptyphoto).then(res => {
            
             if (res == true) {
                 this.removePhoto();
@@ -105,13 +105,13 @@ class CreateGroup extends Component {
                                 <TouchableOpacity style={{ marginTop: 20 }} onPress={this.selectPhoto.bind(this)}>
                             <View style={globalStyle.avatarContainer}>
 
-                                {this.state.avatarsource === '' ? <Ionicons size={75} style={{ color: '#2c3e50' }} name="ios-people" />  :
+                                {this.state.emptyphoto === '1' ? <Ionicons size={75} style={{ color: '#2c3e50' }} name="ios-people" />  :
                                             <Image style={globalStyle.avatarBig} source={this.state.avatarsource} />
                                         }
 
                                     </View>
                                 </TouchableOpacity>
-                                {this.state.avatarsource != '' &&
+                                {this.state.emptyphoto === '0' &&
                                     <TouchableOpacity onPress={this.removePhoto.bind(this)}>
                                         <Text style={globalStyle.deleteButtonSmall} >Remove Photo</Text>
                                     </TouchableOpacity>
@@ -128,7 +128,7 @@ class CreateGroup extends Component {
 
 
                                 <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                                    <Button disabled={!this.state.groupname} style={this.state.groupname ? globalStyle.secondaryButton : globalStyle.secondaryButtonDisabled}
+                                    <Button style={globalStyle.secondaryButton}
                                         onPress={() => this.onSubmit()}
                                         bordered light full  >
                                         <Text style={{ color: 'white' }}>Save</Text>
