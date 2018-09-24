@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { Clipboard, Platform, StyleSheet, Text, View, ScrollView, TextInput, TouchableOpacity, ToastAndroid, Share } from 'react-native';
+import { StatusBar, Clipboard, Platform, StyleSheet, Text, View, ScrollView, TextInput, TouchableOpacity, ToastAndroid, Share } from 'react-native';
 import { Root, Container, Header, Body, Title, Item, Input, Label, Button, Icon, Left, Right, Content } from 'native-base';
 import Loading  from '../shared/Loading';
 import { connect } from 'react-redux';
@@ -115,6 +115,7 @@ class GenerateInviteCode extends Component {
                 <Container style={globalStyle.containerWrapper}>
 
                     <Header style={globalStyle.header}>
+                        <StatusBar backgroundColor="#149279" />
                         <Left style={globalStyle.headerLeft} >
                             <Button transparent onPress={() => { this.props.navigation.goBack() }} >
                                 <Ionicons size={30} style={{ color: 'white' }} name='ios-arrow-back' />

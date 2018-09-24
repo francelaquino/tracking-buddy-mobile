@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import {  Platform,  StyleSheet,  Text,  View, ScrollView,TextInput, TouchableOpacity, ToastAndroid, Image, Alert,RefreshControl, FlatList } from 'react-native';
+import {  StatusBar, Platform,  StyleSheet,  Text,  View, ScrollView,TextInput, TouchableOpacity, ToastAndroid, Image, Alert,RefreshControl, FlatList } from 'react-native';
 import { Root, Container, Header, Body, Title, Item, Input, Label, Button, Icon, Content, List, ListItem,Left, Right,CheckBox, Thumbnail, CardItem, Card } from 'native-base';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -149,6 +149,7 @@ class AddMember extends Component {
                 <Container style={globalStyle.containerWrapper}>
                     <OfflineNotice />
                     <Header style={globalStyle.header}>
+                        <StatusBar backgroundColor="#149279" />
                         <Left style={globalStyle.headerLeft} >
                             <Button transparent onPress={() => { this.props.navigation.goBack() }} >
                                 <Ionicons size={30} style={{ color: 'white' }} name='ios-arrow-back' />

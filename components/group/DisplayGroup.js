@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { TouchableOpacity,Modal, Platform,  StyleSheet,  Text,  View, ScrollView,TextInput, ToastAndroid, Image  } from 'react-native';
+import { StatusBar, TouchableOpacity,Modal, Platform,  StyleSheet,  Text,  View, ScrollView,TextInput, ToastAndroid, Image  } from 'react-native';
 import { Badge,Root, Container, Header, Body, Title, Item, Input, Label, Button, Icon, Content, List, ListItem,Left, Right,Switch,Thumbnail, Card,CardItem } from 'native-base';
 import { connect } from 'react-redux';
 import { displayGroup  } from '../../redux/actions/groupActions' ;
@@ -116,6 +116,7 @@ class DisplayGroup extends Component {
                 <Container style={globalStyle.containerWrapper}>
                     <OfflineNotice />
                     <Header style={globalStyle.header}>
+                        <StatusBar backgroundColor="#149279" />
                         <Left style={globalStyle.headerLeft} >
                             <Button transparent onPress={() => { this.props.navigation.goBack() }} >
                                 <Ionicons size={30} style={{ color: 'white' }} name='ios-arrow-back' />

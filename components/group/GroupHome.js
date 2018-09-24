@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import {  Platform,  StyleSheet,  Text,  View, ScrollView,TextInput, TouchableOpacity, ToastAndroid } from 'react-native';
+import {  StatusBar, Platform,  StyleSheet,  Text,  View, ScrollView,TextInput, TouchableOpacity, ToastAndroid } from 'react-native';
 import { Content,Root, Container, Header, Body, Title, Item, Input, Label, Button, Icon, Left, Right,Tabs, Tab, TabHeading } from 'native-base';
 import EditGroup from '../group/EditGroup';
 import AddMember from '../group/AddMember';
@@ -39,6 +39,7 @@ class GroupHome extends Component {
                 <Container style={globalStyle.containerWrapper}>
                 <OfflineNotice/>
                     <Header hasTabs style={globalStyle.header}>
+                        <StatusBar backgroundColor="#149279" />
                         <Left style={globalStyle.headerLeft} >
                             <Button transparent onPress={()=> {this.props.navigation.goBack()}} >
                                 <Icon size={30} name='arrow-back' />

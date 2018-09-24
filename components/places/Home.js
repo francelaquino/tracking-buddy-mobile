@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { AppState, Modal, BackHandler, AsyncStorage, NetInfo, TouchableOpacity, Platform, StyleSheet, Text, View, ScrollView, TextInput, ToastAndroid, Image, Dimensions, FlatList } from 'react-native';
+import { StatusBar , AppState, Modal, BackHandler, AsyncStorage, NetInfo, TouchableOpacity, Platform, StyleSheet, Text, View, ScrollView, TextInput, ToastAndroid, Image, Dimensions, FlatList } from 'react-native';
 import { Fab , Root, Container, Header, Body, Title, Item, Input, Label, Button, Icon, Content, List, ListItem,Left, Right,Switch, Thumbnail,Card,CardItem } from 'native-base';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -21,7 +21,6 @@ import firebase from 'react-native-firebase';
 import type {  RemoteMessage } from 'react-native-firebase';
 var settings = require('../../components/shared/Settings');
 var screenHeight = Dimensions.get('window').height; 
-//var PushNotification = require('react-native-push-notification');
 
 
 var globalStyle = require('../../assets/style/GlobalStyle');
@@ -70,15 +69,17 @@ class HomePlaces extends Component {
        
         let self = this;
        
-      /*  BackgroundGeolocation.on('http', function(response) {
+        BackgroundGeolocation.on('http', function(response) {
             var status = response.status;
             var success = response.success;
             var responseText = response.responseText;
+            console.log(responseText)
           }, function(response) {
             var success = response.success;
             var status = response.status;
-            var responseText = response.responseText;
-            });*/
+              var responseText = response.responseText;
+              console.log(responseText)
+            });
 
         BackgroundGeolocation.on('heartbeat', function () {
             firebase.messaging().getToken()
@@ -152,82 +153,38 @@ class HomePlaces extends Component {
             .then(fcmToken => {
                 userdetails.fcmtoken = fcmToken;
                 console.log(fcmToken)
-              
-            
             });
             
 
-            firebase.messaging().onMessage((message) => console.log('message', message));
 
         AppState.addEventListener('change',this.haddleAppStateChange);
-      /*  firebase.messaging().onMessage((message: RemoteMessage) => {
-            console.log("message")
-            
-        });
-*/
-       
 
-      /*  PushNotification.cancelAllLocalNotifications();
-                PushNotification.localNotificationSchedule({
-                    //... You can use all the options from localNotifications
-                    message: "My Notification Message PushNotification", // (required)
-                    number: 99,
-                    playSound: true,
-                    popInitialNotification: true,
-                    requestPermissions: true,
-                    'content-available': 1,
-                    date: new Date(Date.now() + (10 * 1000)) // in 60 secs
-                  });
-               
-        */
-      
-           
-     /*  setTimeout(() => {
+        firebase.messaging().onMessage((notification: RemoteMessage) => {
             const channel = new firebase.notifications.Android.Channel('My GPS Buddy', 'My GPS Buddy', firebase.notifications.Android.Importance.Max)
                 .setDescription('My GPS Buddy');
 
             firebase.notifications().android.createChannel(channel);
 
             const notificationMessage = new firebase.notifications.Notification()
-                .setNotificationId("notification._notificationId")
-                .setTitle("notification._title firebase")
+                .setNotificationId(notification._messageId)
+                .setTitle(notification._data.title)
+                .setBody(notification._data.body)
                 .android.setPriority(firebase.notifications.Android.Priority.Max)
-                .android.setChannelId('My GPS Buddy')
-                .setData({
-                    key1: 'value1',
-                    key2: 'value2',
-                });
-
-            firebase.notifications().displayNotification(notificationMessage);
-        }, 10000);*/
-/*
-       
-
-        
-        this.notificationListener = firebase.notifications().onNotification((notification: Notification) => {
-
-
-            const channel = new firebase.notifications.Android.Channel('My GPS Buddy', 'My GPS Buddy', firebase.notifications.Android.Importance.Max)
-                .setDescription('My GPS Buddy');
-
-            firebase.notifications().android.createChannel(channel);
-
-            const notificationMessage = new firebase.notifications.Notification()
-                .setNotificationId(notification._notificationId)
-                .setTitle(notification._title)
                 .android.setChannelId('My GPS Buddy');
 
             firebase.notifications().displayNotification(notificationMessage);
+            
+        });
 
-
-        });*/
+       
+      
+           
     }
 
     componentWillUnmount() {
         AppState.removeEventListener('change',this.haddleAppStateChange);
         BackgroundGeolocation.removeListeners();
-        //this.notificationListener();
-        this.messageListener();
+       
     }
     
 
@@ -428,13 +385,16 @@ class HomePlaces extends Component {
        
 
         return (
-                <Root>
+
+            <Root>
                     <Loader loading={this.state.isLoading} />
                     <OfflineNotice />
                     <Container style={globalStyle.containerWrapper}>
 
-
-                        <Header style={globalStyle.header}>
+                   
+                       
+                    <Header style={globalStyle.header}>
+                        <StatusBar backgroundColor="#149279" />
                             <Left style={globalStyle.headerLeft} >
                             <Button transparent onPress={() => this.props.navigation.navigate('Menu')} >
                                     <SimpleLineIcons size={20} name='menu' style={globalStyle.headerLeftMenuIcon} />
@@ -552,8 +512,7 @@ class HomePlaces extends Component {
 
 
     render() {
-        return this.ready();
-
+                return this.ready()
 
     }
 }

@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import {  Platform,  StyleSheet,  Text,  View, ScrollView,TextInput, TouchableOpacity, ToastAndroid } from 'react-native';
+import {  StatusBar, Platform,  StyleSheet,  Text,  View, ScrollView,TextInput, TouchableOpacity, ToastAndroid } from 'react-native';
 import { Root, Container, Header, Body, Title, Item, Input, Label, Button, Icon, Content, List, ListItem,Left, Right,Switch, Separator } from 'native-base';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { connect } from 'react-redux';
@@ -41,6 +41,7 @@ class MembersGroup extends Component {
                 <Container style={globalStyle.containerWrapper}>
                 <OfflineNotice/>
                     <Header style={globalStyle.header}>
+                        <StatusBar backgroundColor="#149279" />
                         <Left style={globalStyle.headerMenu} >
                             <Button transparent onPress={()=> {this.props.navigation.goBack()}}>
                                 <Icon size={30} name='arrow-back' />

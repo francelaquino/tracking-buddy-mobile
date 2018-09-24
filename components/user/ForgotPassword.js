@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { NetInfo, Platform, StyleSheet, Text, View, ScrollView, TextInput, TouchableOpacity, Image, ToastAndroid, NavigationActions } from 'react-native';
+import { StatusBar, NetInfo, Platform, StyleSheet, Text, View, ScrollView, TextInput, TouchableOpacity, Image, ToastAndroid, NavigationActions } from 'react-native';
 import { Root, Container, Header, Body, Title, Item, Input, Label, Button, Icon, Left, Right, Content } from 'native-base';
 //import firebase from 'react-native-firebase';
 import Loader from '../shared/Loader';
@@ -66,6 +66,7 @@ class ForgotPassword extends Component {
           	<Loader loading={this.state.loading} />
                 <OfflineNotice />
                 <Header style={globalStyle.header}>
+                    <StatusBar backgroundColor="#149279" />
                     <Left style={globalStyle.headerLeft} >
                         <Button transparent onPress={() => { this.props.navigation.goBack() }} >
                             <Ionicons size={30} style={{ color: 'white' }} name='ios-arrow-back' />

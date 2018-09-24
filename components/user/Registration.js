@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Platform, StyleSheet, View, TextInput, TouchableOpacity, ScrollView, Picker, Alert, ToastAndroid, Form, Image } from 'react-native';
+import { StatusBar, Platform, StyleSheet, View, TextInput, TouchableOpacity, ScrollView, Picker, Alert, ToastAndroid, Form, Image } from 'react-native';
 import { Root, Container, Header, Body, Title, Item, Input, Label, Button, Text, Icon, Content, Left, Right } from 'native-base';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -170,10 +170,12 @@ class Register extends Component {
 		const { navigate } = this.props.navigation;
 	  return (
 			<Root>
+
               <Container style={globalStyle.containerWrapper} >
       <Loader loading={this.state.loading} />
                   <OfflineNotice />
                   <Header style={globalStyle.header}>
+                      <StatusBar backgroundColor="#16a085" />
                       <Left style={globalStyle.headerLeft} >
                           <Button transparent onPress={() => { this.props.navigation.goBack() }} >
                               <Ionicons size={30} style={{ color: 'white' }} name='ios-arrow-back' />

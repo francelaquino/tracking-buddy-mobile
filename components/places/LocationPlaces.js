@@ -1,6 +1,6 @@
 ﻿
 import React, { Component } from 'react';
-import { TouchableOpacity, Platform, StyleSheet, Text, View, ScrollView, TextInput, ToastAndroid, Image, FlatList, Dimensions, Animated } from 'react-native';
+import { StatusBar, TouchableOpacity, Platform, StyleSheet, Text, View, ScrollView, TextInput, ToastAndroid, Image, FlatList, Dimensions, Animated } from 'react-native';
 import { Separator, Root, Container, Header, Body, Title, Item, Input, Label, Button, Icon, Content, List, Left, Right, ListItem, Footer, FooterTab, Segment } from 'native-base';
 import { connect } from 'react-redux';
 import DatePicker from 'react-native-datepicker'
@@ -504,6 +504,7 @@ class LocationPlaces extends Component {
                     <OfflineNotice />
                     <Loader loading={this.state.busy} />
                     <Header style={globalStyle.header} hasSegment>
+                        <StatusBar backgroundColor="#149279" />
                         <Left style={globalStyle.headerLeft} >
                             <Button transparent onPress={() => { this.goBack(); }} >
                                 <Ionicons size={30} style={{ color: 'white' }} name='ios-arrow-back' />
