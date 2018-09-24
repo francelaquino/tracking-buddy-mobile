@@ -29,6 +29,22 @@ export const clearHomeMembers=()=> dispatch=> {
 
 
 
+export const updateToken = () =>  dispatch => {
+
+             axios.post(settings.baseURL + 'member/updateToken', {
+                 fcmtoken: userdetails.fcmtoken,
+                userid: userdetails.userid,
+            }).then(function (res) {
+                console.log(res)
+                }).catch(function (error) {
+                    console.log(error)
+            });
+
+
+       
+
+};
+
 export const generateInvitationCode = () => async dispatch => {
     return new Promise(async (resolve) => {
         try {

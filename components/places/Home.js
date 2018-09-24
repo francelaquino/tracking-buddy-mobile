@@ -14,7 +14,7 @@ import Loader  from '../shared/Loader';
 import OfflineNotice  from '../shared/OfflineNotice';
 import { connect } from 'react-redux';
 import Moment from 'moment';
-import { displayHomeMember, displayMember } from '../../redux/actions/memberActions';
+import { displayHomeMember, displayMember, updateToken } from '../../redux/actions/memberActions';
 import {  getAddress } from '../../redux/actions/locationActions';
 import BackgroundGeolocation from "react-native-background-geolocation";
 import firebase from 'react-native-firebase';
@@ -73,23 +73,24 @@ class HomePlaces extends Component {
             var status = response.status;
             var success = response.success;
             var responseText = response.responseText;
-            console.log(responseText)
+            console.log(response)
           }, function(response) {
             var success = response.success;
             var status = response.status;
               var responseText = response.responseText;
-              console.log(responseText)
+              console.log(response)
             });
 
         BackgroundGeolocation.on('heartbeat', function () {
             firebase.messaging().getToken()
                 .then(fcmToken => {
                     userdetails.fcmtoken = fcmToken;
+                    self.props.updateToken();
                 });
         });
        
 
-        BackgroundGeolocation.ready({
+        BackgroundGeolocation.configure({
             locationAuthorizationAlert: {
                 titleWhenNotEnabled: "Location services not enabled",
                 titleWhenOff: "Location services is off",
@@ -124,7 +125,8 @@ class HomePlaces extends Component {
                 BackgroundGeolocation.start(function () {
                 });
             }
-        }).catch(error => {
+            }).catch(error => {
+                console.log(error)
         });
 
         
@@ -137,7 +139,6 @@ class HomePlaces extends Component {
         }, { samples: 1, persist: true,desiredAccuracy: 10,timeout: 30 });
 
         this.initialize();
-
         
        
     }
@@ -147,12 +148,14 @@ class HomePlaces extends Component {
         
     }
     componentDidMount() {
+        let self = this;
         firebase.messaging().requestPermission();
 
         firebase.messaging().getToken()
             .then(fcmToken => {
                 userdetails.fcmtoken = fcmToken;
-                console.log(fcmToken)
+                self.props.updateToken();
+
             });
             
 
@@ -595,6 +598,6 @@ const mapStateToProps = state => ({
   
   
   
-HomePlaces = connect(mapStateToProps, { displayHomeMember, displayMember, getAddress})(HomePlaces);
+HomePlaces = connect(mapStateToProps, { displayHomeMember, displayMember, getAddress, updateToken})(HomePlaces);
   
 export default HomePlaces;
