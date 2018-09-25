@@ -1,19 +1,16 @@
 {
   "ExpandedNodes": [
     "",
-    "\\android",
-    "\\android\\app",
-    "\\android\\app\\src",
-    "\\android\\app\\src\\main",
-    "\\android\\app\\src\\main\\java",
-    "\\android\\app\\src\\main\\java\\com",
-    "\\android\\app\\src\\main\\java\\com\\trackingbuddyv3",
-    "\\android\\app\\src\\main\\res",
-    "\\android\\app\\src\\main\\res\\values",
-    "\\android\\gradle",
-    "\\android\\gradle\\wrapper",
+    "\\assets",
+    "\\assets\\style",
     "\\components",
-    "\\components\\user"
+    "\\components\\group",
+    "\\components\\member",
+    "\\components\\places",
+    "\\components\\shared",
+    "\\components\\user",
+    "\\redux",
+    "\\redux\\actions"
   ],
   "SelectedNode": "\\components\\places\\Home.js",
   "PreviewInSolutionExplorer": false

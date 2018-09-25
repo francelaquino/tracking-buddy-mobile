@@ -69,7 +69,7 @@ class HomePlaces extends Component {
        
         let self = this;
        
-        BackgroundGeolocation.on('http', function(response) {
+      /*  BackgroundGeolocation.on('http', function(response) {
             var status = response.status;
             var success = response.success;
             var responseText = response.responseText;
@@ -80,7 +80,7 @@ class HomePlaces extends Component {
               var responseText = response.responseText;
               console.log(response)
             });
-
+            */
         BackgroundGeolocation.on('heartbeat', function () {
             firebase.messaging().getToken()
                 .then(fcmToken => {
@@ -89,7 +89,6 @@ class HomePlaces extends Component {
                 });
         });
        
-
         BackgroundGeolocation.configure({
             locationAuthorizationAlert: {
                 titleWhenNotEnabled: "Location services not enabled",
@@ -101,10 +100,10 @@ class HomePlaces extends Component {
             stopTimeout: 1,
             logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
             debug: true,
-            desiredAccuracy: 10,
+            desiredAccuracy: 0,
             distanceFilter: 1,
             allowIdenticalLocations :false,
-            maxDaysToPersist: 1,
+            maxDaysToPersist: 3,
             heartbeatInterval:120,
             foregroundService: true,
             notificationTitle: 'My GPS Buddy',
