@@ -156,7 +156,6 @@ export const updateProfile = (profile) => async dispatch => {
                         });
                     })
             } else {
-                console.log
                 await axios.post(settings.baseURL + 'member/updateprofile', {
                     email: profile.email,
                     uid: userdetails.userid,

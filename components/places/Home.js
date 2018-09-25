@@ -18,7 +18,7 @@ import { displayHomeMember, displayMember, updateToken } from '../../redux/actio
 import {  getAddress } from '../../redux/actions/locationActions';
 import BackgroundGeolocation from "react-native-background-geolocation";
 import firebase from 'react-native-firebase';
-import type {  RemoteMessage } from 'react-native-firebase';
+import type {  RemoteMessage, Notification, NotificationOpen } from 'react-native-firebase';
 var settings = require('../../components/shared/Settings');
 var screenHeight = Dimensions.get('window').height; 
 
@@ -125,7 +125,6 @@ class HomePlaces extends Component {
                 });
             }
             }).catch(error => {
-                console.log(error)
         });
 
         
@@ -146,7 +145,7 @@ class HomePlaces extends Component {
         this.setState({appState: nextAppState});
         
     }
-    componentDidMount() {
+    async componentDidMount() {
         let self = this;
         firebase.messaging().requestPermission();
 
@@ -154,6 +153,7 @@ class HomePlaces extends Component {
             .then(fcmToken => {
                 userdetails.fcmtoken = fcmToken;
                 self.props.updateToken();
+                console.log(fcmToken)
 
             });
             
@@ -178,6 +178,20 @@ class HomePlaces extends Component {
             
         });
 
+        this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen: NotificationOpen) => {
+            this.props.navigation.navigate("PlaceNotifications");
+        });
+
+        firebase.notifications().getInitialNotification()
+            .then((notificationOpen: NotificationOpen) => {
+                if (notificationOpen) {
+
+                    this.props.navigation.navigate("PlaceNotifications");
+                }
+            });
+
+       
+
        
       
            
@@ -186,6 +200,7 @@ class HomePlaces extends Component {
     componentWillUnmount() {
         AppState.removeEventListener('change',this.haddleAppStateChange);
         BackgroundGeolocation.removeListeners();
+        this.notificationOpenedListener();
        
     }
     

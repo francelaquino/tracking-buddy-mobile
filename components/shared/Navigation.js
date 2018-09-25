@@ -30,6 +30,7 @@ import LocationView from '../places/LocationView';
 import PlaceAlert from '../places/PlaceAlert';
 import HomeSettings from '../settings/HomeSettings';
 import ChangePassword from '../user/ChangePassword';
+import PlaceNotifications from '../places/PlaceNotifications';
 import Menu from '../shared/Menu';
 import Splash from './Splash';
 
@@ -46,6 +47,18 @@ export const Stack = createStackNavigator({
         },
 
     },
+
+    PlaceNotifications: {
+        screen: PlaceNotifications,
+        headerMode: 'none',
+        navigationOptions: {
+            header: null
+        },
+
+    },
+
+
+    
 
     Home: {
         screen: Home,

@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import {  Platform,  StyleSheet,  Text,  View, ScrollView,TextInput, TouchableOpacity, ToastAndroid } from 'react-native';
+import {  StatusBar, Platform,  StyleSheet,  Text,  View, ScrollView,TextInput, TouchableOpacity, ToastAndroid } from 'react-native';
 import { Content,Root, Container, Header, Body, Title, Item, Input, Label, Button, Icon, Left, Right } from 'native-base';
 import EditGroup from '../group/EditGroup';
 import AddMember from '../group/AddMember';

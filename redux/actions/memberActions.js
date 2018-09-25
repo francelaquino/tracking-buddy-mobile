@@ -35,9 +35,7 @@ export const updateToken = () =>  dispatch => {
                  fcmtoken: userdetails.fcmtoken,
                 userid: userdetails.userid,
             }).then(function (res) {
-                console.log(res)
                 }).catch(function (error) {
-                    console.log(error)
             });
 
 

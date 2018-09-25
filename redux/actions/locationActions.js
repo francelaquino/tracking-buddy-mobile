@@ -1,4 +1,4 @@
-import { DISPLAY_LOCATION_TRACK, DISPLAY_LOCATION, DISPLAY_LOCATION_MAP, DISPLAY_LOCATION_LIST, GET_LOCATIONDETAILS, SAVE_LOCATION_OFFLINE, SAVE_LOCATION_ONLINE, DISPLAY_PLACES,GET_PLACE_ALERT } from './types';
+import { DISPLAY_MESSAGES, DISPLAY_LOCATION_TRACK, DISPLAY_LOCATION, DISPLAY_LOCATION_MAP, DISPLAY_LOCATION_LIST, GET_LOCATIONDETAILS, SAVE_LOCATION_OFFLINE, SAVE_LOCATION_ONLINE, DISPLAY_PLACES,GET_PLACE_ALERT } from './types';
 import Moment from 'moment';
 import { ToastAndroid,AsyncStorage } from 'react-native';
 import axios from 'axios';
@@ -75,6 +75,53 @@ export const getAddress = (coords) => async dispatch => {
 
     } catch (e) {
     }
+};
+
+
+export const displayMessages = () => async dispatch => {
+
+    return new Promise(async (resolve) => {
+        try {
+            await axios.get(settings.baseURL + 'place/getmembernotification')
+                .then(function (res) {
+                    if (res.data.status == "202") {
+                        dispatch({
+                            type: DISPLAY_MESSAGES,
+                            payload: res.data.results
+                        });
+                        resolve(true)
+                    } else {
+                        dispatch({
+                            type: DISPLAY_MESSAGES,
+                            payload: []
+                        });
+                        resolve(false)
+                        ToastAndroid.showWithGravityAndOffset("Something went wrong. Please try again.", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
+                    }
+                }).catch(function (error) {
+
+                    dispatch({
+                        type: DISPLAY_MESSAGES,
+                        payload: []
+                    });
+                    resolve(false)
+                    ToastAndroid.showWithGravityAndOffset("Something went wrong. Please try again.", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
+                });
+
+        } catch (e) {
+
+            dispatch({
+                type: DISPLAY_MESSAGES,
+                payload: []
+            });
+            resolve(false)
+            ToastAndroid.showWithGravityAndOffset("Something went wrong. Please try again.", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
+        }
+    });
+
+
+
+
 };
 
 

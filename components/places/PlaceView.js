@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { TouchableOpacity, Platform, StyleSheet, Text, View, ScrollView, TextInput, ToastAndroid, Image, Dimensions, Alert } from 'react-native';
+import { StatusBar, TouchableOpacity, Platform, StyleSheet, Text, View, ScrollView, TextInput, ToastAndroid, Image, Dimensions, Alert } from 'react-native';
 import { Root, Container, Header, Body, Title, Item, Input, Label, Button, Icon, Content, List, ListItem, Left, Right, Thumbnail, Switch, Separator } from 'native-base';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -166,6 +166,7 @@ class PlaceView extends Component {
                     <OfflineNotice />
 
                     <Header style={globalStyle.header}>
+                        <StatusBar backgroundColor="#149279" />
                         <Left style={globalStyle.headerLeft} >
                             <Button transparent onPress={() => { this.props.navigation.goBack() }} >
                                 <Ionicons size={30} style={{ color: 'white' }} name='ios-arrow-back' />
