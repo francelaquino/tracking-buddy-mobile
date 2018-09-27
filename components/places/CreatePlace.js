@@ -14,6 +14,7 @@ import Loading  from '../shared/Loading';
 import Loader from '../shared/Loader';
 import OfflineNotice from '../shared/OfflineNotice';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import Slider from "react-native-slider";
 const LATITUDE_DELTA = 0.00522;
 const LONGITUDE_DELTA = Dimensions.get("window").width / Dimensions.get("window").height * LATITUDE_DELTA;
 
@@ -30,7 +31,8 @@ class CreatePlace extends Component {
         this.map = null;
         this.state = {
             loading: false,
-            modalVisible:false,
+            modalVisible: false,
+            raduis:100,
             placename: '',
             address: '',
             region: {
@@ -176,14 +178,26 @@ class CreatePlace extends Component {
         
 
     }
+    onRegionChange(region) {
+        console.log(region)
+            this.setState({ region });
+    }
+
     ready(){
 
         //const { region } = this.state;
 
         return (
                     <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps={"always"}>
-                        <View style={styles.mainContainer}>
-                            <View style={styles.searchContainer}>
+                <View style={styles.mainContainer}>
+                   
+                    <View style={styles.searchContainer}>
+                        <View style={{ width: '100%', height:200,backgroundColor:'red' }}>
+                            <Slider
+                                value={this.state.raduis}
+
+                            />
+                            </View>
                                 <GooglePlacesAutocomplete
                                     ref={c => this.googlePlacesAutocomplete = c}
 
@@ -253,10 +267,22 @@ class CreatePlace extends Component {
                                     scrollEnabled={true}
                                     style={StyleSheet.absoluteFill}
                                     textStyle={{ color: '#bc8b00' }}
-                                    loadingEnabled={true}
+                            loadingEnabled={true}
+                            onRegionChangeComplete={region => this.setState({ region })}
                                     showsMyLocationButton={true}
-                                   >
-
+                        >
+                            <MapView.Circle
+                                fillColor={'rgba(66, 140, 40, 0.5)'}
+                                strokeColor={'rgba(66, 140, 40, 0.9)'}
+                                
+                                center={this.state.region}
+                                transparent
+                                radius={this.state.radius/2} />
+                            <MapView.Circle
+                                strokeColor={'rgba(66, 140, 40, 0.9)'}
+                                fillColor={'rgba(250, 251, 250, 0.5)'}
+                                center={this.state.region}
+                                radius={2} />
                                 </MapView>
                                 
                                
@@ -272,8 +298,8 @@ class CreatePlace extends Component {
 
                                         </View>
                                     </TouchableOpacity>
-                                    <Image style={globalStyle.marker}
-                                        source={require('../../images/placemarker.png')} />
+
+                            
                                 </View>
                                     
                                     
