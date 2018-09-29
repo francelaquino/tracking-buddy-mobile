@@ -12,6 +12,8 @@ import axios from 'axios';
 import MapView, { ProviderPropType, Marker, AnimatedRegion, Animated, Polyline } from 'react-native-maps';
 import Loading  from '../shared/Loading';
 import Loader from '../shared/Loader';
+import { savePlace, displayPlaces } from '../../redux/actions/locationActions';
+import { connect } from 'react-redux';
 import OfflineNotice from '../shared/OfflineNotice';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import Slider from "react-native-slider";
@@ -32,7 +34,7 @@ class CreatePlace extends Component {
         this.state = {
             loading: false,
             modalVisible: false,
-            raduis:100,
+            radius:200,
             placename: '',
             address: '',
             region: {
@@ -152,9 +154,30 @@ class CreatePlace extends Component {
         
          
     }
+
+    onSubmit() {
+        
+        if (this.state.placename == "") {
+            ToastAndroid.showWithGravityAndOffset("Please enter place name", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
+            return false;
+        }
+        
+        this.setState({ loading: true })
+        this.props.savePlace(this.state.placename, this.state.address, this.state.region,this.state.radius).then(res => {
+            this.setState({ loading: false })
+            if (res == true) {
+                this.setState({ placename: ''})
+                this.props.displayPlaces();
+                this.props.navigation.pop(1);
+            }
+
+        });
+    }
+   
     onRegionChangeComplete = region => {
         let self = this;
-        axios.get("http://maps.googleapis.com/maps/api/geocode/json?latlng=" + region.latitude + "," + region.longitude + "&sensor=false&key=AIzaSyCHZ-obEHL8TTP4_8vPfQKAyzvRrrlmi5Q")
+       
+        axios.get("https://maps.googleapis.com/maps/api/geocode/json?latlng=" + region.latitude + "," + region.longitude + "&sensor=false&key=AIzaSyCHZ-obEHL8TTP4_8vPfQKAyzvRrrlmi5Q")
             .then(async function (res) {
                 if (res.data.results.length > 0) {
                     self.setState({
@@ -192,12 +215,7 @@ class CreatePlace extends Component {
                 <View style={styles.mainContainer}>
                    
                     <View style={styles.searchContainer}>
-                        <View style={{ width: '100%', height:200,backgroundColor:'red' }}>
-                            <Slider
-                                value={this.state.raduis}
-
-                            />
-                            </View>
+                        
                                 <GooglePlacesAutocomplete
                                     ref={c => this.googlePlacesAutocomplete = c}
 
@@ -258,8 +276,6 @@ class CreatePlace extends Component {
                                 
                             </View>
                             <View style={styles.mapContainer}>
-                                <Image style={globalStyle.marker}
-                                    source={require('../../images/placemarker.png')} />
                                 <MapView ref={map => { this.map = map }}
                                     zoomEnabled={true}
                                     onLayout={() => this.fitToMap()}
@@ -268,42 +284,61 @@ class CreatePlace extends Component {
                                     style={StyleSheet.absoluteFill}
                                     textStyle={{ color: '#bc8b00' }}
                             loadingEnabled={true}
-                            onRegionChangeComplete={region => this.setState({ region })}
+                            
                                     showsMyLocationButton={true}
                         >
                             <MapView.Circle
-                                fillColor={'rgba(66, 140, 40, 0.5)'}
-                                strokeColor={'rgba(66, 140, 40, 0.9)'}
+                                fillColor={'rgba(152, 37, 14, 0.5)'}
+                                strokeColor={'rgba(105,29,14, 0.9)'}
                                 
                                 center={this.state.region}
-                                transparent
                                 radius={this.state.radius/2} />
                             <MapView.Circle
                                 strokeColor={'rgba(66, 140, 40, 0.9)'}
-                                fillColor={'rgba(250, 251, 250, 0.5)'}
+                                strokeColor={'rgba(105,29,14, 0.9)'}
+                                fillColor={'rgba(152, 37, 14, 0.5)'}
                                 center={this.state.region}
-                                radius={2} />
+                                radius={5} />
                                 </MapView>
                                 
                                
-                                <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: -150 }}>
-                                    <TouchableOpacity onPress={() => this.props.navigation.navigate("SavePlace", { region: this.state.region, address: this.state.address })}>
-                                    <View style={globalStyle.callOutFix} >
-                                        <View style={globalStyle.callOutContainerFix} >
-                                            <Text numberOfLines={2} style={globalStyle.callOutText}>{this.state.address}</Text>
-                                        </View>
-                                        <View style={globalStyle.callOutArrow}>
-                                            <SimpleLineIcons style={{ fontSize: 13, color: '#1abc9c' }} name='arrow-right' />
-                                        </View>
-
-                                        </View>
-                                    </TouchableOpacity>
-
-                            
-                                </View>
+                                
                                     
                                     
                             </View>
+                            <Content padder>
+                             <View  style={styles.footerContainer}>
+                             
+                             <Item stackedLabel>
+                                        <Label style={globalStyle.label} >Address</Label>
+                                        <Text numberOfLines={1} style={[globalStyle.textinput, { width: '100%' }]}>{this.state.address}</Text>
+                                </Item>
+
+                               <Item stackedLabel>
+                                        <Label style={globalStyle.label} >Radius <Label style={{color:'gray',fontSize:13,}}>({this.state.radius} meters)</Label></Label>
+                                        <Slider style={{width:'100%',height:30}}  onValueChange={radius => this.setState({ radius })} minimumValue={100} value={this.state.radius} maximumValue={1000} step={100}  minimumTrackTintColor='#1fb28a'
+            maximumTrackTintColor='#d3d3d3'
+            thumbTintColor='#1a9274' value={this.state.radius} />
+                                </Item>
+                            
+                                <Item stackedLabel >
+                                    <Label style={globalStyle.label} >Place</Label>
+                                    <Input numberOfLines={1} style={globalStyle.textinput} value={this.state.placename}
+                                        value={this.state.placename} maxLength={50} placeholder="Enter place name"
+                                        onChangeText={placename => this.setState({ placename })}/>
+                                   
+                                </Item>
+
+                                <Item  style={{ borderBottomWidth: 0 }}>
+                                    <Button
+                                            onPress={() => this.onSubmit()}
+                                        bordered light full style={globalStyle.secondaryButton}>
+                                        <Text style={{ color: 'white' }}>Save</Text>
+                                    </Button>
+                                </Item>
+
+                                </View>
+                                </Content>
                            
                         </View>
 
@@ -385,10 +420,21 @@ const styles = StyleSheet.create({
 
 
     },
+    footerContainer: {
+        height:320,
+        
+      },
   });
 
   
 
-  
+
+  const mapStateToProps = state => ({
+})
+
+CreatePlace = connect(mapStateToProps, { displayPlaces, savePlace })(CreatePlace);
+
 export default CreatePlace;
+
+  
 

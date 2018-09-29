@@ -203,16 +203,16 @@ export const displayPlaces = () => async dispatch => {
 };
 
 
-export const savePlace = (place, address, region) => dispatch => {
+export const savePlace = (place, address, region, radius) => dispatch => {
     return new Promise(async (resolve) => {
         try {
             await axios.post(settings.baseURL + 'place/saveplace', {
                 place: place,
+                radius: radius,
                 latitude: region.latitude,
                 longitude: region.longitude,
                 latitudedelta: region.latitudeDelta,
                 longitudedelta: region.longitudeDelta,
-
                 address: address,
                 owner: userdetails.userid,
             }).then(function (res) {
@@ -245,7 +245,7 @@ export const savePlace = (place, address, region) => dispatch => {
 };
 
 
-export const updatePlace = (id, place,address, coordinate) => dispatch => {
+export const updatePlace = (id, place,address, coordinate,radius) => dispatch => {
 
 
     return new Promise(async (resolve) => {
@@ -253,6 +253,7 @@ export const updatePlace = (id, place,address, coordinate) => dispatch => {
             await axios.post(settings.baseURL + 'place/updateplace', {
                 id: id,
                 place: place,
+                radius: radius,
                 latitude: coordinate.latitude,
                 longitude: coordinate.longitude,
                 latitudedelta: coordinate.latitudeDelta,
