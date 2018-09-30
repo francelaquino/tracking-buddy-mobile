@@ -40,6 +40,7 @@ class LocationPlaces extends Component {
         this.markers = [];
         this.state = {
             useruid: '',
+            addresslist:[],
             name:'',
             coordinate: new MapView.AnimatedRegion({
                 latitude: LATITUDE,
@@ -68,10 +69,12 @@ class LocationPlaces extends Component {
         clearInterval(plot);
     }
 
-    async componentWillMount() {
+    async componentDidMount() {
+       
         
         await this.setState({ busy: true, useruid: this.props.navigation.state.params.uid, name: this.props.navigation.state.params.name })
         await this.initialize();
+        
     }
 
         
@@ -79,11 +82,18 @@ class LocationPlaces extends Component {
        
 
         this.props.displayLocationsMap(this.state.useruid, this.state.dateFilter).then(res => {
-            this.setState({ loading: false, busy: false })
+            this.setState({ loading: false, busy: false, addresslist: this.props.locationsmap })
             setTimeout(() => {
                 this.fitToMap();
+                ToastAndroid.showWithGravityAndOffset("Autoplay after 3 seconds", ToastAndroid.SHORT, ToastAndroid.BOTTOM, 25, 50);
+
+                setTimeout(() => {
+                    this.startRoute();
+                }, 3000);
                 }, 100);
         })
+        
+        
 
     }
 
@@ -116,44 +126,47 @@ class LocationPlaces extends Component {
     }
     
     startRoute() {
-
-        ToastAndroid.showWithGravityAndOffset("Play", ToastAndroid.SHORT, ToastAndroid.BOTTOM, 25, 50);
         let self = this;
-        if (this.state.route == '') {
-            this.setState({ polyline: coordinates})
-        }
-        this.setState({  route: 'play' });
+        if (self.map != null) {
+            ToastAndroid.showWithGravityAndOffset("Play", ToastAndroid.SHORT, ToastAndroid.BOTTOM, 25, 50);
+           
+            if (this.state.route == '') {
+                this.setState({ polyline: coordinates })
+            }
+            this.setState({ route: 'play' });
             plot = setInterval(async function myTimer() {
+                if (self.map != null) {
+                    const coord = {
+                        id: cnt,
+                        coordinates: {
+                            latitude: self.props.locationsmap[cnt].coordinates.latitude,
+                            longitude: self.props.locationsmap[cnt].coordinates.longitude,
+                            latitudeDelta: LATITUDE_DELTA,
+                            longitudeDelta: LONGITUDE_DELTA,
+                        }
+                    }
+                    coordinates = coordinates.concat(coord.coordinates);
 
-                const coord = {
-                    id: cnt,
-                    coordinates: {
+                    await self.setState({ polyline: coordinates, address: self.props.locationsmap[cnt].address, datemovement: self.props.locationsmap[cnt].datemovement, activitytype: self.props.locationsmap[cnt].activitytype })
+
+                    await self.map.animateToRegion({
                         latitude: self.props.locationsmap[cnt].coordinates.latitude,
                         longitude: self.props.locationsmap[cnt].coordinates.longitude,
                         latitudeDelta: LATITUDE_DELTA,
                         longitudeDelta: LONGITUDE_DELTA,
+                    })
+
+                    cnt++;
+                    if (cnt >= self.props.locationsmap.length) {
+                        cnt = 0;
+                        clearInterval(plot);
+                        coordinates = [];
+                        self.setState({ route: '', address: '' });
+                        ToastAndroid.showWithGravityAndOffset("End", ToastAndroid.SHORT, ToastAndroid.BOTTOM, 25, 50);
                     }
                 }
-                coordinates = coordinates.concat(coord.coordinates);
-
-                await self.setState({ polyline: coordinates, address: self.props.locationsmap[cnt].address, datemovement: self.props.locationsmap[cnt].datemovement, activitytype: self.props.locationsmap[cnt].activitytype  })
-
-                await self.map.animateToRegion({
-                    latitude: self.props.locationsmap[cnt].coordinates.latitude,
-                    longitude: self.props.locationsmap[cnt].coordinates.longitude,
-                    latitudeDelta: LATITUDE_DELTA,
-                    longitudeDelta: LONGITUDE_DELTA,
-                })
-
-                cnt++;
-                if (cnt >= self.props.locationsmap.length) {
-                    cnt = 0;
-                    clearInterval(plot);
-                    coordinates = [];
-                    self.setState({ route: '', address: '' });
-                    ToastAndroid.showWithGravityAndOffset("End", ToastAndroid.SHORT, ToastAndroid.BOTTOM, 25, 50);
-                }
             }, 500);
+        }
         
     }
     
@@ -262,10 +275,33 @@ class LocationPlaces extends Component {
             LONGITUDE_DELTA = LONGITUDE_DELTA + .005;
         }
     }
+
+    searchFilterFunction = text => {
+        if (text != "") {
+            this.setState({ addresslist: [] })
+            let address = this.props.locationsmap.filter((item) => {
+                return item.address.includes(text)
+            });
+
+
+            this.setState({ addresslist: [...address] })
+
+
+        } else {
+            this.setState({ addresslist: this.props.locationsmap })
+        }
+
+    };
+
     renderLocation(){
         return (
             <View style={styles.mainContainer}>
-           
+                <Header style={{ backgroundColor:'#ecf0f1'}} searchBar rounded>
+                    <Item>
+                        <Icon name="ios-search" />
+                        <Input placeholder="Search" onChangeText={text => this.searchFilterFunction(text)} />
+                    </Item>
+                </Header>
             <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps={"always"}>
                 <Content padder>
                     <View style={globalStyle.container}>
@@ -273,7 +309,7 @@ class LocationPlaces extends Component {
             <FlatList
             style={{flex:1}}
                 keyExtractor={item => item.id.toString()}
-                                data={this.props.locationsmap}
+                                    data={this.state.addresslist}
                                     renderItem={({ item }) => (
                                         <ListItem icon key={item.id.toString()} button avatar style={globalStyle.listItem} onPress={() => { this.props.navigation.navigate("LocationDetails", { location: item }) }}>
                         <Left style={globalStyle.listLeft}>
@@ -426,7 +462,6 @@ class LocationPlaces extends Component {
             )
     }
     async renderRoute() {
-        console.log(this.props.locationsmap)
         return this.props.locationsmap.map((r) => (
             <MapView.Marker
                 key={r.id}
@@ -481,10 +516,13 @@ class LocationPlaces extends Component {
                     </View>
 
                 </View>
-                <View style={{
-                    height: 5, backgroundColor: '#ecf0f1', width: '100%', borderBottomWidth: 1,
-                    borderBottomColor: '#efebef' }}>
-                </View>
+                {this.state.pageStyle == 'map' &&
+                    <View style={{
+                        height: 5, backgroundColor: '#ecf0f1', width: '100%', borderBottomWidth: 1,
+                        borderBottomColor: '#efebef'
+                    }}>
+                    </View>
+                }
 
                 {
                     this.state.pageStyle == 'list' ?  this.renderLocation() :
@@ -512,12 +550,13 @@ class LocationPlaces extends Component {
                             </Button>
                         </Left>
                         <Body style={globalStyle.headerBody}>
-                            <Title>Location History</Title>
+                            <Title>LOCATION HISTORY</Title>
                         </Body>
                         <Right style={globalStyle.headerRight}>
                             
                         </Right>
                     </Header>
+
                     {
                         this.state.loading ? this.loading() :
                             this.ready()

@@ -26,17 +26,17 @@ class InfoMember extends Component {
       }
 
       
-    async componentWillMount() {
+     async componentWillMount() {
        
-        await this.props.getMember(this.props.navigation.state.params.memberuid).then(res => {
+       await  this.props.getMember(this.props.navigation.state.params.memberuid).then(res => {
             if (res == true) {
                 this.setState({ loading: false })
             }
         });
-        await this.props.getMemberGroup(this.props.navigation.state.params.memberuid).then(res => {
+         await this.props.getMemberGroup(this.props.navigation.state.params.memberuid).then(res => {
            
         });
-        await this.props.getMemberNotification(this.props.navigation.state.params.memberuid).then(res => {
+         await this.props.getMemberNotification(this.props.navigation.state.params.memberuid).then(res => {
         });
 
     }
@@ -138,7 +138,9 @@ class InfoMember extends Component {
                     <ListItem key={item.id.toString()} avatar style={globalStyle.listItem}>
                         <Left style={globalStyle.listLeft}>
                             <View style={globalStyle.listAvatarContainer} >
-                                <Thumbnail style={globalStyle.listAvatar} source={{ uri: item.avatar }} />
+                                {item.emptyphoto === 1 ? <Ionicons size={46} style={{ color: '#2c3e50' }} name="ios-people" /> :
+                                    <Thumbnail style={globalStyle.listAvatar} source={{ uri: item.avatar }} />
+                                }
                             </View>
                         </Left>
                         <Body style={globalStyle.listBody} >

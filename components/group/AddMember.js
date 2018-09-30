@@ -92,7 +92,9 @@ class AddMember extends Component {
                                {item.emptyphoto === "1" ? <Ionicons size={46} style={{ color: '#2c3e50' }} name="ios-person" /> :
                                    <Thumbnail style={globalStyle.listAvatar} source={{ uri: item.avatar }} />
                                }
-                               </View>
+                            </View>
+
+
                         
                     </Left>
                     <Body style={globalStyle.listBody} >

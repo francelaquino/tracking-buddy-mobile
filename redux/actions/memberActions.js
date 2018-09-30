@@ -83,6 +83,7 @@ export const getInvitationCode = () => async dispatch => {
                         if (res.data.status == "202") {
                             let invitationcode = {
                                 code: res.data.results.invitationcode,
+                                codestatus: res.data.results.codestatus,
                                 expiration: res.data.results.invitationcodeexpiration,
                             }
                             dispatch({

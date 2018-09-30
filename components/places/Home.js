@@ -153,7 +153,6 @@ class HomePlaces extends Component {
             .then(fcmToken => {
                 userdetails.fcmtoken = fcmToken;
                 self.props.updateToken();
-                console.log(fcmToken)
 
             });
             

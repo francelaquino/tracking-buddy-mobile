@@ -201,10 +201,8 @@ class CreatePlace extends Component {
         
 
     }
-    onRegionChange(region) {
-        console.log(region)
-            this.setState({ region });
-    }
+
+
 
     ready(){
 
@@ -279,7 +277,8 @@ class CreatePlace extends Component {
                                 <MapView ref={map => { this.map = map }}
                                     zoomEnabled={true}
                                     onLayout={() => this.fitToMap()}
-                                    onRegionChangeComplete={this.onRegionChangeComplete}
+                            onRegionChangeComplete={this.onRegionChangeComplete}
+                            
                                     scrollEnabled={true}
                                     style={StyleSheet.absoluteFill}
                                     textStyle={{ color: '#bc8b00' }}
@@ -288,19 +287,19 @@ class CreatePlace extends Component {
                                     showsMyLocationButton={true}
                         >
                             <MapView.Circle
-                                fillColor={'rgba(152, 37, 14, 0.5)'}
-                                strokeColor={'rgba(105,29,14, 0.9)'}
+                                fillColor={'rgba(26, 188, 156, 0.5)'}
+                                strokeColor={'rgba(20,149,123, 0.9)'}
                                 
                                 center={this.state.region}
                                 radius={this.state.radius/2} />
-                            <MapView.Circle
-                                strokeColor={'rgba(66, 140, 40, 0.9)'}
-                                strokeColor={'rgba(105,29,14, 0.9)'}
-                                fillColor={'rgba(152, 37, 14, 0.5)'}
-                                center={this.state.region}
-                                radius={5} />
+                           
                                 </MapView>
-                                
+
+                        <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: -40 }}>
+                            
+                            <Image style={globalStyle.marker}
+                                source={require('../../images/placemarker.png')} />
+                        </View>
                                
                                 
                                     

@@ -21,6 +21,7 @@ class PlaceNotifications extends Component {
         super(props)
         this.state = {
             loading: true,
+            notifications: [],
         };
     
     }
@@ -31,7 +32,8 @@ class PlaceNotifications extends Component {
         
     initialize() {
         this.props.displayMessages().then(res => {
-            this.setState({ loading: false })
+            this.setState({ loading: false, notifications: this.props.messages })
+            
         });
     }
 
@@ -49,12 +51,29 @@ class PlaceNotifications extends Component {
         )
     }
 
+    searchFilterFunction = text => {
+        if (text != "") {
+            this.setState({ notifications: []})
+            let ideas = this.props.messages.filter((idea) => {
+                return idea.message.includes(text)
+            });
+
+            console.log(ideas)
+
+            this.setState({ notifications: [ ...ideas] })
+
+          
+        } else {
+            this.setState({ notifications: this.props.messages})
+        }
+
+    };
     renderNotifications() {
         return (
             <FlatList
             style={{flex:1}}
                 keyExtractor={item => item.id.toString()}
-                data={this.props.messages}
+                data={this.state.notifications}
                 renderItem={({ item }) => (
                  
                         <ListItem key={item.id}  button avatar style={globalStyle.listItem}  >
@@ -66,9 +85,10 @@ class PlaceNotifications extends Component {
                                 }
                             </View>
                 </Left>
-                    <Body style={globalStyle.listBody} >
-                        <Text numberOfLines={1} note style={{ fontSize: 12 }}>{item.datetime}</Text>
+                        <Body style={globalStyle.listBody} >
                             <Text numberOfLines={1} style={globalStyle.listHeading}>{item.message}</Text>
+                        <Text numberOfLines={1} note style={{ fontSize: 12 }}>{item.datetime}</Text>
+                           
                             
                         </Body>
                     
@@ -101,6 +121,7 @@ class PlaceNotifications extends Component {
                     
         )
     }
+  
 
     render() {
         return (
@@ -121,6 +142,15 @@ class PlaceNotifications extends Component {
                            
 
                         </Right>
+                    </Header>
+                    <Header style={globalStyle.header} searchBar rounded>
+                        <Item>
+                            <Icon name="ios-search" />
+                            <Input placeholder="Search" onChangeText={text => this.searchFilterFunction(text)} />
+                        </Item>
+                        <Button transparent>
+                            <Text>Search</Text>
+                        </Button>
                     </Header>
                     {
                         this.state.loading ? this.loading() :

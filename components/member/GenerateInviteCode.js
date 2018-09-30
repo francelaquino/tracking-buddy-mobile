@@ -47,7 +47,7 @@ class GenerateInviteCode extends Component {
 
     onShare() {
         Share.share({
-            message: 'Invitation Code : '+ this.props.invitationcode.code
+            message: this.props.invitationcode.code
         }).then(res => {
         });
     }
@@ -73,8 +73,12 @@ class GenerateInviteCode extends Component {
                         <View style={globalStyle.container}>
                         { this.props.invitationcode.code !='' &&
                                     <View >
-                                    <Text style={{justifyContent: 'center',alignItems: 'center', alignSelf: "center", flexDirection:'column',fontSize:40,marginBottom:2,color:'green'}}>{this.props.invitationcode.code}</Text>
-                                    <Text style={{justifyContent: 'center',alignItems: 'center', alignSelf: "center", flexDirection:'column',fontSize:12,marginBottom:5,color:'gray'}}>Expires on {this.props.invitationcode.expiration}</Text>
+                            <Text style={{ justifyContent: 'center', alignItems: 'center', alignSelf: "center", flexDirection: 'column', fontSize: 40, marginBottom: 2, color: 'green' }}>{this.props.invitationcode.code}</Text>
+                            {this.props.invitationcode.codestatus == 'valid' ? 
+                                <Text style={{ justifyContent: 'center', alignItems: 'center', alignSelf: "center", flexDirection: 'column', fontSize: 12, marginBottom: 5, color: 'gray' }}>Expires on {this.props.invitationcode.expiration}</Text> :
+                                <Text style={{ justifyContent: 'center', alignItems: 'center', alignSelf: "center", flexDirection: 'column', fontSize: 12, marginBottom: 5, color: 'red' }}>Expired invitation code</Text> 
+
+                            }
                                     </View>
                         }
                         <Content padder>
