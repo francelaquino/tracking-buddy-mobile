@@ -274,6 +274,7 @@ export const registerUser = (profile) => async dispatch => {
                                 lastname: profile.lastname,
                                 middlename: profile.middlename,
                                 mobileno: profile.mobileno,
+                                password: profile.password,
                                 dateadded: Moment().format('YYYY-MM-DD HH:mm:ss'),
                                 avatar: avatar,
                             }).then(function (res) {

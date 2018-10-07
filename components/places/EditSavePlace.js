@@ -174,7 +174,17 @@ class SavePlace extends Component {
                                         bordered light full style={globalStyle.secondaryButton}>
                                         <Text style={{ color: 'white' }}>Save</Text>
                                     </Button>
-                                </Item>
+                                    </Item>
+
+                                    <Item style={{ borderBottomWidth: 0 }}>
+
+
+                                        <Button
+                                            onPress={() => this.confirmDelete()}
+                                            bordered light full style={globalStyle.deleteButton}>
+                                            <Text style={{ color: 'white' }}>Delete </Text>
+                                        </Button>
+                                    </Item>
                                 </View>
                             </View>
                        

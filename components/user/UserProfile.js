@@ -196,12 +196,7 @@ class UserProfile extends Component {
                             onChangeText={lastname => this.setState({ lastname })} />
                     </Item>
 
-                    <Item stackedLabel>
-                        <Label style={globalStyle.label} >Last name</Label>
-                        <Input style={globalStyle.textinput} name="lastname" autoCorrect={false}
-                            value={this.state.lastname} maxLength={10}
-                            onChangeText={lastname => this.setState({ lastname })} />
-                    </Item>
+                  
 
                     <Item stackedLabel>
                         <Label style={globalStyle.label} >Mobile No.</Label>

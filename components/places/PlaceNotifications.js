@@ -58,7 +58,6 @@ class PlaceNotifications extends Component {
                 return idea.message.includes(text)
             });
 
-            console.log(ideas)
 
             this.setState({ notifications: [ ...ideas] })
 
@@ -148,9 +147,6 @@ class PlaceNotifications extends Component {
                             <Icon name="ios-search" />
                             <Input placeholder="Search" onChangeText={text => this.searchFilterFunction(text)} />
                         </Item>
-                        <Button transparent>
-                            <Text>Search</Text>
-                        </Button>
                     </Header>
                     {
                         this.state.loading ? this.loading() :

@@ -14,7 +14,7 @@ import Loading  from '../shared/Loading';
 import Loader from '../shared/Loader';
 import Slider from "react-native-slider";
 import OfflineNotice from '../shared/OfflineNotice';
-import { updatePlace, displayPlaces } from '../../redux/actions/locationActions';
+import { updatePlace, displayPlaces, deletePlace } from '../../redux/actions/locationActions';
 import { connect } from 'react-redux';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 const LATITUDE_DELTA = 0.00522;
@@ -131,7 +131,21 @@ class EditCreatePlace extends Component {
          
     }
 
-    
+    onDelete() {
+        this.setState({ loading: true })
+        this.props.deletePlace(this.state.id).then(res => {
+            if (res == true) {
+                this.setState({ loading: false })
+                this.props.displayPlaces();
+                this.props.navigation.pop(2)
+            }
+        }).catch(function (err) {
+            this.setState({ loading: false })
+        });
+
+
+
+    }
 
     onSubmit() {
         
@@ -303,7 +317,13 @@ class EditCreatePlace extends Component {
                                         bordered light full style={globalStyle.secondaryButton}>
                                         <Text style={{ color: 'white' }}>Save</Text>
                                     </Button>
-                                </Item>
+                            </Item>
+
+                            <Button
+                                onPress={() => this.onDelete()}
+                                bordered light full style={globalStyle.deleteButton}>
+                                <Text style={{ color: 'white' }}>Delete </Text>
+                            </Button>
 
                                 </View>
                                 </Content>
@@ -397,7 +417,7 @@ const styles = StyleSheet.create({
   const mapStateToProps = state => ({
 })
 
-EditCreatePlace = connect(mapStateToProps, { displayPlaces, updatePlace })(EditCreatePlace);
+EditCreatePlace = connect(mapStateToProps, { displayPlaces, updatePlace, deletePlace })(EditCreatePlace);
 
 export default EditCreatePlace;
 
