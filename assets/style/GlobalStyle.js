@@ -10,8 +10,7 @@ module.exports = StyleSheet.create({
     },
     header: {
         backgroundColor: theme.primaryColor,
-            elevation: 0,
-            shadowOpacity: 0,
+       
     },
     headerMenu: {
         width:40,
@@ -411,7 +410,8 @@ module.exports = StyleSheet.create({
         padding: 10,
         marginBottom: 10,
         marginRight: 15,
-        textAlign:'center'
+        textAlign:'center',
+        
 
     },
     modalCancel: {

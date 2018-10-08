@@ -48,6 +48,13 @@ export const Stack = createStackNavigator({
 
     },
     
+    Register: {
+        screen: Register,
+        headerMode: 'none',
+        navigationOptions: {
+            header: null
+        }
+    },
     CreatePlace: {
         screen: CreatePlace,
         headerMode: 'none',
@@ -112,13 +119,7 @@ export const Stack = createStackNavigator({
 
     },
 
-    Register: {
-        screen: Register,
-        headerMode: 'none',
-        navigationOptions: {
-            header: null
-        }
-    },
+    
 
 
 

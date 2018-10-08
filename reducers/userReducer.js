@@ -1,8 +1,9 @@
-import {  GET_PROFILE, POST_DATA, SIGNIN_USER, NO_CONNECTION } from '../redux/actions/types';
+import {  GET_PROFILE, POST_DATA, SIGNIN_USER, NO_CONNECTION, GET_COUNTRIES } from '../redux/actions/types';
 
 const initialState = {
     items:[],
     item:[],
+    countries:[],
     profile:[],
     isready:false,
     isLoading:true,
@@ -11,6 +12,11 @@ const initialState = {
 
 export default function(state=initialState,action){
     switch(action.type){
+        case GET_COUNTRIES:
+            return {
+                ...state,
+                countries: action.payload,
+            };
         case POST_DATA:
             return {
                 ...state,

@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 import {   Platform,  StyleSheet,  Text,  View, ScrollView,TextInput, TouchableOpacity, ToastAndroid, Alert, Image, Picker } from 'react-native';
 import { Root, Container, Header, Body, Title, Item, Input, Label, Button, Icon, Left, Right, List, ListItem, Content } from 'native-base';
 import { connect } from 'react-redux';
-import { getProfile, updateProfile } from '../../redux/actions/userActions';
+import DatePicker from 'react-native-datepicker'
+import { getProfile, updateProfile, getcountry } from '../../redux/actions/userActions';
 import { displayHomeMember } from '../../redux/actions/memberActions';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -28,6 +29,9 @@ class UserProfile extends Component {
             middlename:'',
             lastname: '',
             emptyphoto:'',
+            gender:'',
+            birthdate:'',
+            country:'',
             avatarsource:{
                 uri:''
             },
@@ -37,8 +41,10 @@ class UserProfile extends Component {
       }
 
       
-    componentWillMount() {
-        this.props.getProfile().then((res) => {
+    async componentWillMount() {
+        await this.props.getcountry();
+       
+        await this.props.getProfile().then((res) => {
             if (res == true) {
                 this.setState({
                     isbusy:false,
@@ -46,6 +52,9 @@ class UserProfile extends Component {
                     email: this.props.profile.email,
                     fullname: this.props.profile.fullname,
                     mobileno: this.props.profile.mobileno,
+                    gender: this.props.profile.gender,
+                    country: this.props.profile.country,
+                    birthdate: this.props.profile.birthdate,
                     middlename: this.props.profile.middlename,
                     lastname: this.props.profile.lastname,
                     emptyphoto: this.props.profile.emptyphoto,
@@ -57,6 +66,22 @@ class UserProfile extends Component {
 
     }
 
+    onGenderValueChange(value: string) {
+        this.setState({
+          gender: value
+        });
+      }
+    
+      onCountryValueChange(value: string) {
+        this.setState({
+          country: value
+        });
+      }
+
+      async onDateChange(date) {
+        coordinates = []
+        this.setState({birthdate:date }) 
+    }
     
     onSubmit() {
         if (this.state.firstname.trim() === "") {
@@ -80,7 +105,19 @@ class UserProfile extends Component {
         }
 
 
+        if (this.state.birthdate == "") {
+            ToastAndroid.showWithGravityAndOffset("Please enter birthdate", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
+            return false;
+        }
+        if (this.state.gender == "") {
+            ToastAndroid.showWithGravityAndOffset("Please enter gender", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
+            return false;
+        }
 
+        if (this.state.country == "") {
+            ToastAndroid.showWithGravityAndOffset("Please enter country", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
+            return false;
+        }
 
 
         let profile = {
@@ -91,6 +128,9 @@ class UserProfile extends Component {
             lastname: this.state.lastname,
             avatarsource: this.state.avatarsource,
             isPhotoChange: this.state.isPhotoChange,
+            gender: this.state.gender,
+            country: this.state.country,
+            birthdate: this.state.birthdate,
             emptyphoto: this.state.emptyphoto
         }
         this.setState({ loading: true })
@@ -202,9 +242,73 @@ class UserProfile extends Component {
                         <Label style={globalStyle.label} >Mobile No.</Label>
                         <Input style={globalStyle.textinput} name="mobileno" autoCorrect={false}
                             value={this.state.mobileno} maxLength={20}
-                            onChangeText={v => this.setState({ mobileno })} />
+                            onChangeText={mobileno => this.setState({ mobileno })} />
                     </Item>
+                    <Item stackedLabel>
+                              <Label style={globalStyle.label} >Birthdate</Label>
+                              
+                              <Input  style={[registrationStyle.textinput,{position:'absolute',top:20,left:5}]} 
+								name="mobileno" autoCorrect={false}
+								value={this.state.birthdate}
+								/> 
+                           <DatePicker
+                            style={{width:'100%' }}
+                            mode="date"
+                            maxDate="2013-06-01"
+                            date={this.state.birthdate}
+                            format="DD-MMM-YYYY"
+                            confirmBtnText="Confirm"
+                            hideText={true}
+                            cancelBtnText="Cancel"
+                            iconSource={require('../../images/today.png')}
+                            customStyles={{
+                                dateIcon: {
+                                    position: 'absolute', right: 0
+                                },
+                                dateInput:{
+                                    borderWidth:0,
+                                    position: 'absolute', left: 7
+                                }
 
+                            }}
+                            onDateChange={(date) => this.onDateChange(date)}
+
+                        />
+						</Item>
+
+                         <Item stackedLabel>
+                              <Label style={globalStyle.label} >Gender</Label>
+                              <Picker
+                                mode="dropdown"
+                                iosHeader="Select Gender"
+                                iosIcon={<Icon name="ios-arrow-down-outline" />}
+                                style={{ width: '100%' }}
+                                selectedValue={this.state.gender}
+                                onValueChange={this.onGenderValueChange.bind(this)}
+                                >
+                                 <Picker.Item label="Select gender" value="" />
+                                <Picker.Item label="Male" value="Male" />
+                                <Picker.Item label="Female" value="Female" />
+                                </Picker>
+						</Item>
+
+                        <Item stackedLabel>
+                              <Label style={globalStyle.label} >Country</Label>
+                              <Picker
+                                mode="dropdown"
+                                iosHeader="Select Country"
+                                iosIcon={<Icon name="ios-arrow-down-outline" />}
+                                style={{ width: '100%' }}
+                                selectedValue={this.state.country}
+                                onValueChange={this.onCountryValueChange.bind(this)}
+                                >
+                                <Picker.Item label="Select country" value="" />
+                                {this.props.countries.map((item, index) => {
+                                return (< Picker.Item label={item.country} value={item.id} key={index} />);
+                                })}  
+                                </Picker>
+						</Item>
+					
                     <Button onPress={() => this.onSubmit()}
                         bordered light full style={globalStyle.secondaryButton}>
                         <Text style={{ color: 'white' }}>Update</Text>
@@ -254,10 +358,11 @@ class UserProfile extends Component {
 
 const mapStateToProps = state => ({
     profile: state.fetchUser.profile,
+    countries: state.fetchUser.countries,
   })
   
   
-  UserProfile=connect(mapStateToProps,{getProfile,updateProfile,displayHomeMember})(UserProfile);
+  UserProfile=connect(mapStateToProps,{getProfile,updateProfile,displayHomeMember,getcountry})(UserProfile);
   
 export default UserProfile;
   

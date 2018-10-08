@@ -1,16 +1,17 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { StatusBar, Platform, StyleSheet, View, TextInput, TouchableOpacity, ScrollView, Picker, Alert, ToastAndroid, Form, Image } from 'react-native';
-import { Root, Container, Header, Body, Title, Item, Input, Label, Button, Text, Icon, Content, Left, Right } from 'native-base';
+import { StatusBar, Platform, StyleSheet, View, TextInput, TouchableOpacity, ScrollView,  Alert, ToastAndroid, Form, Image } from 'react-native';
+import { Picker , Root, Container, Header, Body, Title, Item, Input, Label, Button, Text, Icon, Content, Left, Right } from 'native-base';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import DatePicker from 'react-native-datepicker'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Loading  from '../shared/Loading';
 import ImagePicker from 'react-native-image-picker';
 import Loader from '../shared/Loader';
 import OfflineNotice from '../shared/OfflineNotice';
 import { saveLocation } from '../../redux/actions/locationActions';
-import { registerUser } from '../../redux/actions/userActions';
+import { registerUser , getcountry } from '../../redux/actions/userActions';
 var registrationStyle = require('../../assets/style/Registration');
 var globalStyle = require('../../assets/style/GlobalStyle');
 
@@ -32,7 +33,10 @@ class Register extends Component {
           middlename: '',
           lastname: '',
           avatar: '',
-          avatarsource: ''
+          avatarsource: '',
+          gender:'',
+          birthdate:'',
+          country:'',
 
       };
     
@@ -68,13 +72,17 @@ class Register extends Component {
 
 
 
+   componentWillMount() {
+        this.props.getcountry();
+    }
 
-  /*onValueChange(value: string) {
-    this.setState({
-      selected: value
-    });
-  }
-  */
+    async onDateChange(date) {
+        coordinates = []
+        this.setState({birthdate:date }) 
+    }
+
+
+  
   
     async onSubmit() {
 
@@ -107,6 +115,21 @@ class Register extends Component {
             ToastAndroid.showWithGravityAndOffset("Please enter last name", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
             return false;
         }
+        if (this.state.birthdate == "") {
+            ToastAndroid.showWithGravityAndOffset("Please enter birthdate", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
+            return false;
+        }
+        if (this.state.gender == "") {
+            ToastAndroid.showWithGravityAndOffset("Please enter gender", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
+            return false;
+        }
+
+        if (this.state.country == "") {
+            ToastAndroid.showWithGravityAndOffset("Please enter country", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
+            return false;
+        }
+
+       
 
 
         if (this.state.password != this.state.retypepassword) {
@@ -121,9 +144,11 @@ class Register extends Component {
             lastname: this.state.lastname,
             middlename: this.state.middlename,
             mobileno: this.state.mobileno,
+            gender: this.state.gender,
+            country: this.state.country,
+            birthdate: this.state.birthdate,
             avatarsource: this.state.avatarsource
         }
-
 
         this.props.registerUser(user).then((res) => {
             if (res == true) {
@@ -151,6 +176,9 @@ class Register extends Component {
           firstname: '',
           middlename: '',
           lastname: '',
+          gender:'',
+          birthdate:'',
+          country:'',
           avatar: '',
           longitude: '',
           latitude: '',
@@ -165,6 +193,17 @@ class Register extends Component {
 	  return (
 		<Loading/>
 	  )
+  }
+  onGenderValueChange(value: string) {
+    this.setState({
+      gender: value
+    });
+  }
+
+  onCountryValueChange(value: string) {
+    this.setState({
+      country: value
+    });
   }
   ready(){
 		const { navigate } = this.props.navigation;
@@ -234,7 +273,7 @@ class Register extends Component {
                           <Item stackedLabel>
                               <Label style={globalStyle.label} >First Name</Label>
                             <Input  style={registrationStyle.textinput} 
-                                      maxLength={15}
+                                      maxLength={20}
                                       autoCapitalize="words"
 								name="firstname" autoCorrect={false}
 								value={this.state.firstname}
@@ -244,7 +283,7 @@ class Register extends Component {
                           <Item stackedLabel>
                               <Label style={globalStyle.label} >Middle Name</Label>
                         <Input  style={registrationStyle.textinput} 
-                                      maxLength={15}
+                                      maxLength={20}
                                       autoCapitalize="words"
 								name="middlename" autoCorrect={false}
 								value={this.state.middlename}
@@ -254,7 +293,7 @@ class Register extends Component {
                           <Item stackedLabel>
                               <Label style={globalStyle.label} >Last Name</Label>
                             <Input  style={registrationStyle.textinput} 
-                                      name="lastname" autoCorrect={false} maxLength={15}
+                                      name="lastname" autoCorrect={false} maxLength={20}
                                       autoCapitalize="words"
 								value={this.state.lastname}
 								onChangeText={lastname=>this.setState({lastname})}/>
@@ -265,6 +304,71 @@ class Register extends Component {
 								name="mobileno" autoCorrect={false}
 								value={this.state.mobileno}
 								onChangeText={mobileno=>this.setState({mobileno})}/>
+						</Item>
+
+                         <Item stackedLabel>
+                              <Label style={globalStyle.label} >Birthdate</Label>
+                              
+                              <Input  style={[registrationStyle.textinput,{position:'absolute',top:20,left:5}]} 
+								name="mobileno" autoCorrect={false}
+								value={this.state.birthdate}
+								/> 
+                           <DatePicker
+                            style={{width:'100%' }}
+                            mode="date"
+                            maxDate="2013-06-01"
+                            date={this.state.birthdate}
+                            format="DD-MMM-YYYY"
+                            confirmBtnText="Confirm"
+                            hideText={true}
+                            cancelBtnText="Cancel"
+                            iconSource={require('../../images/today.png')}
+                            customStyles={{
+                                dateIcon: {
+                                    position: 'absolute', right: 0
+                                },
+                                dateInput:{
+                                    borderWidth:0,
+                                    position: 'absolute', left: 7
+                                }
+
+                            }}
+                            onDateChange={(date) => this.onDateChange(date)}
+
+                        />
+						</Item>
+
+                         <Item stackedLabel>
+                              <Label style={globalStyle.label} >Gender</Label>
+                              <Picker
+                                mode="dropdown"
+                                iosHeader="Select Gender"
+                                iosIcon={<Icon name="ios-arrow-down-outline" />}
+                                style={{ width: '100%' }}
+                                selectedValue={this.state.gender}
+                                onValueChange={this.onGenderValueChange.bind(this)}
+                                >
+                                 <Picker.Item label="Select gender" value="" />
+                                <Picker.Item label="Male" value="Male" />
+                                <Picker.Item label="Female" value="Female" />
+                                </Picker>
+						</Item>
+
+                        <Item stackedLabel>
+                              <Label style={globalStyle.label} >Country</Label>
+                              <Picker
+                                mode="dropdown"
+                                iosHeader="Select Country"
+                                iosIcon={<Icon name="ios-arrow-down-outline" />}
+                                style={{ width: '100%' }}
+                                selectedValue={this.state.country}
+                                onValueChange={this.onCountryValueChange.bind(this)}
+                                >
+                                <Picker.Item label="Select country" value="" />
+                                {this.props.countries.map((item, index) => {
+                                return (< Picker.Item label={item.country} value={item.id} key={index} />);
+                                })}  
+                                </Picker>
 						</Item>
 					
 						
@@ -292,13 +396,13 @@ class Register extends Component {
 }
 
 
-
 const mapStateToProps = state => ({
+    countries: state.fetchUser.countries,
+    isLoading: state.fetchLocation.isLoading,
+  })
+  
 
-})
 
-
-
-Register = connect(mapStateToProps, { registerUser, saveLocation})(Register);
+Register = connect(mapStateToProps, { registerUser, saveLocation ,getcountry })(Register);
 
 export default Register;

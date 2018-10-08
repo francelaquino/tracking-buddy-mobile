@@ -73,8 +73,8 @@ class EditCreatePlace extends Component {
 
  
    
-    async componentDidMount(){
-        await this.getCurrentPosition();
+     componentDidMount(){
+         this.getCurrentPosition();
 
 
     }
@@ -291,9 +291,8 @@ class EditCreatePlace extends Component {
                             <Content padder>
                              <View  style={styles.footerContainer}>
                              
-                             <Item stackedLabel>
-                                        <Label style={globalStyle.label} >Address</Label>
-                                        <Text numberOfLines={1} style={[globalStyle.textinput, { width: '100%' }]}>{this.state.address}</Text>
+                             <Item >
+                                        <Text numberOfLines={1} style={[globalStyle.textinput, { width: '100%',height:35  }]}>{this.state.address}</Text>
                                 </Item>
 
                                <Item stackedLabel>
@@ -303,9 +302,8 @@ class EditCreatePlace extends Component {
             thumbTintColor='#1a9274' value={this.state.radius} />
                                 </Item>
                             
-                                <Item stackedLabel >
-                                    <Label style={globalStyle.label} >Place</Label>
-                                    <Input numberOfLines={1} style={globalStyle.textinput} value={this.state.placename}
+                                <Item  >
+                                    <Input numberOfLines={1} style={[globalStyle.textinput, { width: '100%',height:50  }]} value={this.state.placename}
                                         value={this.state.placename} maxLength={50} placeholder="Enter place name"
                                         onChangeText={placename => this.setState({ placename })}/>
                                    
@@ -392,7 +390,7 @@ const styles = StyleSheet.create({
     },
     
     mapContainer: {
-        flex: 1,
+        flex: 2,
         justifyContent: 'center',
         alignItems: 'center'
       
@@ -408,6 +406,10 @@ const styles = StyleSheet.create({
 
 
     },
+    footerContainer: {
+        height:270,
+        
+      },
   });
 
   

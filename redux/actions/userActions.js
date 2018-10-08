@@ -1,4 +1,4 @@
-import { SIGNIN_USER, REGISTRATION_USER, NO_CONNECTION, GET_PROFILE, SAVE_LOCATION_ONLINE } from './types';
+import { SIGNIN_USER, REGISTRATION_USER, NO_CONNECTION, GET_PROFILE, SAVE_LOCATION_ONLINE, GET_COUNTRIES } from './types';
 import { ToastAndroid, AsyncStorage } from 'react-native';
 import axios from 'axios';
 import firebase from 'react-native-firebase';
@@ -130,6 +130,9 @@ export const updateProfile = (profile) => async dispatch => {
                             avatar: avatar,
                             firstname: profile.firstname,
                             lastname: profile.lastname,
+                            gender:profile.gender,
+                            country:profile.country,
+                            birthdate:profile.birthdate,
                             emptyphoto: profile.emptyphoto,
                             middlename: profile.middlename,
                             mobileno: profile.mobileno,
@@ -163,6 +166,9 @@ export const updateProfile = (profile) => async dispatch => {
                     firstname: profile.firstname,
                     lastname: profile.lastname,
                     middlename: profile.middlename,
+                    gender:profile.gender,
+                    country:profile.country,
+                    birthdate:profile.birthdate,
                     emptyphoto: profile.emptyphoto,
                     mobileno: profile.mobileno,
                 }).then(function (res) {
@@ -243,6 +249,48 @@ export const getProfile = () => async dispatch => {
 };
 
 
+export const getcountry = () => async dispatch => {
+    return new Promise(async (resolve) => {
+        try {
+            await axios.get(settings.baseURL + 'utility/getcountry')
+                .then(function (res) {
+                    if (res.data.status == "202") {
+                        dispatch({
+                            type: GET_COUNTRIES,
+                            payload: res.data.results
+                        });
+                        resolve(true)
+                    } else {
+                        dispatch({
+                            type: GET_COUNTRIES,
+                            payload: []
+                        });
+                        resolve(false)
+                        ToastAndroid.showWithGravityAndOffset("Something went wrong. Please try again.", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
+                    }
+                }).catch(function (error) {
+                    dispatch({
+                        type: GET_COUNTRIES,
+                        payload: []
+                    });
+                    resolve(false)
+                    ToastAndroid.showWithGravityAndOffset("Something went wrong. Please try again.", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
+                });
+
+        } catch (e) {
+
+            dispatch({
+                type: GET_COUNTRIES,
+                payload: []
+            });
+            resolve(false)
+            ToastAndroid.showWithGravityAndOffset("Something went wrong. Please try again.", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
+        }
+    });
+
+};
+
+
 export const registerUser = (profile) => async dispatch => {
     
     return new Promise(async (resolve) => {
@@ -275,6 +323,9 @@ export const registerUser = (profile) => async dispatch => {
                                 middlename: profile.middlename,
                                 mobileno: profile.mobileno,
                                 password: profile.password,
+                                gender:profile.gender,
+                                country:profile.country,
+                                birthdate:profile.birthdate,
                                 dateadded: Moment().format('YYYY-MM-DD HH:mm:ss'),
                                 avatar: avatar,
                             }).then(function (res) {
@@ -298,6 +349,9 @@ export const registerUser = (profile) => async dispatch => {
                         lastname: profile.lastname,
                         middlename: profile.middlename,
                         mobileno: profile.mobileno,
+                        gender:profile.gender,
+                        country:profile.country,
+                        birthdate:profile.birthdate,
                         dateadded: Moment().format('YYYY-MM-DD HH:mm:ss'),
                         avatar: avatar,
                     }).then(function (res) {
