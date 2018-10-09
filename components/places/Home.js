@@ -417,7 +417,7 @@ class HomePlaces extends Component {
                                 </Button>
                             </Left>
                             <Body style={globalStyle.headerBody}>
-                                <Title numberOfLines={1} style={globalStyle.headerTitle}>{this.props.address} </Title>
+                                <Title numberOfLines={1} style={globalStyle.headerTitle}>My GPS Buddy </Title>
                             </Body>
                             <Right style={globalStyle.headerRight} >
                                
@@ -463,9 +463,61 @@ class HomePlaces extends Component {
 
                         <View style={globalStyle.mapMenu}>
 
-                            
+                            <Button style={globalStyle.mapMenuCircle} onPress={() => this.props.navigation.navigate('GenerateInviteCode')} >
+                                <View style={globalStyle.mapMenuCircleContainer}>
+                                    <Ionicons size={30} style={{ color: 'white', }} name="ios-person-add" />
+                                </View>
+                            </Button>
+                            <Text style={globalStyle.mapMenuLabel}>Invite Member </Text>
+
+
+                            <Button style={globalStyle.mapMenuCircle} onPress={() => this.props.navigation.navigate('NewInvite')} >
+                                <View style={globalStyle.mapMenuCircleContainer}>
+                                    <Ionicons size={30} style={{ color: 'white', }} name="ios-person-add" />
+                                </View>
+                            </Button>
+                            <Text style={globalStyle.mapMenuLabel}>Add Member </Text>
+
+
                            
 
+
+                            <Button style={globalStyle.mapMenuCircle} onPress={() => this.allMembers()} >
+                                <View style={globalStyle.mapMenuCircleContainer}>
+                                    <Ionicons size={30} style={{ color: 'white' }} name="ios-person" />
+                                </View>
+                            </Button>
+                            <Text style={globalStyle.mapMenuLabel}>Show Members </Text>
+
+                            <Button style={globalStyle.mapMenuCircle} onPress={() => this.changeGroup() } >
+                                <View style={globalStyle.mapMenuCircleContainer}>
+                                    <Ionicons size={30} style={{ color: 'white' }} name="ios-people" />
+                                </View>
+                            </Button>
+                            <Text style={globalStyle.mapMenuLabel}>Switch Group </Text>
+
+                            <Button style={globalStyle.mapMenuCircleMap} onPress={() => this.centerToUserMarker()} >
+                                <View style={globalStyle.mapMenuCircleContainer}>
+                                    <MaterialIcons size={25} style={{ color: 'white' }} name="my-location" />
+                                </View>
+                            </Button>
+                            <Text style={globalStyle.mapMenuLabel}>My Location </Text>
+                            <Button style={globalStyle.mapMenuCircleMap} onPress={() => this.fitToMap()} >
+                                <View style={globalStyle.mapMenuCircleContainer}>
+                                    <MaterialIcons size={25} style={{ color: 'white' }} name="zoom-out-map" />
+                                </View>
+                            </Button>
+                            <Text style={globalStyle.mapMenuLabel}>Fit to Map </Text>
+                            <Button style={globalStyle.mapMenuCircleMap} onPress={() => this.changeMapMode()} >
+                                <View style={globalStyle.mapMenuCircleContainer}>
+                                    <Entypo size={25} style={{ color: 'white' }} name="globe" />
+                                </View>
+                            </Button>
+                            <Text style={globalStyle.mapMenuLabel}>Map Style </Text>
+
+
+                           
+                            
                            
                             </View>
                             {this.state.groupname !== '' &&
@@ -479,38 +531,7 @@ class HomePlaces extends Component {
                                 }
                         </View>
 
-                        <View style={{ flex: 1 }}>
-                            <Fab
-                                active={this.state.active}
-                                direction="down"
-                                containerStyle={{ position: 'absolute',left:1 }}
-                                style={{ backgroundColor: '#34495e', width: 45, height: 45,top:4, }}
-                            position="topLeft"
-                                onPress={() => this.setState({ active: !this.state.active })}>
-                                {this.state.active === true ?
-                                    <Ionicons style={{ color: 'white' }} name="ios-close" /> :
-                                    <Ionicons style={{ color: 'white' }} name="ios-add" />
-                                }
-                                <Button style={globalStyle.fabMenuCircle} onPress={() => this.props.navigation.navigate('NewInvite')} >
-                                    <Ionicons size={30} style={{ color: '#2c3e50' }} name="ios-person-add" />
-                                </Button>
-                                <Button style={globalStyle.fabMenuCircle} onPress={() => this.allMembers()}>
-                                    <Ionicons size={30} style={{ color: '#2c3e50' }} name="ios-person" />
-                                </Button>
-                                <Button style={globalStyle.fabMenuCircle} onPress={() => this.props.navigation.navigate('SelectGroup', { changeGroup: this.changeGroup })}>
-                                    <Ionicons size={30} style={{ color: '#2c3e50' }} name="ios-people" />
-                                </Button>
-                                <Button style={globalStyle.fabMenuCircle} onPress={() => this.centerToUserMarker()}>
-                                    <MaterialIcons size={25} style={{ color: '#2c3e50' }} name="my-location" />
-                                </Button>
-                                <Button style={globalStyle.fabMenuCircle} onPress={() => this.fitToMap()}>
-                                    <MaterialIcons size={25} style={{ color: '#2c3e50' }} name="zoom-out-map" />
-                                </Button>
-                                <Button style={globalStyle.fabMenuCircle} onPress={() => this.changeMapMode()}>
-                                    <Entypo size={25} style={{ color: '#2c3e50' }} name="globe" />
-                                    </Button>
-                            </Fab>
-                        </View>
+                       
                         </View>
 
 

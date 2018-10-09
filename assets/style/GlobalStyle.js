@@ -6,19 +6,19 @@ import { Dimensions} from 'react-native';
 var { StyleSheet} = React;
 module.exports = StyleSheet.create({
     containerWrapper: {
-        backgroundColor:'white',
+        backgroundColor: 'white',
     },
     header: {
         backgroundColor: theme.primaryColor,
-       
+
     },
     headerMenu: {
-        width:40,
-        flex:0,
+        width: 40,
+        flex: 0,
     },
     headerLeft: {
-        flex:1,
-        width:40,
+        flex: 1,
+        width: 40,
     },
     headerBody: {
         flex: 3,
@@ -29,27 +29,27 @@ module.exports = StyleSheet.create({
         flex: 1,
     },
     headerRightIcon: {
-        width:40,
-        color:'white',
-        flex:0,
+        width: 40,
+        color: 'white',
+        flex: 0,
     },
-    headerRightText:{
-        color:'white',
-        fontSize:20,
+    headerRightText: {
+        color: 'white',
+        fontSize: 20,
     },
-    headerLeftMenuIcon:{
-        color:'white',
+    headerLeftMenuIcon: {
+        color: 'white',
     },
-    headerTitle:{
-        color:'white',
-        fontSize:17,
+    headerTitle: {
+        color: 'white',
+        fontSize: 17,
     },
     container: {
-        backgroundColor:'white',
+        backgroundColor: 'white',
         flex: 1,
         alignSelf: "center",
-        flexDirection:'column',
-        width:'100%',
+        flexDirection: 'column',
+        width: '100%',
     },
     regularitem: {
         borderLeftWidth: 1,
@@ -62,20 +62,20 @@ module.exports = StyleSheet.create({
         marginBottom: 5,
     },
     item: {
-        borderColor:'transparent',
-        backgroundColor:'transparent',
+        borderColor: 'transparent',
+        backgroundColor: 'transparent',
     },
-    inputicon:{
-        backgroundColor:'transparent',
+    inputicon: {
+        backgroundColor: 'transparent',
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
     },
-    secondaryButton:{
-        backgroundColor:theme.primaryButtonColor,
-        marginTop:10,
-        marginBottom:10,
+    secondaryButton: {
+        backgroundColor: theme.primaryButtonColor,
+        marginTop: 10,
+        marginBottom: 10,
         width: '100%',
         alignSelf: "center",
         borderRadius: 15,
@@ -89,14 +89,14 @@ module.exports = StyleSheet.create({
     },
     secondaryButtonDisabled: {
         backgroundColor: theme.lightColor,
-        marginBottom:10,
+        marginBottom: 10,
         width: '100%',
         alignSelf: "center",
         borderRadius: 15,
     },
-    deleteButton:{
-        backgroundColor:theme.deleteColor,
-        marginBottom:10,
+    deleteButton: {
+        backgroundColor: theme.deleteColor,
+        marginBottom: 10,
         width: '100%',
         alignSelf: "center",
         borderRadius: 15,
@@ -110,9 +110,9 @@ module.exports = StyleSheet.create({
         color: 'gray',
         textAlign: 'left',
     },
-    textinput:{
+    textinput: {
         flex: 1,
-        padding:5,
+        padding: 5,
         height: 20,
         fontSize: 15,
         textAlign: 'left',
@@ -122,243 +122,243 @@ module.exports = StyleSheet.create({
         padding: 5,
         height: 50,
         fontSize: 15,
-        textAlign:'center',
+        textAlign: 'center',
 
     },
-    primaryBKColor:{
-        backgroundColor:theme.primaryColor,
+    primaryBKColor: {
+        backgroundColor: theme.primaryColor,
     },
-    icon:{
-        color:'white',
+    icon: {
+        color: 'white',
     },
-    thumbnail:{
-        width:20,
+    thumbnail: {
+        width: 20,
     },
-    heading1:{
-        color:'#141414',
+    heading1: {
+        color: '#141414',
         fontSize: 17,
     },
-    heading2:{
-        color:'#313030',
+    heading2: {
+        color: '#313030',
         fontSize: 13,
         fontWeight: 'bold',
     },
-    font11:{
-        fontSize:11,
+    font11: {
+        fontSize: 11,
     },
-    font12:{
-        fontSize:12,
+    font12: {
+        fontSize: 12,
     },
-    font13:{
-        fontSize:13,
+    font13: {
+        fontSize: 13,
     },
-    font14:{
-        fontSize:14,
+    font14: {
+        fontSize: 14,
     },
     /*List Design Start */
-   
-    listItem:{
-        borderBottomColor:'#e5e5e5',
-        borderBottomWidth:.5,
-        marginLeft:0,
-        padding:5,
-        height:60,
 
-       
+    listItem: {
+        borderBottomColor: '#e5e5e5',
+        borderBottomWidth: .5,
+        marginLeft: 0,
+        padding: 5,
+        height: 60,
+
+
     },
-    listLeft:{
+    listLeft: {
         width: 55,
         height: 55,
         justifyContent: 'center',
         alignItems: 'center',
-        paddingLeft:0,
+        paddingLeft: 0,
         marginLeft: 3,
     },
-    listBody:{
-        borderBottomWidth:0,
-        marginLeft:5
+    listBody: {
+        borderBottomWidth: 0,
+        marginLeft: 5
     },
-    listHeading:{
-        color:'black',
-        fontSize:16,
+    listHeading: {
+        color: 'black',
+        fontSize: 16,
     },
-    listHeadingHome:{
-        color:'black',
-        fontSize:15,
+    listHeadingHome: {
+        color: 'black',
+        fontSize: 15,
     },
-    listRight:{
-        borderBottomWidth:0,
-        padding:0,
-        width:40,
-        height:40,
+    listRight: {
+        borderBottomWidth: 0,
+        padding: 0,
+        width: 40,
+        height: 40,
         alignItems: 'flex-end',
-        
+
     },
-    listRightOptionIcon:{
-        fontSize:20,
+    listRightOptionIcon: {
+        fontSize: 20,
         color: 'silver',
         position: 'absolute',
         right: 0,
-        top:10,
-       
+        top: 10,
+
 
     },
-    listRightTouchable:{
-        position:'absolute',
-        top:10
+    listRightTouchable: {
+        position: 'absolute',
+        top: 10
     },
-    listAvatarContainer:{
+    listAvatarContainer: {
         borderRadius: 22,
         backgroundColor: 'white',
-        width:46,
+        width: 46,
         height: 46,
         alignItems: 'center',
         justifyContent: 'center',
         borderColor: '#383939',
         borderWidth: 1,
         position: 'absolute',
-        top:2,
+        top: 2,
     },
-    listAvatar:{
-        width:40,
+    listAvatar: {
+        width: 40,
         height: 40,
-        
+
     },
-    listItemSmall:{
-        borderTopColor:'#e5e5e5',
-        borderTopWidth:.5,
-        marginLeft:0,
-        padding:5,
-        height:48,
+    listItemSmall: {
+        borderTopColor: '#e5e5e5',
+        borderTopWidth: .5,
+        marginLeft: 0,
+        padding: 5,
+        height: 48,
     },
-  
-    listHeadingSmall:{
-        color:'black',
-        fontSize:10,
+
+    listHeadingSmall: {
+        color: 'black',
+        fontSize: 10,
     },
     listAvatarContainerSmall: {
-        marginTop:5,
+        marginTop: 5,
         borderRadius: 25,
-        backgroundColor:'white',
-        padding:2,
-        width:46,
+        backgroundColor: 'white',
+        padding: 2,
+        width: 46,
         height: 46,
         alignItems: 'center',
         justifyContent: 'center',
     },
-    listAvatarSmall:{
-        width:46,
+    listAvatarSmall: {
+        width: 46,
         height: 46,
-      
+
     },
     /* List Design End */
 
-    avatarContainer:{
-        backgroundColor:'white',
+    avatarContainer: {
+        backgroundColor: 'white',
         alignItems: 'center',
-        marginBottom:10,
+        marginBottom: 10,
         borderRadius: 40,
         width: 80,
         height: 80,
-        padding:2,
+        padding: 2,
         alignSelf: "center",
         flexDirection: 'column',
         justifyContent: 'center',
         borderColor: '#383939',
         borderWidth: 1,
     },
-   
-    avatarcontainerbottom:{
+
+    avatarcontainerbottom: {
         borderRadius: 50,
-        backgroundColor:'#e2e0e0',
-        padding:2,
-        width:40,
-        height:40,
+        backgroundColor: '#e2e0e0',
+        padding: 2,
+        width: 40,
+        height: 40,
     },
     avatarBig: {
         borderRadius: 38,
         width: 76,
         height: 76,
-      },
-    avatar:{
-        width:46,
-        height:46,
     },
-   
-    avatarbottom:{
-        width:36,
-        height:36,
+    avatar: {
+        width: 46,
+        height: 46,
     },
-    label:{
-        color:theme.primaryColor,
-        fontSize:14,
+
+    avatarbottom: {
+        width: 36,
+        height: 36,
     },
-    value:{
-        color:'black',
+    label: {
+        color: theme.primaryColor,
+        fontSize: 14,
+    },
+    value: {
+        color: 'black',
         fontSize: 17,
     },
     cardNavBar: {
         flexDirection: 'row',
         height: 50,
         backgroundColor: 'red',
-        width:'100%',
-        alignItems:'center',
-       
+        width: '100%',
+        alignItems: 'center',
+
     },
-    cardNavFooter:{
-        borderTopWidth:.5,
-        borderTopColor:'#e4e5e5',
-        width:'98%',
+    cardNavFooter: {
+        borderTopWidth: .5,
+        borderTopColor: '#e4e5e5',
+        width: '98%',
         alignSelf: "center",
-        height:35
+        height: 35
     },
-    navBarWrapperYellow:{
-        height:28,
-        width:28,
+    navBarWrapperYellow: {
+        height: 28,
+        width: 28,
         borderRadius: 15,
-        backgroundColor:'#edc901',
+        backgroundColor: '#edc901',
         justifyContent: 'center',
         alignItems: 'center'
     },
-    navBarWrapperPrimary:{
-        height:28,
-        width:28,
+    navBarWrapperPrimary: {
+        height: 28,
+        width: 28,
         borderRadius: 15,
-        backgroundColor:theme.primaryColor,
+        backgroundColor: theme.primaryColor,
         justifyContent: 'center',
         alignItems: 'center'
     },
-    navBarWrapperTransparent:{
-        backgroundColor:'transparent',
+    navBarWrapperTransparent: {
+        backgroundColor: 'transparent',
         justifyContent: 'center',
         alignItems: 'center'
     },
-    navBarButton:{
+    navBarButton: {
         flex: 1,
         alignItems: 'center',
-        padding:2,
+        padding: 2,
     },
-    navBarIcon:{
-        fontSize:21,
-        color:'white',
-        alignItems:'center',
+    navBarIcon: {
+        fontSize: 21,
+        color: 'white',
+        alignItems: 'center',
     },
-    navBarLabel:{
-        fontSize:11,
-        height:15,
-        color:'white',
+    navBarLabel: {
+        fontSize: 11,
+        height: 15,
+        color: 'white',
     },
-    deleteButtonSmall:{
-        color:'white',
-        textAlign:'center',
-        marginBottom:20,
-        fontSize:10,
-        backgroundColor:'red',
-        borderRadius:60,
-        paddingTop:3,
-        height:20,
-        width:80,
-        alignSelf: "center", 
+    deleteButtonSmall: {
+        color: 'white',
+        textAlign: 'center',
+        marginBottom: 20,
+        fontSize: 10,
+        backgroundColor: 'red',
+        borderRadius: 60,
+        paddingTop: 3,
+        height: 20,
+        width: 80,
+        alignSelf: "center",
         flexDirection: 'column',
 
     },
@@ -369,39 +369,39 @@ module.exports = StyleSheet.create({
         margin: 0, padding: 0,
     },
     /*Modal Design Start*/
-    modalWrapper:{
+    modalWrapper: {
         backgroundColor: 'rgba(0,0,0,0.5)',
         height: '100%',
-        
+
         zIndex: 1000,
         flex: 1,
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-      
+
     },
     modalContainer: {
-        borderRadius: 6, 
-        backgroundColor:'white',
-        width:340,
+        borderRadius: 6,
+        backgroundColor: 'white',
+        width: 340,
         alignSelf: "center",
-        padding:10,
-       
-        
+        padding: 10,
+
+
     },
-    modalAvatar:{
-        marginLeft:0,
-        borderBottomColor:'#e5e5e5',
-        borderBottomWidth:.5,
-        padding:5
+    modalAvatar: {
+        marginLeft: 0,
+        borderBottomColor: '#e5e5e5',
+        borderBottomWidth: .5,
+        padding: 5
     },
-    modalLeft:{
-        width:55,
+    modalLeft: {
+        width: 55,
         justifyContent: 'center',
         alignItems: 'center'
     },
     modalAvatarIcon: {
-        color:'#818181'
+        color: '#818181'
     },
     modalHeader: {
         width: '100%',
@@ -410,33 +410,33 @@ module.exports = StyleSheet.create({
         padding: 10,
         marginBottom: 10,
         marginRight: 15,
-        textAlign:'center',
-        
+        textAlign: 'center',
+
 
     },
     modalCancel: {
-        textAlign:'right',
+        textAlign: 'right',
         width: '100%',
         color: theme.lightColor,
         fontSize: 15,
-        padding:10,
+        padding: 10,
         marginBottom: 15,
         marginRight: 15,
-         
+
     },
     callOut: {
         width: 200,
-        height:50,
+        height: 50,
         alignItems: 'center',
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'center',
-        marginBottom:5,
+        marginBottom: 5,
         backgroundColor: 'white',
         borderColor: '#2c3e50',
         borderWidth: 1,
-        borderRadius:8,
-       
+        borderRadius: 8,
+
     },
     callOutFix: {
         width: 200,
@@ -456,12 +456,12 @@ module.exports = StyleSheet.create({
         height: 50,
         justifyContent: 'center',
         alignItems: 'center',
-        
+
     },
     callOutContainerFix: {
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor:'white',
+        backgroundColor: 'white',
 
     },
     callOutText: {
@@ -474,7 +474,7 @@ module.exports = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         textAlignVertical: 'center'
-        
+
     },
     callOutArrow: {
         height: 50,
@@ -486,17 +486,21 @@ module.exports = StyleSheet.create({
     /*Model Design End*/
     mapMenu: {
         position: 'absolute',
-        width: 60,
+        width: 46,
+        left:0,
         //height: Dimensions.get('window').height ,
         alignItems: 'center',
         flexDirection: 'column',
-        justifyContent: 'space-around',
+        justifyContent: 'center',
+        marginLeft: 20,
+        marginTop: 20
+
         //backgroundColor: '#00000040'
         
     },
     mapTopMenu: {
         position: 'absolute',
-        width: 60,
+        width: 46,
         height: 200,
         top: 10,
         padding: 5,
@@ -516,26 +520,40 @@ module.exports = StyleSheet.create({
         borderWidth: 1,
     },
     mapMenuCircle: {
-        marginLeft: 10,
-        width: 40,
-        height: 40,
-        backgroundColor: 'white',
-        borderRadius: 20,
+        width: 42,
+        height: 42,
+        backgroundColor: '#009ad6',
+        borderRadius: 21,
         justifyContent: 'center',
         alignItems: 'center',
-        borderColor: '#2c3e50',
-        borderWidth: 1,
-        marginTop: 5,
+        borderColor: '#ecedef',
+        borderWidth: 2,
+        marginTop: 3,
+    },
+    mapMenuCircleMap: {
+        width: 42,
+        height: 42,
+        backgroundColor: '#f79345',
+        borderRadius: 21,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderColor: '#ecedef',
+        borderWidth: 2,
+        marginTop: 3,
+    },
+    mapMenuCircleContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     mapMenuLabel: {
-        color: 'white',
+        color: '#34495e',
         fontSize: 9,
         fontWeight: 'bold' ,
-        width: 60,
+        width: 46,
         textAlign: 'center',
-        textShadowColor: '#2c3e50',
-        textShadowOffset: { width:1, height: 1 },
-        textShadowRadius: 5,
+        textShadowColor: 'white',
+        textShadowOffset: { width:.5, height: .5 },
+        textShadowRadius: 1,
     }
   
 

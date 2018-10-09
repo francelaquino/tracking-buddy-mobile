@@ -244,7 +244,7 @@ class Register extends Component {
 						</TouchableOpacity>
 					</View>
                          
-                          <Item stackedLabel>
+                              <Item fixedLabel>
                               <Label style={globalStyle.label} >Email address</Label>
                               <Input style={globalStyle.textinput} 
 							name="email" autoCorrect={false} maxLength = {50}
