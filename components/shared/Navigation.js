@@ -24,6 +24,7 @@ import EditCreatePlace from '../places/EditCreatePlace';
 import PlaceList from '../places/PlaceList';
 import LocationsMember from '../places/LocationsMember';
 import PlaceView from '../places/PlaceView';
+import RealTimeLocation from '../places/RealTimeLocation';
 import LocationPlaces from '../places/LocationPlaces';
 import LocationDetails from '../places/LocationDetails';
 import LocationView from '../places/LocationView';
@@ -79,6 +80,15 @@ export const Stack = createStackNavigator({
 
     Home: {
         screen: Home,
+        headerMode: 'none',
+        navigationOptions: {
+            header: null,
+            gesturesEnabled: false,
+        }
+    },
+
+    RealTimeLocation: {
+        screen: RealTimeLocation,
         headerMode: 'none',
         navigationOptions: {
             header: null,

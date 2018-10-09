@@ -13,10 +13,7 @@ import { Stack }  from './components/shared/Navigation';
 
 const tracking =()=>(
     <Provider store={store}>
-        <View style={{flex:1}}>
-            <StatusBar backgroundColor="#16a085" />
             <Stack />
-            </View>
     </Provider>
 )
 

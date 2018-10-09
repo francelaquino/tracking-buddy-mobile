@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react';
 import { StatusBar , AppState, Modal, BackHandler, AsyncStorage, NetInfo, TouchableOpacity, Platform, StyleSheet, Text, View, ScrollView, TextInput, ToastAndroid, Image, Dimensions, FlatList } from 'react-native';
-import { Fab , Root, Container, Header, Body, Title, Item, Input, Label, Button, Icon, Content, List, ListItem,Left, Right,Switch, Thumbnail,Card,CardItem } from 'native-base';
+import { ActionSheet , Root, Container, Header, Body, Title, Item, Input, Label, Button, Icon, Content, List, ListItem,Left, Right,Switch, Thumbnail,Card,CardItem } from 'native-base';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -15,7 +15,6 @@ import OfflineNotice  from '../shared/OfflineNotice';
 import { connect } from 'react-redux';
 import Moment from 'moment';
 import { displayHomeMember, displayMember, updateToken } from '../../redux/actions/memberActions';
-import {  getAddress } from '../../redux/actions/locationActions';
 import BackgroundGeolocation from "react-native-background-geolocation";
 import firebase from 'react-native-firebase';
 import type {  RemoteMessage, Notification, NotificationOpen } from 'react-native-firebase';
@@ -51,7 +50,6 @@ class HomePlaces extends Component {
             memberReady: false,
             memberModal: false,
             fitToMap: true,
-            address:'',
             region: {
                 latitude: LATITUDE,
                 longitude: LONGITUDE,
@@ -127,14 +125,14 @@ class HomePlaces extends Component {
             }).catch(error => {
         });
 
-        
+        /*
        
         BackgroundGeolocation.getCurrentPosition((location) => {
             self.props.getAddress(location.coords);
            
            
         }, (error) => {
-        }, { samples: 1, persist: true,desiredAccuracy: 10,timeout: 30 });
+        }, { samples: 1, persist: true,desiredAccuracy: 10,timeout: 30 });*/
 
         this.initialize();
         
@@ -381,14 +379,13 @@ class HomePlaces extends Component {
                     source={require('../../images/marker.png')} />
                 <Text style={styles.markerText}>{marker.firstname}</Text>
 
-                <MapView.Callout tooltip={true} onPress={() => this.props.navigation.navigate("LocationPlaces", { uid: marker.uid, name: marker.firstname })} >
+                <MapView.Callout  tooltip={true}  onPress={() => this.props.navigation.navigate("RealTimeLocation", { uid: marker.uid, name: marker.firstname })}  >
                     <View style={globalStyle.callOutFix} >
-                        <View style={globalStyle.callOutContainerFix} >
-                            <Text numberOfLines={2} style={globalStyle.callOutText}>{marker.address}</Text>
-                        </View>
-                        <View style={globalStyle.callOutArrow}>
-                            <SimpleLineIcons style={{ fontSize: 13, color: '#1abc9c' }} name='arrow-right' />
-                        </View>
+                    <Text numberOfLines={2} style={globalStyle.callOutText}>{marker.address}</Text>
+                        
+                    <Button bordered light full style={globalStyle.calloutButton}>
+                                        <Text style={{ color: 'white',fontSize:11 }}>Track Realtime</Text>
+                                    </Button>
 
                     </View>
 
@@ -465,7 +462,7 @@ class HomePlaces extends Component {
 
                             <Button style={globalStyle.mapMenuCircle} onPress={() => this.props.navigation.navigate('GenerateInviteCode')} >
                                 <View style={globalStyle.mapMenuCircleContainer}>
-                                    <Ionicons size={30} style={{ color: 'white', }} name="ios-person-add" />
+                                    <SimpleLineIcons  size={23} style={{ color: 'white' }} name="user-following" />
                                 </View>
                             </Button>
                             <Text style={globalStyle.mapMenuLabel}>Invite Member </Text>
@@ -473,44 +470,41 @@ class HomePlaces extends Component {
 
                             <Button style={globalStyle.mapMenuCircle} onPress={() => this.props.navigation.navigate('NewInvite')} >
                                 <View style={globalStyle.mapMenuCircleContainer}>
-                                    <Ionicons size={30} style={{ color: 'white', }} name="ios-person-add" />
+                                    <SimpleLineIcons size={23} style={{color: 'white' }} name="user-follow" />
                                 </View>
                             </Button>
                             <Text style={globalStyle.mapMenuLabel}>Add Member </Text>
 
 
-                           
-
-
                             <Button style={globalStyle.mapMenuCircle} onPress={() => this.allMembers()} >
                                 <View style={globalStyle.mapMenuCircleContainer}>
-                                    <Ionicons size={30} style={{ color: 'white' }} name="ios-person" />
+                                    <SimpleLineIcons size={23} style={{color: 'white' }} name="people" />
                                 </View>
                             </Button>
                             <Text style={globalStyle.mapMenuLabel}>Show Members </Text>
 
                             <Button style={globalStyle.mapMenuCircle} onPress={() => this.changeGroup() } >
                                 <View style={globalStyle.mapMenuCircleContainer}>
-                                    <Ionicons size={30} style={{ color: 'white' }} name="ios-people" />
+                                    <SimpleLineIcons size={23} style={{ color: 'white' }} name="organization" />
                                 </View>
                             </Button>
                             <Text style={globalStyle.mapMenuLabel}>Switch Group </Text>
 
                             <Button style={globalStyle.mapMenuCircleMap} onPress={() => this.centerToUserMarker()} >
                                 <View style={globalStyle.mapMenuCircleContainer}>
-                                    <MaterialIcons size={25} style={{ color: 'white' }} name="my-location" />
+                                    <SimpleLineIcons size={23} style={{color: 'white' }} name="compass" />
                                 </View>
                             </Button>
                             <Text style={globalStyle.mapMenuLabel}>My Location </Text>
                             <Button style={globalStyle.mapMenuCircleMap} onPress={() => this.fitToMap()} >
                                 <View style={globalStyle.mapMenuCircleContainer}>
-                                    <MaterialIcons size={25} style={{ color: 'white' }} name="zoom-out-map" />
+                                    <SimpleLineIcons size={23} style={{color: 'white' }} name="size-actual" />
                                 </View>
                             </Button>
                             <Text style={globalStyle.mapMenuLabel}>Fit to Map </Text>
                             <Button style={globalStyle.mapMenuCircleMap} onPress={() => this.changeMapMode()} >
                                 <View style={globalStyle.mapMenuCircleContainer}>
-                                    <Entypo size={25} style={{ color: 'white' }} name="globe" />
+                                    <SimpleLineIcons size={23} style={{color: 'white' }} name="globe" />
                                 </View>
                             </Button>
                             <Text style={globalStyle.mapMenuLabel}>Map Style </Text>
@@ -625,13 +619,12 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => ({
     members: state.fetchMember.home_members,
-    address: state.fetchLocation.address,
     isConnected:state.fetchConnection.isConnected,
     
   })
   
   
   
-HomePlaces = connect(mapStateToProps, { displayHomeMember, displayMember, getAddress, updateToken})(HomePlaces);
+HomePlaces = connect(mapStateToProps, { displayHomeMember, displayMember, updateToken})(HomePlaces);
   
 export default HomePlaces;
