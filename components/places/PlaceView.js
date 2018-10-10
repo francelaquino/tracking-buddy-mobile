@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { StatusBar, TouchableOpacity, Platform, StyleSheet, Text, View, ScrollView, TextInput, ToastAndroid, Image, Dimensions, Alert } from 'react-native';
+import { FlatList, StatusBar, TouchableOpacity, Platform, StyleSheet, Text, View, ScrollView, TextInput, ToastAndroid, Image, Dimensions, Alert } from 'react-native';
 import { Root, Container, Header, Body, Title, Item, Input, Label, Button, Icon, Content, List, ListItem, Left, Right, Thumbnail, Switch, Separator } from 'native-base';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -10,8 +10,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Entypo from 'react-native-vector-icons/Entypo';
 import MapView, { ProviderPropType, Marker, AnimatedRegion,Animated,Polyline } from 'react-native-maps';
 import { connect } from 'react-redux';
-import { updatePlace, displayPlaces  } from '../../redux/actions/locationActions' ;
-import { displayMember  } from '../../redux/actions/memberActions' ;
+import { getMemberNotification,updateMemberNotification  } from '../../redux/actions/memberActions' ;
 import Loading  from '../shared/Loading';
 import OfflineNotice  from '../shared/OfflineNotice';
 const LATITUDE_DELTA = 0.01;
@@ -63,7 +62,7 @@ class PlaceView extends Component {
             },
            
         })
-        this.props.displayMember().then(res => {
+        this.props.getMemberNotification(this.props.navigation.state.params.place.id).then(res => {
             this.setState({ loading: false })
         });
     }
@@ -77,28 +76,70 @@ class PlaceView extends Component {
         )
     }
 
-    
-    ready() {
-        const members = this.props.members.map(member => (
-            <ListItem key={member.id} avatar button style={globalStyle.listItem} onPress={() => { this.props.navigation.navigate("PlaceAlert", { place: this.state.place, placeid: this.state.id, userid: member.uid, firstname: member.firstname, region: this.state.region }) }}>
-                <Left style={globalStyle.listLeft}>
+    onArrivesChange(item,value){
+        this.props.updateMemberNotification(this.props.navigation.state.params.place.id,item,value,'arrives').then(res => {
+            this.props.getMemberNotification(this.props.navigation.state.params.place.id).then(res => {
+            });
+        });
+    }
+    onLeavesChange(item,value){
+        this.props.updateMemberNotification(this.props.navigation.state.params.place.id,item,value,'leaves').then(res => {
+            this.props.getMemberNotification(this.props.navigation.state.params.place.id).then(res => {
+            });
+        });
+    }
+    renderMember(){
+        return (
+            <View >
+            <FlatList
+            style={{flex:1}}
+                keyExtractor={item => item.id.toString()}
+                data={this.props.members}
+                renderItem={({ item }) => (
+                    <ListItem  avatar  key={item.id.toString()} style={[globalStyle.listItem,{}]}  >
+                        <Left style={globalStyle.listLeft}>
 
-                    <View style={globalStyle.listAvatarContainer} >
-                        {member.emptyphoto === "1" ? <Ionicons size={46} style={{ color: '#2c3e50' }} name="ios-person" /> :
-                            <Thumbnail style={globalStyle.listAvatar} source={{ uri: member.avatar }} />
-                        }
+                        <View style={globalStyle.listAvatarContainer} >
+                            {item.emptyphoto === "1" ? <Ionicons size={46} style={{ color: '#2c3e50' }} name="ios-person" /> :
+                                <Thumbnail style={globalStyle.listAvatar} source={{ uri: item.avatar }} />
+                            }
+                              
+                        </View>
 
-                    </View>
-                </Left>
-                <Body style={globalStyle.listBody} >
-                    <Text style={globalStyle.listHeading}>{member.firstname}</Text>
+                        </Left>
+                        <Body style={[globalStyle.listBody,{}]} >
+                    <Text style={globalStyle.listHeading}>{item.firstname}</Text>
                 </Body>
-                <Right style={globalStyle.listRight} >
-                    <SimpleLineIcons style={globalStyle.listRightOptionIcon} name='arrow-right' />
-                </Right>
-            </ListItem>
-        ));
+                        
+                <Right style={[globalStyle.listRight,{width:100,height:60}]} >
+                <View style={{width:100,height:20,position:'absolute',top:2,right:0}}>
+                                <Text style={{ fontSize:12,color: '#e67e22' }}>ARRIVES</Text>
+                               
+                                    <Switch  onValueChange={arrives => this.onArrivesChange(item,arrives)} style={{position:'absolute',top:0,right:0}}  value={item.arrives} /> 
+                            </View>
+                            <View style={{width:100,height:20,position:'absolute',top:32,right:0}}>
+                                <Text style={{ fontSize:12, color: '#e67e22',position:'absolute',top:0}}>LEAVES</Text>
+                                <Switch  onValueChange={leaves => this.onLeavesChange(item,leaves)} style={{position:'absolute',top:0,right:0}}  value={item.leaves} /> 
+                            </View>
+                        </Right>
+                </ListItem>
 
+
+                                        
+                ) }
+            />
+        </View>)
+     }
+
+    ready() {
+       /* const members = this.props.members.map(member => (
+            <View key={member.id} style={{flex:1, flexDirection: 'column',}}>
+                <View style={{flex:1, backgroundColor:'blue'}}></View>
+                <View style={{flex:1,  backgroundColor:'red'}}> </View>
+            </View>
+                
+        ));
+*/
 
         return (
 
@@ -133,15 +174,16 @@ class PlaceView extends Component {
                     <View style={styles.footerContainer}>
                         <List style={{ height: 35 }}>
                             <Separator bordered>
-                                <Text style={{ height: 35, textAlignVertical: 'center' }}>Notification</Text>
+                                <Text style={{ height: 35, textAlignVertical: 'center' }}>Notify me when</Text>
                             </Separator>
                         </List>
 
                         <Content padder>
-                            <List>
-                                {members}
-                            </List>
-
+                            <View>
+                                {
+                                    this.renderMember()
+                                    }
+                            </View>
                         </Content>
 
                     </View>
@@ -231,11 +273,11 @@ const styles = StyleSheet.create({
   
 
 const mapStateToProps = state => ({
-    members: state.fetchMember.members,
+    members:state.fetchMember.placenotification,
     isLoading:state.fetchMember.isLoading,
   })
   
-PlaceView=connect(mapStateToProps,{displayPlaces,updatePlace,displayMember})(PlaceView);
+PlaceView=connect(mapStateToProps,{getMemberNotification,updateMemberNotification})(PlaceView);
   
 export default PlaceView;
 

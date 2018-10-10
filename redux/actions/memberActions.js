@@ -43,6 +43,47 @@ export const updateToken = () =>  dispatch => {
 
 };
 
+
+export const updateMemberNotification = (placeid,item,value,mode) => async dispatch => {
+    return new Promise(async (resolve) => {
+        try {
+            await axios.post(settings.baseURL + 'member/updateMemberNotification', {
+                placeid: placeid,
+                useruid: item.uid,
+                owner:item.owner,
+                mode:mode,
+                value:value
+           }).then(function (res) {
+            if (res.data.status == "202") {
+                resolve(true)
+            } else {
+                resolve(false)
+                ToastAndroid.showWithGravityAndOffset("Something went wrong. Please try again.", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
+            }
+
+               }).catch(function (error) {
+
+                    resolve(false)
+                    ToastAndroid.showWithGravityAndOffset("Something went wrong. Please try again.", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
+           });
+
+            
+
+        } catch (e) {
+            
+            resolve(false)
+            ToastAndroid.showWithGravityAndOffset("Something went wrong. Please try again.", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
+        }
+    });
+
+
+    
+
+
+
+
+};
+
 export const generateInvitationCode = () => async dispatch => {
     return new Promise(async (resolve) => {
         try {
@@ -291,6 +332,7 @@ export const displayMember = () => async dispatch => {
 
 
 
+
 export const getMemberGroup = (userid) => async dispatch => {
     return new Promise(async (resolve) => {
         try {
@@ -333,17 +375,51 @@ export const getMemberGroup = (userid) => async dispatch => {
 
 
 
-export const getMemberNotification = (userid) => async dispatch => {
+export const getMemberNotification = (placeid) => async dispatch => {
+
+    let members = [];
+    let count = 0;
+    let cnt = 0;
+   
+
     return new Promise(async (resolve) => {
         try {
-            await axios.get(settings.baseURL + 'member/getmembernotification/' + userid)
+            await axios.get(settings.baseURL + 'member/getmembernotification/' +userdetails.userid+"/"+ placeid)
                 .then(function (res) {
                     if (res.data.status == "202") {
-                        dispatch({
-                            type: GET_MEMBERNOTIFICATION,
-                            payload: res.data.results
-                        });
-                        resolve(true)
+                        count = res.data.results.length;
+                        let x = 0;
+                        if (count > 0) {
+                            res.data.results.forEach(data => {
+                                let arrives=true;
+                                let leaves=true;
+                                if(data.arrives=='0'){
+                                    arrives=false;
+                                }
+                                if(data.leaves=='0'){
+                                    leaves=false;
+                                }
+                                members.push({
+                                    arrives: arrives,
+                                    leaves: leaves,
+                                    avatar: data.avatar,
+                                    emptyphoto: data.emptyphoto,
+                                    id: data.id,
+                                    owner: data.owner,
+                                    uid: data.uid,
+                                    firstname: data.firstname,
+                                    
+                                });
+                                cnt++;
+                            })
+                        }
+                        if (cnt >= count) {
+                            dispatch({
+                                type: GET_MEMBERNOTIFICATION,
+                                payload: members
+                            });
+                            resolve(true)
+                        }
                     } else {
                         dispatch({
                             type: GET_MEMBERNOTIFICATION,

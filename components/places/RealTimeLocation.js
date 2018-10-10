@@ -31,9 +31,6 @@ var LONGITUDE_DELTA = .005;
 class RealTimeLocation extends Component {
     constructor(props) {
         super(props)
-        
-       
-        let self = this;
         this.map = null;
         this.state = {
             mapMode:'standard',
@@ -46,43 +43,33 @@ class RealTimeLocation extends Component {
 
     }
 
-
-    async componentWillMount() {
-
-
-        this.initialize();
+    componentWillUnmount() {
        
     }
+    
+    componentWillMount() {
+        this.initialize();
+    }
        
-    
-
-
-    
-    
-
-   
-    
-
 
     initialize() {
         let self = this;
-       
-       
-        setTimeout(() => {
-           
-            firebase.database().ref('users/' + userdetails.userid+"/members/"+this.props.navigation.state.params.uid).on("value", function (snapshot) {
-                self.map.animateToRegion({
-                    latitude: Number(snapshot.val().latitude),
-                    longitude: Number(snapshot.val().longitude),
-                    longitudeDelta:LONGITUDE_DELTA,
-                    latitudeDelta:LATITUDE_DELTA
-                })
-                self.setState({ latitude:Number(snapshot.val().latitude),longitude:Number(snapshot.val().longitude) })
-                //LATITUDE=Number(snapshot.val().latitude);
-               // LONGITUDE=Number(snapshot.val().longitude);
-            });
+        setTimeout(()=>{
+            
+                firebase.database().ref('users/' + userdetails.userid+"/members/"+this.props.navigation.state.params.uid).on("value", function (snapshot) {
+                    if(self.map!=null){
+                    self.map.animateToRegion({
+                        latitude: Number(snapshot.val().latitude),
+                        longitude: Number(snapshot.val().longitude),
+                        longitudeDelta:LONGITUDE_DELTA,
+                        latitudeDelta:LATITUDE_DELTA
+                    })
+                    self.setState({ latitude:Number(snapshot.val().latitude),longitude:Number(snapshot.val().longitude) })
+                }
+                    
+                });
+        },500);
 
-           }, 1000);
     }
     loading() {
         return (
