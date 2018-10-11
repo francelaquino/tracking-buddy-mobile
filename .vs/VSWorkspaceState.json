@@ -9,9 +9,8 @@
     "\\components\\places",
     "\\components\\shared",
     "\\components\\user",
-    "\\redux",
-    "\\redux\\actions"
+    "\\redux"
   ],
-  "SelectedNode": "\\components\\places\\SavePlace.js",
+  "SelectedNode": "\\components\\user\\UserProfile.js",
   "PreviewInSolutionExplorer": false
 }

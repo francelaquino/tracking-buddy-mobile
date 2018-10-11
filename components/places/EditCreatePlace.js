@@ -37,6 +37,7 @@ class EditCreatePlace extends Component {
             radius:200,
             address: '',
             id: '',
+            mapMode: 'standard',
             region: {
                   latitude: -37.78825,
                 longitude: -122.4324,
@@ -165,7 +166,21 @@ class EditCreatePlace extends Component {
 
         });
     }
-   
+
+
+
+    async changeMapMode() {
+        if (this.state.mapMode == "standard") {
+            this.setState({
+                mapMode: 'satellite'
+            });
+        } else {
+            this.setState({
+                mapMode: 'standard'
+            });
+        }
+
+    }
     onRegionChangeComplete = region => {
         if (this.state.pause==false) {
             let self = this;
@@ -195,7 +210,7 @@ class EditCreatePlace extends Component {
     }
     ready(){
 
-        //const { region } = this.state;
+      
 
         return (
                     <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps={"always"}>
@@ -266,6 +281,7 @@ class EditCreatePlace extends Component {
                                     scrollEnabled={true}
                                     style={StyleSheet.absoluteFill}
                                     textStyle={{ color: '#bc8b00' }}
+                                    mapType={this.state.mapMode}
                                     loadingEnabled={true}
                                     showsMyLocationButton={true}
                                    >
@@ -287,7 +303,23 @@ class EditCreatePlace extends Component {
                                 
                                     
                                     
+                    </View>
+                    <View style={[globalStyle.mapMenu, {top:50}]}>
+
+
+                        <TouchableOpacity style={globalStyle.mapMenuCircleMap} onPress={() => this.changeMapMode()} >
+                            <View style={globalStyle.mapMenuCircleContainer}>
+                                <SimpleLineIcons size={23} style={{ color: 'white' }} name="globe" />
                             </View>
+                        </TouchableOpacity>
+                        <Text style={globalStyle.mapMenuLabel}>Map Style </Text>
+
+
+
+
+
+                    </View>
+
                             <Content padder>
                              <View  style={styles.footerContainer}>
                              

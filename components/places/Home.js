@@ -14,6 +14,7 @@ import Loader  from '../shared/Loader';
 import OfflineNotice  from '../shared/OfflineNotice';
 import { connect } from 'react-redux';
 import Moment from 'moment';
+import DeviceInfo from 'react-native-device-info';
 import { displayHomeMember, displayMember, updateToken } from '../../redux/actions/memberActions';
 import BackgroundGeolocation from "react-native-background-geolocation";
 import firebase from 'react-native-firebase';
@@ -30,8 +31,9 @@ const LATITUDE = 0;
 const LONGITUDE = 0;
 const LATITUDE_DELTA = .05;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
-
-
+var Model = DeviceInfo.getModel();
+var timeZone = DeviceInfo.getTimezone();
+var Manufacturer = DeviceInfo.getManufacturer();
 class HomePlaces extends Component {
     constructor(props) {
         super(props)
@@ -64,10 +66,10 @@ class HomePlaces extends Component {
 
 
     async componentWillMount() {
-       
+
         let self = this;
        
-      /*  BackgroundGeolocation.on('http', function(response) {
+        /*BackgroundGeolocation.on('http', function(response) {
             var status = response.status;
             var success = response.success;
             var responseText = response.responseText;
@@ -77,8 +79,7 @@ class HomePlaces extends Component {
             var status = response.status;
               var responseText = response.responseText;
               console.log(response)
-            });
-            */
+            });*/
         BackgroundGeolocation.on('heartbeat', function () {
             firebase.messaging().getToken()
                 .then(fcmToken => {
@@ -86,8 +87,11 @@ class HomePlaces extends Component {
                     self.props.updateToken();
                 });
         });
-       
+
+      
+
         BackgroundGeolocation.configure({
+
             locationAuthorizationAlert: {
                 titleWhenNotEnabled: "Location services not enabled",
                 titleWhenOff: "Location services is off",
@@ -95,6 +99,7 @@ class HomePlaces extends Component {
                 cancelButton: "Cancel",
                 settingsButton: "Settings"
             },
+            notificationPriority: BackgroundGeolocation.NOTIFICATION_PRIORITY_MIN,
             stopTimeout: 1,
             logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
             debug: true,
@@ -116,6 +121,9 @@ class HomePlaces extends Component {
             params: {             
                 "useruid": userdetails.userid,
                 "fcmtoken": userdetails.fcmtoken,
+                "model": Model,
+                "timezone": timeZone,
+                "manufacturer": Manufacturer
             }
         }).then(state => {
             if (!state.enabled) {
@@ -125,14 +133,14 @@ class HomePlaces extends Component {
             }).catch(error => {
         });
 
-        /*
+        
        
         BackgroundGeolocation.getCurrentPosition((location) => {
-            self.props.getAddress(location.coords);
-           
-           
+            console.log(location)
+            /*var localTime = Moment.utc(location.timestamp).local();
+            console.log(localTime)*/
         }, (error) => {
-        }, { samples: 1, persist: true,desiredAccuracy: 10,timeout: 30 });*/
+        }, { samples: 1, persist: true,desiredAccuracy: 10,timeout: 30 })
 
         this.initialize();
         
@@ -324,8 +332,12 @@ class HomePlaces extends Component {
                             if (self.state.fitToMap == true) {
                                  self.fitToMap();
                             }
+                            if (self.props.members.length <= 0) {
+                                self.centerToUserMarker();
+                            }
                             self.setState({ memberReady: true, isLoading: false })
                         }, 500);
+
                     });
                 }
             });
@@ -458,55 +470,55 @@ class HomePlaces extends Component {
 
 
 
-                        <View style={globalStyle.mapMenu}>
+                        <View style={[globalStyle.mapMenu, {top:20}]}>
 
-                            <Button style={globalStyle.mapMenuCircle} onPress={() => this.props.navigation.navigate('GenerateInviteCode')} >
+                            <TouchableOpacity style={globalStyle.mapMenuCircle} onPress={() => this.props.navigation.navigate('GenerateInviteCode')} >
                                 <View style={globalStyle.mapMenuCircleContainer}>
                                     <SimpleLineIcons  size={23} style={{ color: 'white' }} name="user-following" />
                                 </View>
-                            </Button>
+                            </TouchableOpacity>
                             <Text style={globalStyle.mapMenuLabel}>Invite Member </Text>
 
 
-                            <Button style={globalStyle.mapMenuCircle} onPress={() => this.props.navigation.navigate('NewInvite')} >
+                            <TouchableOpacity style={globalStyle.mapMenuCircle} onPress={() => this.props.navigation.navigate('NewInvite')} >
                                 <View style={globalStyle.mapMenuCircleContainer}>
                                     <SimpleLineIcons size={23} style={{color: 'white' }} name="user-follow" />
                                 </View>
-                            </Button>
+                            </TouchableOpacity>
                             <Text style={globalStyle.mapMenuLabel}>Add Member </Text>
 
 
-                            <Button style={globalStyle.mapMenuCircle} onPress={() => this.allMembers()} >
+                            <TouchableOpacity  style={globalStyle.mapMenuCircle} onPress={() => this.allMembers()} >
                                 <View style={globalStyle.mapMenuCircleContainer}>
                                     <SimpleLineIcons size={23} style={{color: 'white' }} name="people" />
                                 </View>
-                            </Button>
+                            </TouchableOpacity >
                             <Text style={globalStyle.mapMenuLabel}>Show Members </Text>
 
-                            <Button style={globalStyle.mapMenuCircle} onPress={() => this.changeGroup() } >
+                            <TouchableOpacity style={globalStyle.mapMenuCircle} onPress={() => this.props.navigation.navigate('SelectGroup', { changeGroup: this.changeGroup })}  >
                                 <View style={globalStyle.mapMenuCircleContainer}>
                                     <SimpleLineIcons size={23} style={{ color: 'white' }} name="organization" />
                                 </View>
-                            </Button>
+                            </TouchableOpacity>
                             <Text style={globalStyle.mapMenuLabel}>Switch Group </Text>
 
-                            <Button style={globalStyle.mapMenuCircleMap} onPress={() => this.centerToUserMarker()} >
+                            <TouchableOpacity style={globalStyle.mapMenuCircleMap} onPress={() => this.centerToUserMarker()} >
                                 <View style={globalStyle.mapMenuCircleContainer}>
                                     <SimpleLineIcons size={23} style={{color: 'white' }} name="compass" />
                                 </View>
-                            </Button>
+                            </TouchableOpacity>
                             <Text style={globalStyle.mapMenuLabel}>My Location </Text>
-                            <Button style={globalStyle.mapMenuCircleMap} onPress={() => this.fitToMap()} >
+                            <TouchableOpacity style={globalStyle.mapMenuCircleMap} onPress={() => this.fitToMap()} >
                                 <View style={globalStyle.mapMenuCircleContainer}>
                                     <SimpleLineIcons size={23} style={{color: 'white' }} name="size-actual" />
                                 </View>
-                            </Button>
+                            </TouchableOpacity>
                             <Text style={globalStyle.mapMenuLabel}>Fit to Map </Text>
-                            <Button style={globalStyle.mapMenuCircleMap} onPress={() => this.changeMapMode()} >
+                            <TouchableOpacity style={globalStyle.mapMenuCircleMap} onPress={() => this.changeMapMode()} >
                                 <View style={globalStyle.mapMenuCircleContainer}>
                                     <SimpleLineIcons size={23} style={{color: 'white' }} name="globe" />
                                 </View>
-                            </Button>
+                            </TouchableOpacity>
                             <Text style={globalStyle.mapMenuLabel}>Map Style </Text>
 
 
@@ -514,10 +526,15 @@ class HomePlaces extends Component {
                             
                            
                             </View>
-                            {this.state.groupname !== '' &&
-                                <View style={{ flexDirection: 'column', marginVertical: 5, width: '100%', alignItems: 'center', position: 'absolute', bottom: 80 }}>
-                                    <Text style={{ paddingTop: 5, opacity: .5, borderRadius: 10, backgroundColor: 'black', width: 250, height: 30, color: 'white', textAlign: 'center', alignSelf: "center", flexDirection: 'column' }}>{this.state.groupname} Group</Text>
-                                </View>
+                        {this.state.groupname !== '' &&
+                            <View>
+                            <View style={{ flexDirection: 'column', opacity: .5, backgroundColor: '#16a085', marginVertical: 5, width: '100%', alignItems: 'center', position: 'absolute', top: -5, height: 40, }}>
+
+                            </View>
+                            <View>
+                                <Text style={{ fontSize: 15, paddingTop: 9, zIndex: 99999, width: 250, height: 30, color: 'white', textAlign: 'center', alignSelf: "center", flexDirection: 'column' }}>{this.state.groupname} Group</Text>
+                            </View>
+                        </View>
                             }
                             <View style={styles.memberContainer} >
                                 {this.state.memberReady &&

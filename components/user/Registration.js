@@ -9,6 +9,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Loading  from '../shared/Loading';
 import ImagePicker from 'react-native-image-picker';
 import Loader from '../shared/Loader';
+import axios from 'axios';
 import OfflineNotice from '../shared/OfflineNotice';
 import { saveLocation } from '../../redux/actions/locationActions';
 import { registerUser , getcountry } from '../../redux/actions/userActions';
@@ -87,7 +88,7 @@ class Register extends Component {
     async onSubmit() {
 
 
-
+        let self = this;
 
 
         if (this.state.email == "") {
@@ -137,28 +138,62 @@ class Register extends Component {
             return false;
         }
         this.setState({ loading: true })
-        let user = {
-            email: this.state.email,
-            password: this.state.password,
-            firstname: this.state.firstname,
-            lastname: this.state.lastname,
-            middlename: this.state.middlename,
-            mobileno: this.state.mobileno,
-            gender: this.state.gender,
-            country: this.state.country,
-            birthdate: this.state.birthdate,
-            avatarsource: this.state.avatarsource
+        try {
+            navigator.geolocation.getCurrentPosition(
+                async (position) => {
+
+                    await axios.get("https://maps.googleapis.com/maps/api/geocode/json?latlng=" + position.coords.latitude + "," + position.coords.longitude + "&sensor=false&key=AIzaSyCHZ-obEHL8TTP4_8vPfQKAyzvRrrlmi5Q")
+                        .then(function (res) {
+                            let address = res.data.results[0].formatted_address
+                            let latitude = position.coords.latitude;
+                            let longitude = position.coords.longitude;
+                            let user = {
+                                email: self.state.email,
+                                password: self.state.password,
+                                firstname: self.state.firstname,
+                                lastname: self.state.lastname,
+                                middlename: self.state.middlename,
+                                mobileno: self.state.mobileno,
+                                address: address,
+                                latitude: latitude,
+                                longitude: longitude,
+                                gender: self.state.gender,
+                                country: self.state.country,
+                                birthdate: self.state.birthdate,
+                                avatarsource: self.state.avatarsource
+                            }
+
+                            self.props.registerUser(user).then((res) => {
+                                if (res == true) {
+
+                                    self.props.saveLocation();
+
+                                    self.resetState();
+                                }
+                                self.setState({ loading: false })
+                            })
+
+
+                            
+                        }).catch(function (error) {
+                            console.log(error)
+                        });
+
+
+
+
+
+                },
+                (err) => {
+                },
+                { enableHighAccuracy: true, timeout: 10000 }
+            );
+        } catch (error) {
+            console.log(error)
         }
 
-        this.props.registerUser(user).then((res) => {
-            if (res == true) {
-                
-               this.props.saveLocation();
 
-                this.resetState();
-            }
-            this.setState({ loading: false })
-        })
+        
 
 
        
@@ -194,13 +229,13 @@ class Register extends Component {
 		<Loading/>
 	  )
   }
-  onGenderValueChange(value: string) {
+  onGenderValueChange(value) {
     this.setState({
       gender: value
     });
   }
 
-  onCountryValueChange(value: string) {
+  onCountryValueChange(value) {
     this.setState({
       country: value
     });
@@ -244,7 +279,7 @@ class Register extends Component {
 						</TouchableOpacity>
 					</View>
                          
-                              <Item fixedLabel>
+                              <Item stackedLabel>
                               <Label style={globalStyle.label} >Email address</Label>
                               <Input style={globalStyle.textinput} 
 							name="email" autoCorrect={false} maxLength = {50}

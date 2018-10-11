@@ -30,14 +30,14 @@ class PlaceView extends Component {
         this.state = {
             id:'',
             loading:true,
-            place:'',
             region: {
                   latitude: -37.78825,
                   longitude: -122.4324,
                   latitudeDelta: 0.0922,
                   longitudeDelta: 0.0421,
                 },
-            mapSnapshot: '',
+            notifications: [],
+            mapMode: 'standard',
         };
 
       }
@@ -62,84 +62,118 @@ class PlaceView extends Component {
             },
            
         })
-        this.props.getMemberNotification(this.props.navigation.state.params.place.id).then(res => {
-            this.setState({ loading: false })
+        await this.props.getMemberNotification(this.props.navigation.state.params.place.id).then(async res => {
+            this.setState({ notifications:[] })
+            let count = 0;
+            let cnt = 0;
+            count = this.props.members.length;
+            let x = 0;
+            if (count > 0) {
+                await this.props.members.forEach(data => {
+                  
+                    if (data.arrives == '1') {
+                        data.arrives = true;
+                    } else {
+                        data.arrives = false;
+                    }
+                    if (data.leaves == '1') {
+                        data.leaves = true;
+                    } else {
+                        data.leaves = false;
+                    }
+                    this.setState({
+                        notifications: this.state.notifications.concat(data)
+                    });
+                    cnt++;
+                })
+            }
+            if (cnt >= count) {
+                this.setState({ loading: false })
+            }
+            
         });
     }
 
 
  
-   
-    loading(){
-        return (
-          <Loading/>
-        )
-    }
 
-    onArrivesChange(item,value){
-        this.props.updateMemberNotification(this.props.navigation.state.params.place.id,item,value,'arrives').then(res => {
-            this.props.getMemberNotification(this.props.navigation.state.params.place.id).then(res => {
+    async changeMapMode() {
+        if (this.state.mapMode == "standard") {
+            this.setState({
+                mapMode: 'satellite'
             });
+        } else {
+            this.setState({
+                mapMode: 'standard'
+            });
+        }
+
+    }
+    onArrivesChange(item,value,index){
+        this.props.updateMemberNotification(this.props.navigation.state.params.place.id, item, value, 'arrives').then(res => {
+            let noti = this.state.notifications;
+            noti[index].arrives = value;
+            this.setState({ notifications: noti })
         });
     }
-    onLeavesChange(item,value){
-        this.props.updateMemberNotification(this.props.navigation.state.params.place.id,item,value,'leaves').then(res => {
-            this.props.getMemberNotification(this.props.navigation.state.params.place.id).then(res => {
-            });
+    onLeavesChange(item,value,index){
+        this.props.updateMemberNotification(this.props.navigation.state.params.place.id, item, value, 'leaves').then(res => {
+            let noti = this.state.notifications;
+            noti[index].leaves = value;
+            this.setState({ notifications: noti })
+
         });
     }
-    renderMember(){
+    renderMember() {
         return (
             <View >
-            <FlatList
-            style={{flex:1}}
-                keyExtractor={item => item.id.toString()}
-                data={this.props.members}
-                renderItem={({ item }) => (
-                    <ListItem  avatar  key={item.id.toString()} style={[globalStyle.listItem,{}]}  >
-                        <Left style={globalStyle.listLeft}>
+                <FlatList
+                    style={{ flex: 1 }}
+                    keyExtractor={item => item.id.toString()}
+                    data={this.state.notifications}
+                    renderItem={({ item,index }) => (
+                        <ListItem avatar key={item.id.toString()} style={[globalStyle.listItem, {}]}  >
+                            <Left style={globalStyle.listLeft}>
 
-                        <View style={globalStyle.listAvatarContainer} >
-                            {item.emptyphoto === "1" ? <Ionicons size={46} style={{ color: '#2c3e50' }} name="ios-person" /> :
-                                <Thumbnail style={globalStyle.listAvatar} source={{ uri: item.avatar }} />
-                            }
-                              
-                        </View>
+                                <View style={globalStyle.listAvatarContainer} >
+                                    {item.emptyphoto === "1" ? <Ionicons size={46} style={{ color: '#2c3e50' }} name="ios-person" /> :
+                                        <Thumbnail style={globalStyle.listAvatar} source={{ uri: item.avatar }} />
+                                    }
 
-                        </Left>
-                        <Body style={[globalStyle.listBody,{}]} >
-                    <Text style={globalStyle.listHeading}>{item.firstname}</Text>
-                </Body>
-                        
-                <Right style={[globalStyle.listRight,{width:100,height:60}]} >
-                <View style={{width:100,height:20,position:'absolute',top:2,right:0}}>
-                                <Text style={{ fontSize:12,color: '#e67e22' }}>ARRIVES</Text>
-                               
-                                    <Switch  onValueChange={arrives => this.onArrivesChange(item,arrives)} style={{position:'absolute',top:0,right:0}}  value={item.arrives} /> 
-                            </View>
-                            <View style={{width:100,height:20,position:'absolute',top:32,right:0}}>
-                                <Text style={{ fontSize:12, color: '#e67e22',position:'absolute',top:0}}>LEAVES</Text>
-                                <Switch  onValueChange={leaves => this.onLeavesChange(item,leaves)} style={{position:'absolute',top:0,right:0}}  value={item.leaves} /> 
-                            </View>
-                        </Right>
-                </ListItem>
+                                </View>
+
+                            </Left>
+                            <Body style={[globalStyle.listBody, {}]} >
+                                <Text style={globalStyle.listHeading}>{item.firstname}</Text>
+                            </Body>
+
+                            <Right style={[globalStyle.listRight, { width: 100, height: 60 }]} >
+                                <View style={{ width: 100, height: 20, position: 'absolute', top: 2, right: 0 }}>
+                                    <Text style={{ fontSize: 12, color: '#e67e22' }}>ARRIVES</Text>
+                                    <Switch onValueChange={arrives => this.onArrivesChange(item, arrives,index)} style={{ position: 'absolute', top: 0, right: 0 }} value={item.arrives} />
+                                </View>
+                                <View style={{ width: 100, height: 20, position: 'absolute', top: 32, right: 0 }}>
+                                    <Text style={{ fontSize: 12, color: '#e67e22', position: 'absolute', top: 0 }}>LEAVES</Text>
+                                    <Switch onValueChange={leaves => this.onLeavesChange(item, leaves,index)} style={{ position: 'absolute', top: 0, right: 0 }} value={item.leaves} />
+                                </View>
+                            </Right>
+                        </ListItem>
 
 
-                                        
-                ) }
-            />
-        </View>)
-     }
 
+                    )}
+                />
+            </View>)
+    }
+
+
+    loading() {
+        return (
+            <Loading />
+        )
+    }
     ready() {
-       /* const members = this.props.members.map(member => (
-            <View key={member.id} style={{flex:1, flexDirection: 'column',}}>
-                <View style={{flex:1, backgroundColor:'blue'}}></View>
-                <View style={{flex:1,  backgroundColor:'red'}}> </View>
-            </View>
-                
-        ));
-*/
+      
 
         return (
 
@@ -154,6 +188,7 @@ class PlaceView extends Component {
                             style={StyleSheet.absoluteFill}
                             textStyle={{ color: '#bc8b00' }}
                             loadingEnabled={true}
+                            mapType={this.state.mapMode}
                             showsMyLocationButton={false}>
 
                             <MapView.Marker coordinate={this.state.region} >
@@ -163,6 +198,22 @@ class PlaceView extends Component {
 
 
                         </MapView>
+
+                    </View>
+
+                    <View style={globalStyle.mapMenu}>
+
+                      
+                        <TouchableOpacity style={globalStyle.mapMenuCircleMap} onPress={() => this.changeMapMode()} >
+                            <View style={globalStyle.mapMenuCircleContainer}>
+                                <SimpleLineIcons size={23} style={{ color: 'white' }} name="globe" />
+                            </View>
+                        </TouchableOpacity>
+                        <Text style={globalStyle.mapMenuLabel}>Map Style </Text>
+
+
+
+
 
                     </View>
 

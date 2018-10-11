@@ -171,6 +171,7 @@ export const addMember = (invitationcode) => async dispatch => {
 
             await axios.post(settings.baseURL + 'member/addmember', {
                 invitationcode: invitationcode,
+                firstname: userdetails.firstname,
                 uid: userdetails.userid,
             }).then(async function (res) {
                 if (res.data.status == "202") {
@@ -387,39 +388,12 @@ export const getMemberNotification = (placeid) => async dispatch => {
             await axios.get(settings.baseURL + 'member/getmembernotification/' +userdetails.userid+"/"+ placeid)
                 .then(function (res) {
                     if (res.data.status == "202") {
-                        count = res.data.results.length;
-                        let x = 0;
-                        if (count > 0) {
-                            res.data.results.forEach(data => {
-                                let arrives=true;
-                                let leaves=true;
-                                if(data.arrives=='0'){
-                                    arrives=false;
-                                }
-                                if(data.leaves=='0'){
-                                    leaves=false;
-                                }
-                                members.push({
-                                    arrives: arrives,
-                                    leaves: leaves,
-                                    avatar: data.avatar,
-                                    emptyphoto: data.emptyphoto,
-                                    id: data.id,
-                                    owner: data.owner,
-                                    uid: data.uid,
-                                    firstname: data.firstname,
-                                    
-                                });
-                                cnt++;
-                            })
-                        }
-                        if (cnt >= count) {
-                            dispatch({
-                                type: GET_MEMBERNOTIFICATION,
-                                payload: members
-                            });
-                            resolve(true)
-                        }
+                        dispatch({
+                            type: GET_MEMBERNOTIFICATION,
+                            payload: res.data.results
+                        });
+                        resolve(true)
+                       
                     } else {
                         dispatch({
                             type: GET_MEMBERNOTIFICATION,
@@ -500,6 +474,7 @@ export const deleteMember=(memberuid)=> async dispatch=> {
 
             await axios.post(settings.baseURL + 'member/deletemember', {
                 memberuid: memberuid,
+                firstname: userdetails.firstname,
                 owneruid: userdetails.userid,
             }).then(async function (res) {
                 if (res.data.status == "202") {

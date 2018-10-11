@@ -298,6 +298,8 @@ export const registerUser = (profile) => async dispatch => {
 
             let avatar = "";
 
+
+
             await firebase.auth().createUserAndRetrieveDataWithEmailAndPassword(profile.email, profile.password).then(async (res) => {
                 let uid = res.user.uid;
                 res.user.sendEmailVerification();
@@ -323,7 +325,10 @@ export const registerUser = (profile) => async dispatch => {
                                 middlename: profile.middlename,
                                 mobileno: profile.mobileno,
                                 password: profile.password,
-                                gender:profile.gender,
+                                gender: profile.gender,
+                                address: profile.address,
+                                latitude: profile.latitude,
+                                longitude: profile.longitude,
                                 country:profile.country,
                                 birthdate:profile.birthdate,
                                 dateadded: Moment().format('YYYY-MM-DD HH:mm:ss'),
@@ -350,7 +355,10 @@ export const registerUser = (profile) => async dispatch => {
                         middlename: profile.middlename,
                         mobileno: profile.mobileno,
                         gender:profile.gender,
-                        country:profile.country,
+                        country: profile.country,
+                        address: profile.address,
+                        latitude: profile.latitude,
+                        longitude: profile.longitude,
                         birthdate:profile.birthdate,
                         dateadded: Moment().format('YYYY-MM-DD HH:mm:ss'),
                         avatar: avatar,

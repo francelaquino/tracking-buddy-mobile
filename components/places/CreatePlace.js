@@ -34,7 +34,8 @@ class CreatePlace extends Component {
         this.state = {
             loading: false,
             modalVisible: false,
-            radius:200,
+            radius: 200,
+            mapMode: 'standard',
             placename: '',
             address: '',
             region: {
@@ -153,6 +154,21 @@ class CreatePlace extends Component {
             
         
          
+    }
+
+
+
+    async changeMapMode() {
+        if (this.state.mapMode == "standard") {
+            this.setState({
+                mapMode: 'satellite'
+            });
+        } else {
+            this.setState({
+                mapMode: 'standard'
+            });
+        }
+
     }
 
     onSubmit() {
@@ -278,7 +294,7 @@ class CreatePlace extends Component {
                                     zoomEnabled={true}
                                     onLayout={() => this.fitToMap()}
                             onRegionChangeComplete={this.onRegionChangeComplete}
-                            
+                            mapType={this.state.mapMode}
                                     scrollEnabled={true}
                                     style={StyleSheet.absoluteFill}
                                     textStyle={{ color: '#bc8b00' }}
@@ -304,7 +320,22 @@ class CreatePlace extends Component {
                                 
                                     
                                     
+                    </View>
+                    <View style={[globalStyle.mapMenu, { top: 50 }]}>
+
+
+                        <TouchableOpacity style={globalStyle.mapMenuCircleMap} onPress={() => this.changeMapMode()} >
+                            <View style={globalStyle.mapMenuCircleContainer}>
+                                <SimpleLineIcons size={23} style={{ color: 'white' }} name="globe" />
                             </View>
+                        </TouchableOpacity>
+                        <Text style={globalStyle.mapMenuLabel}>Map Style </Text>
+
+
+
+
+
+                    </View>
                             <Content padder>
                              <View  style={styles.footerContainer}>
                              

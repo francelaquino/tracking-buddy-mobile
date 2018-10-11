@@ -386,40 +386,37 @@ class LocationPlaces extends Component {
 
                 </MapView>
                     <View style={[globalStyle.mapMenu, { top: 1 }]}>
-                        <TouchableOpacity onPress={() => this.changeMapMode()}>
-                            <View style={globalStyle.mapMenuCircle} >
-                                <Entypo size={25} style={{ color: '#2c3e50' }} name="globe" />
+                        <TouchableOpacity onPress={() => this.changeMapMode()} style={globalStyle.mapMenuCircleMap}>
+                            <View style={globalStyle.mapMenuCircleContainer}>
+                            <SimpleLineIcons size={23} style={{ color: 'white' }} name="globe" />
                             </View>
-                            <Text style={globalStyle.mapMenuLabel}>Map Style</Text>
                         </TouchableOpacity>
-                        
+                        <Text style={globalStyle.mapMenuLabel}>Map Style </Text>
                         
                         {this.props.locationsmap.length > 1 &&
                             <View>
-                                <TouchableOpacity onPress={() => this.fitToMap()}>
-                                    <View style={globalStyle.mapMenuCircle} >
-                                        <MaterialIcons size={25} style={{ color: '#2c3e50' }} name="zoom-out-map" />
+                                <TouchableOpacity onPress={() => this.fitToMap()} style={globalStyle.mapMenuCircleMap} >
+                                    <View style={globalStyle.mapMenuCircleContainer}>
+                                        <SimpleLineIcons size={23} style={{ color: 'white' }} name="size-actual" />
                                     </View>
-                                    <Text style={globalStyle.mapMenuLabel}>Center Map</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity onPress={() => this.zoomIn()}>
-                                    <View style={globalStyle.mapMenuCircle} >
-                                        <MaterialIcons size={25} style={{ color: '#2c3e50' }} name="zoom-in" />
+                            </TouchableOpacity>
+                            <Text style={globalStyle.mapMenuLabel}>Fit to Map </Text>
+
+                                <TouchableOpacity onPress={() => this.zoomIn()} style={globalStyle.mapMenuCircleMap}>
+                                    <View style={globalStyle.mapMenuCircleContainer}>
+                                        <SimpleLineIcons size={23} style={{ color: 'white' }} name="magnifier-add" />
                                     </View>
-                                    <Text style={globalStyle.mapMenuLabel}>Zoom In</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity onPress={() => this.zoomOut()}>
-                                    <View style={globalStyle.mapMenuCircle} >
-                                        <MaterialIcons size={25} style={{ color: '#2c3e50' }} name="zoom-out" />
+                            </TouchableOpacity>
+                            <Text style={globalStyle.mapMenuLabel}>Zoom In </Text>
+                                <TouchableOpacity onPress={() => this.zoomOut()} style={globalStyle.mapMenuCircleMap}>
+                                    <View style={globalStyle.mapMenuCircleContainer}>
+                                        <SimpleLineIcons size={23} style={{ color: 'white' }} name="magnifier-remove" />
                                     </View>
-                                    <Text style={globalStyle.mapMenuLabel}>Zoom Out</Text>
-                                </TouchableOpacity>
+                            </TouchableOpacity>
+                            <Text style={globalStyle.mapMenuLabel}>Zoom Out </Text>
                             </View>
                         }
                        
-
-
-
 
                     </View>
                 </View>
