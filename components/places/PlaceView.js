@@ -10,7 +10,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Entypo from 'react-native-vector-icons/Entypo';
 import MapView, { ProviderPropType, Marker, AnimatedRegion,Animated,Polyline } from 'react-native-maps';
 import { connect } from 'react-redux';
-import { getMemberNotification,updateMemberNotification  } from '../../redux/actions/memberActions' ;
+import { getPlaceNotification,updateMemberNotification  } from '../../redux/actions/memberActions' ;
 import Loading  from '../shared/Loading';
 import OfflineNotice  from '../shared/OfflineNotice';
 const LATITUDE_DELTA = 0.01;
@@ -62,7 +62,7 @@ class PlaceView extends Component {
             },
            
         })
-        await this.props.getMemberNotification(this.props.navigation.state.params.place.id).then(async res => {
+        await this.props.getPlaceNotification(this.props.navigation.state.params.place.id).then(async res => {
             this.setState({ notifications:[] })
             let count = 0;
             let cnt = 0;
@@ -328,7 +328,7 @@ const mapStateToProps = state => ({
     isLoading:state.fetchMember.isLoading,
   })
   
-PlaceView=connect(mapStateToProps,{getMemberNotification,updateMemberNotification})(PlaceView);
+PlaceView=connect(mapStateToProps,{getPlaceNotification,updateMemberNotification})(PlaceView);
   
 export default PlaceView;
 

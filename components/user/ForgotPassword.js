@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { StatusBar, NetInfo, Platform, StyleSheet, Text, View, ScrollView, TextInput, TouchableOpacity, Image, ToastAndroid, NavigationActions } from 'react-native';
 import { Root, Container, Header, Body, Title, Item, Input, Label, Button, Icon, Left, Right, Content } from 'native-base';
-//import firebase from 'react-native-firebase';
+import firebase from 'react-native-firebase';
 import Loader from '../shared/Loader';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import OfflineNotice  from '../shared/OfflineNotice';
@@ -31,10 +31,9 @@ class ForgotPassword extends Component {
             return false;
         }
           firebase.database().ref(".info/connected").on("value", function (snap) {
-              if (snap.val() === true) {
-                  this.setState({ loading: true })
-                  this.setState({ loading: true });
-                  firebase.auth().sendPasswordResetEmail(this.state.email).then((res) => {
+              if (snap.key === "connected") {
+                self.setState({ loading: true })
+                  firebase.auth().sendPasswordResetEmail(self.state.email).then((res) => {
                       self.setState({ loading: false, email: '' });
                       ToastAndroid.showWithGravityAndOffset("A message has been sent to your email with instructions to reset your password", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
                   }).catch(function (err) {

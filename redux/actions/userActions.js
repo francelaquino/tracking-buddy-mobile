@@ -89,9 +89,10 @@ export const userLogin = (email, password) => async dispatch => {
                         }*/
 
                     })
-                    .catch(function (err) {
+                    .catch(function (e) {
                         resolve(false);
-                        ToastAndroid.showWithGravityAndOffset("Invalid username or bad password", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
+                       
+                        ToastAndroid.showWithGravityAndOffset("Invalid email address or bad password", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
                 });
         } catch (e) {
             ToastAndroid.showWithGravityAndOffset("Something went wrong. Please try again.", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
@@ -383,8 +384,13 @@ export const registerUser = (profile) => async dispatch => {
 
 
             }).catch(function (e) {
+               
                 if (e.code === 'auth/email-already-in-use') {
-                    ToastAndroid.showWithGravityAndOffset("Email aready used", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
+                    ToastAndroid.showWithGravityAndOffset("The email address is already in use by another account", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
+                }else if (e.code === 'auth/invalid-email') {
+                        ToastAndroid.showWithGravityAndOffset("Invalid email address", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
+                }else if (e.code === 'auth/weak-password') {
+                        ToastAndroid.showWithGravityAndOffset("Please provide strong password", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
                 } else {
                     ToastAndroid.showWithGravityAndOffset("Something went wrong. Please try again.", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
                 }

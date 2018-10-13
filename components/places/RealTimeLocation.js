@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { StatusBar , AppState, Modal, BackHandler, AsyncStorage, NetInfo, TouchableOpacity, Platform, StyleSheet, Text, View, ScrollView, TextInput, ToastAndroid, Image, Dimensions, FlatList } from 'react-native';
+import { Linking, StatusBar , AppState, Modal, BackHandler, AsyncStorage, NetInfo, TouchableOpacity, Platform, StyleSheet, Text, View, ScrollView, TextInput, ToastAndroid, Image, Dimensions, FlatList } from 'react-native';
 import { ActionSheet , Root, Container, Header, Body, Title, Item, Input, Label, Button, Icon, Content, List, ListItem,Left, Right,Switch, Thumbnail,Card,CardItem } from 'native-base';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -13,6 +13,7 @@ import Loading  from '../shared/Loading';
 import Loader  from '../shared/Loader';
 import OfflineNotice  from '../shared/OfflineNotice';
 import { connect } from 'react-redux';
+import axios from 'axios';
 import Moment from 'moment';
 import { displayHomeMember, displayMember, updateToken } from '../../redux/actions/memberActions';
 import BackgroundGeolocation from "react-native-background-geolocation";
@@ -56,7 +57,7 @@ class RealTimeLocation extends Component {
         let self = this;
         setTimeout(()=>{
             
-                firebase.database().ref('users/' + userdetails.userid+"/members/"+this.props.navigation.state.params.uid).on("value", function (snapshot) {
+                firebase.database().ref('users/' +this.props.navigation.state.params.uid).on("value", function (snapshot) {
                     if(self.map!=null){
                     self.map.animateToRegion({
                         latitude: Number(snapshot.val().latitude),
@@ -80,6 +81,26 @@ class RealTimeLocation extends Component {
             </Root>
         )
     }
+    startNavigation(){
+        if(Platform.OS === 'ios'){
+            navigator.geolocation.getCurrentPosition(
+                async (position) => {
+                    Linking.openURL('maps://app?saddr='+ position.coords.latitude +'+'+position.coords.longitude+'&daddr='+this.state.latitude+'+'+this.state.longitude)
+
+                    
+
+                },
+                (err) => {
+                },
+                { enableHighAccuracy: true, timeout: 10000 }
+            );
+            
+        } else{
+            Linking.openURL('google.navigation:q='+this.state.latitude+'+'+this.state.longitude)
+        }
+    }
+
+
 
     async changeMapMode() {
         if (this.state.mapMode == "standard") {
@@ -93,7 +114,14 @@ class RealTimeLocation extends Component {
         }
 
     }
-
+    async fitToMap() {
+        this.map.animateToRegion({
+            latitude: this.state.latitude,
+            longitude: this.state.longitude,
+            latitudeDelta: 0.005,
+            longitudeDelta: 0.005
+        })
+    }
 
     ready() {
 
@@ -156,14 +184,36 @@ class RealTimeLocation extends Component {
                         <View style={globalStyle.mapMenu}>
 
                            
+                           <TouchableOpacity style={globalStyle.mapMenuCircle} onPress={() => { this.props.navigation.navigate("LocationPlaces", { uid: this.props.navigation.state.params.uid, name: this.props.navigation.state.params.name })}}  >
+                                <View style={globalStyle.mapMenuCircleContainer}>
+                                    <SimpleLineIcons size={23} style={{color: 'white' }} name="map" />
+                                </View>
+                            </TouchableOpacity>
+                            <Text style={globalStyle.mapMenuLabel}>Location History </Text>
+                            
+                            <TouchableOpacity style={globalStyle.mapMenuCircleMap} onPress={() => this.fitToMap()} >
+                                <View style={globalStyle.mapMenuCircleContainer}>
+                                    <SimpleLineIcons size={23} style={{color: 'white' }} name="size-actual" />
+                                </View>
+                            </TouchableOpacity>
 
-                           
-                            <Button style={globalStyle.mapMenuCircleMap} onPress={() => this.changeMapMode()} >
+                            <Text style={globalStyle.mapMenuLabel}>Center Map </Text>
+
+                            <TouchableOpacity style={globalStyle.mapMenuCircleMap} onPress={() => this.changeMapMode()} >
                                 <View style={globalStyle.mapMenuCircleContainer}>
                                     <SimpleLineIcons size={23} style={{color: 'white' }} name="globe" />
                                 </View>
-                            </Button>
+                            </TouchableOpacity>
                             <Text style={globalStyle.mapMenuLabel}>Map Style </Text>
+
+                            <TouchableOpacity style={globalStyle.mapMenuCircleMap} onPress={() => this.startNavigation()} >
+                                <View style={globalStyle.mapMenuCircleContainer}>
+                                    <SimpleLineIcons size={23} style={{color: 'white' }} name="cursor" />
+                                </View>
+                            </TouchableOpacity>
+                            <Text style={globalStyle.mapMenuLabel}>Start Navigation </Text>
+
+                            
 
 
                            

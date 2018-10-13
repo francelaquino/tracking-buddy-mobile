@@ -217,19 +217,19 @@ module.exports = StyleSheet.create({
     },
     listAvatarContainer: {
         borderRadius: 22,
-        backgroundColor: 'white',
+        backgroundColor: '#e9ebeb',
         width: 46,
         height: 46,
         alignItems: 'center',
         justifyContent: 'center',
-        borderColor: '#383939',
-        borderWidth: 1,
+        /*borderColor: '#127461',
+        borderWidth: 1,*/
         position: 'absolute',
         top: 2,
     },
     listAvatar: {
-        width: 40,
-        height: 40,
+        width: 46,
+        height: 46,
 
     },
     listItemSmall: {
@@ -447,17 +447,17 @@ module.exports = StyleSheet.create({
 
     },
     callOutFix: {
-        width: 200,
-        height: 100,
+        width: 150,
+        height: 50,
         alignItems: 'center',
         flexDirection: 'column',
         justifyContent: 'center',
-        marginBottom: 5,
+        //marginBottom: 5,
         backgroundColor: 'white',
-        borderColor: '#2c3e50',
-        borderWidth: 1,
-        borderRadius: 8,
-        flex:1,
+        //borderColor: 'gray',
+        //borderWidth: 1,
+        /*borderRadius: 8,*/
+        //flex:1,
 
     },
     callOutContainer: {

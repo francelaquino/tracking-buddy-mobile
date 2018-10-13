@@ -26,13 +26,13 @@ class Register extends Component {
           longitude: '',
           address: '',
           isLoading: true,
-          email: '',
-          password: '',
-          retypepassword: '',
-          mobileno: '',
-          firstname: '',
-          middlename: '',
-          lastname: '',
+          email: 'aquinof@rchsp.med.sa',
+          password: '111111',
+          retypepassword: '111111',
+          mobileno: '0538191138',
+          firstname: 'Francel',
+          middlename: 'Dizon',
+          lastname: 'Aquino',
           avatar: '',
           avatarsource: '',
           gender:'',
@@ -75,6 +75,7 @@ class Register extends Component {
 
    componentWillMount() {
         this.props.getcountry();
+        
     }
 
     async onDateChange(date) {
@@ -167,8 +168,8 @@ class Register extends Component {
                                 if (res == true) {
 
                                     self.props.saveLocation();
-
-                                    self.resetState();
+                                    //self.resetState();
+                                    self.props.navigation.navigate('Login');
                                 }
                                 self.setState({ loading: false })
                             })
@@ -176,7 +177,6 @@ class Register extends Component {
 
                             
                         }).catch(function (error) {
-                            console.log(error)
                         });
 
 
@@ -189,7 +189,6 @@ class Register extends Component {
                 { enableHighAccuracy: true, timeout: 10000 }
             );
         } catch (error) {
-            console.log(error)
         }
 
 

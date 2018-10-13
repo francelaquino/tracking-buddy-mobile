@@ -56,7 +56,7 @@ class DisplayMember extends Component {
                             <Left style={globalStyle.listLeft}>
                                 <View style={globalStyle.listAvatarContainer} >
                                
-                                {item.emptyphoto === "1" ? <Ionicons size={46} style={{ color: '#2c3e50' }} name="ios-person" /> :
+                                {item.emptyphoto === "1" ? <Text style={{fontSize:23,color:'#4b4c4c'}}>{item.firstletter}</Text> :
                                     <Thumbnail style={globalStyle.listAvatar} source={{ uri: item.avatar }} />
                                 }
                                 </View>

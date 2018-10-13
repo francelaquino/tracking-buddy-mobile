@@ -28,6 +28,7 @@ class Login extends Component {
       
   
      componentDidMount() {
+         
          BackHandler.addEventListener('hardwareBackPress', function () {
              return true;
          });

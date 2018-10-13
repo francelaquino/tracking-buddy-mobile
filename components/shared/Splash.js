@@ -10,6 +10,14 @@ var userdetails = require('../shared/userDetails');
 class Splash extends Component {
 
     async componentDidMount() {
+        navigator.geolocation.getCurrentPosition(
+            async (position) => {
+            },
+            (err) => {
+            },
+            { enableHighAccuracy: true, timeout: 10000 }
+        );
+        
         let self = this;
         let userid = await AsyncStorage.getItem("userid");
         let email = await AsyncStorage.getItem("email");

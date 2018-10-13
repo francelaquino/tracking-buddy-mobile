@@ -376,16 +376,60 @@ export const getMemberGroup = (userid) => async dispatch => {
 
 
 
-export const getMemberNotification = (placeid) => async dispatch => {
+export const getPlaceNotification = (placeid) => async dispatch => {
 
-    let members = [];
-    let count = 0;
-    let cnt = 0;
    
 
     return new Promise(async (resolve) => {
         try {
-            await axios.get(settings.baseURL + 'member/getmembernotification/' +userdetails.userid+"/"+ placeid)
+            await axios.get(settings.baseURL + 'place/getplacemembernotification/' + userdetails.userid+"/"+placeid)
+                .then(function (res) {
+                    if (res.data.status == "202") {
+                        dispatch({
+                            type: GET_MEMBERNOTIFICATION,
+                            payload: res.data.results
+                        });
+                        resolve(true)
+                       
+                    } else {
+                        dispatch({
+                            type: GET_MEMBERNOTIFICATION,
+                            payload: []
+                        });
+                        resolve(false)
+                        ToastAndroid.showWithGravityAndOffset("Something went wrong. Please try again.", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
+                    }
+                }).catch(function (error) {
+                    
+                    dispatch({
+                        type: GET_MEMBERNOTIFICATION,
+                        payload: []
+                    });
+                    resolve(false)
+                    ToastAndroid.showWithGravityAndOffset("Something went wrong. Please try again.", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
+                });
+
+        } catch (e) {
+            
+            dispatch({
+                type: GET_MEMBERNOTIFICATION,
+                payload: []
+            });
+            resolve(false)
+            ToastAndroid.showWithGravityAndOffset("Something went wrong. Please try again.", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
+        }
+    });
+
+};
+
+
+export const getMemberNotification = (memberuid) => async dispatch => {
+
+   
+
+    return new Promise(async (resolve) => {
+        try {
+            await axios.get(settings.baseURL + 'member/getmembernotification/' +memberuid +"/"+ userdetails.userid)
                 .then(function (res) {
                     if (res.data.status == "202") {
                         dispatch({

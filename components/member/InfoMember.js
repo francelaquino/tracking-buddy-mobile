@@ -47,7 +47,7 @@ class InfoMember extends Component {
         this.props.deleteMember(this.props.navigation.state.params.memberuid).then(res=>{
             
                 self.props.displayMember();
-            self.props.displayHomeMember();
+                self.props.displayHomeMember();
             setTimeout(() => {
                 this.props.navigation.pop(1);
                 self.setState({ isbusy: false })
@@ -87,6 +87,7 @@ class InfoMember extends Component {
                 data={this.props.placenotification}
                 renderItem={({ item }) => (
                     <View key={item.id.toString()} >
+                    
                         <ListItem key={item.id.toString()} style={[globalStyle.listItem, { borderBottomWidth:0 }]}>
                             <Body>
                                 <Text numberOfLines={1} style={globalStyle.listHeading}>{item.place}</Text>
@@ -175,7 +176,7 @@ class InfoMember extends Component {
                                     <Button
                                         onPress={() => this.confirmDelete()}
                                         bordered light full style={[globalStyle.deleteButton, {width:'90%'}]}>
-                                        <Text style={{ color: 'white' }}>Delete </Text>
+                                        <Text style={{ color: 'white' }}>Remove Member </Text>
                                     </Button>
                                 </View>
                             </View>
@@ -187,7 +188,7 @@ class InfoMember extends Component {
                                         </List>
                                     </Content>
                                     </Tab>
-                                <Tab heading="Notification" tabStyle={{ backgroundColor: '#16a085' }} textStyle={{ color: 'white' }} activeTextStyle={{ color: 'white', fontWeight: 'normal' }} activeTabStyle={{ backgroundColor: '#16a085' }} >
+                                <Tab heading="Place Notification" tabStyle={{ backgroundColor: '#16a085' }} textStyle={{ color: 'white' }} activeTextStyle={{ color: 'white', fontWeight: 'normal' }} activeTabStyle={{ backgroundColor: '#16a085' }} >
                                     <Content padder>
                                         <List>
                                             {this.renderMemberNotification()}
@@ -223,7 +224,7 @@ class InfoMember extends Component {
                                 </Button>
                             </Left>
                             <Body style={globalStyle.headerBody}>
-                                <Title>{this.props.navigation.state.params.firstname}</Title>
+                                <Title>MEMBER DETAILS</Title>
                             </Body>
                             <Right style={globalStyle.headerRight}>
                             </Right>
