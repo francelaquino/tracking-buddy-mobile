@@ -44,7 +44,7 @@ class HomePlaces extends Component {
         this.map = null;
         this.markers=[];
         this.state = {
-            appState:AppState.currentState,
+            //appState:AppState.currentState,
             active: true,
             useruid:'',
             firstname:'',
@@ -69,7 +69,7 @@ class HomePlaces extends Component {
     }
 
 
-    async componentWillMount() {
+     componentWillMount() {
 
         let self = this;
        
@@ -151,11 +151,11 @@ class HomePlaces extends Component {
        
     }
        
-    haddleAppStateChange = (nextAppState) => {
+    /*haddleAppStateChange = (nextAppState) => {
         this.setState({appState: nextAppState});
         
-    }
-    async componentDidMount() {
+    }*/
+     componentDidMount() {
         let self = this;
         firebase.messaging().requestPermission();
 
@@ -168,7 +168,7 @@ class HomePlaces extends Component {
             
 
 
-        AppState.addEventListener('change',this.haddleAppStateChange);
+        //AppState.addEventListener('change',this.haddleAppStateChange);
 
         firebase.messaging().onMessage((notification: RemoteMessage) => {
             const channel = new firebase.notifications.Android.Channel('My GPS Buddy', 'My GPS Buddy', firebase.notifications.Android.Importance.Max)
@@ -207,7 +207,7 @@ class HomePlaces extends Component {
     }
 
     componentWillUnmount() {
-        AppState.removeEventListener('change',this.haddleAppStateChange);
+        //AppState.removeEventListener('change',this.haddleAppStateChange);
         BackgroundGeolocation.removeListeners();
         this.notificationOpenedListener();
        
@@ -297,7 +297,7 @@ class HomePlaces extends Component {
     async allMembers() {
         let self = this;
         userdetails.group = "";
-        this.setState({ isLoading: true, groupname:'' })
+        this.setState({ isLoading: true, groupname: '', isChildVisible:false })
         await self.props.displayHomeMember().then(res => {
             setTimeout(async () => {
                 await self.fitToMap();
@@ -309,12 +309,12 @@ class HomePlaces extends Component {
    
     changeGroup = (groupname) => {
         this.reload();
-        this.setState({ groupname: groupname });
+        this.setState({ groupname: groupname, isChildVisible:false });
 
     }
     async reload() {
         let self = this;
-        this.setState({ isLoading:true })
+        this.setState({ isLoading: true, isChildVisible:false })
         await self.props.displayHomeMember().then(res => {
             setTimeout(async () => {
                 await self.fitToMap();

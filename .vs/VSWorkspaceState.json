@@ -1,16 +1,16 @@
 {
   "ExpandedNodes": [
     "",
+    "\\android",
+    "\\android\\app",
+    "\\android\\app\\src",
+    "\\android\\app\\src\\main",
+    "\\android\\gradle",
     "\\assets",
     "\\assets\\style",
     "\\components",
-    "\\components\\group",
-    "\\components\\member",
-    "\\components\\places",
-    "\\components\\shared",
-    "\\components\\user",
-    "\\redux"
+    "\\components\\places"
   ],
-  "SelectedNode": "\\components\\user\\UserProfile.js",
+  "SelectedNode": "\\components\\places\\RealTimeLocation.js",
   "PreviewInSolutionExplorer": false
 }
