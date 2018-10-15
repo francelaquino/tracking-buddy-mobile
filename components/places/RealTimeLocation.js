@@ -36,7 +36,8 @@ class RealTimeLocation extends Component {
         this.state = {
             mapMode:'standard',
             longitude:49.566759,
-            latitude:27.159915,
+            latitude: 27.159915,
+            isReady:false,
            
         };
 
@@ -45,10 +46,11 @@ class RealTimeLocation extends Component {
     }
 
     componentWillUnmount() {
-       
+        this.setState({ isReady: false })
     }
     
     componentWillMount() {
+        this.setState({ isReady:true })
         this.initialize();
     }
        
@@ -56,20 +58,21 @@ class RealTimeLocation extends Component {
     initialize() {
         let self = this;
         setTimeout(()=>{
-            
-                firebase.database().ref('users/' +this.props.navigation.state.params.uid).on("value", function (snapshot) {
-                    if(self.map!=null){
+            if (self.state.isReady == true) {
+                firebase.database().ref('users/' + this.props.navigation.state.params.uid).on("value", function (snapshot) {
+
+
                     self.map.animateToRegion({
                         latitude: Number(snapshot.val().latitude),
                         longitude: Number(snapshot.val().longitude),
-                        longitudeDelta:LONGITUDE_DELTA,
-                        latitudeDelta:LATITUDE_DELTA
+                        longitudeDelta: LONGITUDE_DELTA,
+                        latitudeDelta: LATITUDE_DELTA
                     })
-                    self.setState({ latitude:Number(snapshot.val().latitude),longitude:Number(snapshot.val().longitude) })
-                }
-                    
+                    self.setState({ latitude: Number(snapshot.val().latitude), longitude: Number(snapshot.val().longitude) })
+
                 });
-        },500);
+            }
+            }, 500);
 
     }
     loading() {
