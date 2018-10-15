@@ -232,6 +232,26 @@ module.exports = StyleSheet.create({
         height: 46,
 
     },
+    listAvatarContainerSmall: {
+        marginTop: 5,
+        borderRadius: 25,
+        backgroundColor: 'white',
+        padding: 2,
+        width: 49,
+        height: 49,
+        alignItems: 'center',
+        justifyContent: 'center',
+       
+    },
+    listAvatarHome: {
+        width: 46,
+        height: 46,
+        borderColor:'#1abc9c',
+        borderWidth:2,
+        borderRadius: 25,
+        padding: 2,
+
+    },
     listItemSmall: {
         borderTopColor: '#e5e5e5',
         borderTopWidth: .5,
@@ -244,16 +264,7 @@ module.exports = StyleSheet.create({
         color: 'black',
         fontSize: 10,
     },
-    listAvatarContainerSmall: {
-        marginTop: 5,
-        borderRadius: 25,
-        backgroundColor: 'white',
-        padding: 2,
-        width: 46,
-        height: 46,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
+    
     listAvatarSmall: {
         width: 46,
         height: 46,
@@ -566,6 +577,15 @@ module.exports = StyleSheet.create({
         textShadowColor: 'white',
         textShadowOffset: { width:.5, height: .5 },
         textShadowRadius: 1,
+    },
+    noteLabel:{
+        paddingLeft:15,
+        paddingRight:15,
+        textAlign:'justify',
+        color:'#336e7b',
+        marginBottom:10,
+        fontSize: 16,
+        lineHeight: 20,
     }
   
 

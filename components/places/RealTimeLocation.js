@@ -57,11 +57,10 @@ class RealTimeLocation extends Component {
 
     initialize() {
         let self = this;
+        if (this.state.isReady == true) {
         setTimeout(()=>{
-            if (self.state.isReady == true) {
+           
                 firebase.database().ref('users/' + this.props.navigation.state.params.uid).on("value", function (snapshot) {
-
-
                     self.map.animateToRegion({
                         latitude: Number(snapshot.val().latitude),
                         longitude: Number(snapshot.val().longitude),
@@ -71,8 +70,8 @@ class RealTimeLocation extends Component {
                     self.setState({ latitude: Number(snapshot.val().latitude), longitude: Number(snapshot.val().longitude) })
 
                 });
-            }
             }, 500);
+        }
 
     }
     loading() {

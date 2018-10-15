@@ -73,8 +73,8 @@ class CreatePlace extends Component {
 
  
    
-    async componentDidMount(){
-        await this.getCurrentPosition();
+     componentDidMount(){
+         this.getCurrentPosition();
 
 
     }
@@ -225,7 +225,7 @@ class CreatePlace extends Component {
         //const { region } = this.state;
 
         return (
-                    <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps={"always"}>
+                    
                 <View style={styles.mainContainer}>
                    
                     <View style={styles.searchContainer}>
@@ -289,6 +289,7 @@ class CreatePlace extends Component {
                                 />
                                 
                             </View>
+                            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps={"always"}>
                             <View style={styles.mapContainer}>
                                 <MapView ref={map => { this.map = map }}
                                     zoomEnabled={true}
@@ -336,10 +337,11 @@ class CreatePlace extends Component {
 
 
                     </View>
-                            <Content padder>
+                           <Content padder>
                              <View  style={styles.footerContainer}>
                              
-                             <Item >
+                             <Item stackedLabel>
+                             <Label style={globalStyle.label} >Address </Label>
                                         <Text numberOfLines={1} style={[globalStyle.textinput, { width: '100%',height:35 }]}>{this.state.address}</Text>
                                 </Item>
 
@@ -366,12 +368,12 @@ class CreatePlace extends Component {
                                 </Item>
 
                                 </View>
-                                </Content>
-                           
+                               </Content>
+                                </ScrollView  >
                         </View>
 
 
-                    </ScrollView  >
+                
             
         )
     }
@@ -432,24 +434,29 @@ const styles = StyleSheet.create({
     },
     
     mapContainer: {
-        flex: 2,
+        //flex: 2,
         justifyContent: 'center',
+        height:450,
         alignItems: 'center'
       
     },
     searchContainer: {
-        flex: 1,
-        flexDirection: 'row',
+        //flex: 1,
+        //flexDirection: 'row',
+        height:55,
+        width:'100%',
         backgroundColor:'white',
         position: 'absolute',
         zIndex: 9999,
         borderRadius: 5,
         borderWidth: 0,
+        
 
 
     },
     footerContainer: {
-        height:230,
+        height:250,
+    
         
       },
   });

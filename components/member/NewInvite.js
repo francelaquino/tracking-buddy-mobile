@@ -60,10 +60,10 @@ class NewInvite extends Component {
                     <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps={"always"}>
                         <Content padder>
                             <View style={globalStyle.container}>
-
+                            
+                            
                                 <Item stackedLabel>
-                                    <Label style={globalStyle.label} >Invitation Code</Label>
-                                    <Input style={globalStyle.textinput} name="invitationcode" autoCorrect={false}
+                                    <Input style={[globalStyle.textinput,{textAlign:'center'}]} placeholder="Enter Invitation Code" name="invitationcode" autoCorrect={false}
                                         value={this.state.invitationcode} maxLength={20} autoCapitalize="characters"
                                         onChangeText={invitationcode => this.setState({ invitationcode })} />
                                 </Item>
@@ -78,7 +78,10 @@ class NewInvite extends Component {
                                     <Text style={{color:'white'}}>Submit</Text>
                                 </Button>
                             </View>
+                            <Text style={globalStyle.noteLabel} >To add a member enter the Invitation Code that you received from the 
+person who invites you.  </Text>
 
+                           
                             </View>
                             </Content>
                     </ScrollView>

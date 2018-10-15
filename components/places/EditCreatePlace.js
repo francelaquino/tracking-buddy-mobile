@@ -213,7 +213,7 @@ class EditCreatePlace extends Component {
       
 
         return (
-                    <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps={"always"}>
+                   
                         <View style={styles.mainContainer}>
                             <View style={styles.searchContainer}>
                                 <GooglePlacesAutocomplete
@@ -273,6 +273,7 @@ class EditCreatePlace extends Component {
                                 />
                                 
                             </View>
+                            <ScrollView showsVerticalScrollIndicator={false}  contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps={"always"}>
                             <View style={styles.mapContainer}>
                                 <MapView ref={map => { this.map = map }}
                                     zoomEnabled={true}
@@ -357,11 +358,11 @@ class EditCreatePlace extends Component {
 
                                 </View>
                                 </Content>
-                           
+                                </ScrollView  >
                         </View>
 
 
-                    </ScrollView  >
+                  
             
         )
     }
@@ -422,14 +423,14 @@ const styles = StyleSheet.create({
     },
     
     mapContainer: {
-        flex: 2,
         justifyContent: 'center',
+        height:450,
         alignItems: 'center'
       
     },
     searchContainer: {
-        flex: 1,
-        flexDirection: 'row',
+        height:55,
+        width:'100%',
         backgroundColor:'white',
         position: 'absolute',
         zIndex: 9999,
@@ -439,7 +440,7 @@ const styles = StyleSheet.create({
 
     },
     footerContainer: {
-        height:270,
+        height:300,
         
       },
   });

@@ -177,7 +177,7 @@ class PlaceView extends Component {
 
         return (
 
-            <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps={"always"}>
+            
                 <View style={styles.mainContainer}>
                     <View style={styles.mapContainer}>
                         <Image style={globalStyle.marker}
@@ -228,7 +228,7 @@ class PlaceView extends Component {
                                 <Text style={{ height: 35, textAlignVertical: 'center' }}>Notify me when</Text>
                             </Separator>
                         </List>
-
+                        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps={"always"}>
                         <Content padder>
                             <View>
                                 {
@@ -236,13 +236,14 @@ class PlaceView extends Component {
                                     }
                             </View>
                         </Content>
-
+                        </ScrollView  >
                     </View>
+                   
 
                 </View>
 
 
-            </ScrollView  >
+          
 
         )
     }

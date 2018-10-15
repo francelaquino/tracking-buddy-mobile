@@ -238,7 +238,7 @@ class HomePlaces extends Component {
                 }
                 coordinates = coordinates.concat(coord.coordinates);
             }
-            this.map.fitToCoordinates(coordinates, { edgePadding: { top: 50, right: 50, bottom: 200, left: 250 }, animated: false })
+            this.map.fitToCoordinates(coordinates, { edgePadding: { top: 250, right: 50, bottom: 300, left: 250 }, animated: false })
            
 
 
@@ -365,18 +365,20 @@ class HomePlaces extends Component {
     renderMember() {
         return (
             <FlatList
+                style = {{ flex: 1 }}
+                showsHorizontalScrollIndicator={false}
                 keyExtractor={item => item.uid.toString()}
                 horizontal={true}
                 data={this.props.members}
                 renderItem={({ item }) => (
                     <TouchableOpacity key={item.uid.toString()} onPress={() => this.centerToMarker(item.coordinates.latitude, item.coordinates.longitude,item.uid,item.firstname)}>
-                        <View style={{ flex: 1, flexDirection: 'column', alignItems: 'center', width: 80, height: 60, margin: 2, backgroundColor: '#2c3e50', borderRadius:10, }}>
+                        <View style={{ flex: 1, flexDirection: 'column', alignItems: 'center', width: 55, height: 60, margin: 2,  }}>
                             <View style={globalStyle.listAvatarContainerSmall} >
-                                {item.emptyphoto === "1" ? <Ionicons size={46} style={{ color: '#2c3e50' }} name="ios-person" /> :
-                                    <Thumbnail style={globalStyle.listAvatar} source={{ uri: item.avatar }} />
+                                {item.emptyphoto === "1" ?  <Text style={{fontSize:23,color:'#4b4c4c'}}>{item.firstletter}</Text> :
+                                    <Thumbnail style={globalStyle.listAvatarHome} source={{ uri: item.avatar }} />
                                 }
                             </View>
-                            <Text numberOfLines={1} style={{ color: 'white', fontSize: 12 }}>{item.firstname}</Text>
+                            <Text numberOfLines={1} style={[globalStyle.mapMenuLabel,{width:'100%',fontSize:12}]} >{item.firstname}</Text>
                         </View>
                     </TouchableOpacity>
                 )}
@@ -627,7 +629,7 @@ const styles = StyleSheet.create({
     },
    
       map: {
-          
+          height:'104%',
         ...StyleSheet.absoluteFillObject,
       },
       marker: {
