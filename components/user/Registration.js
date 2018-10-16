@@ -277,71 +277,70 @@ class Register extends Component {
 							</View>
 						</TouchableOpacity>
 					</View>
-                         
-                              <Item stackedLabel>
-                              <Label style={globalStyle.label} >Email address</Label>
-                              <Input style={globalStyle.textinput} 
+                        <Label style={globalStyle.label} >Email Address</Label>
+                              <Item regular style={globalStyle.roundtextinput}>
+                              <Input 
 							name="email" autoCorrect={false} maxLength = {50}
                                       value={this.state.email}
                                       autoCapitalize="none"
 							onChangeText={email=>this.setState({email})}/>
 						</Item>
-					
-                          <Item stackedLabel>
-                              <Label style={globalStyle.label} >Password</Label>
-                            <Input  style={registrationStyle.textinput } 
+                        <Label style={globalStyle.label} >Password</Label>
+                        <Item regular style={globalStyle.roundtextinput}>
+                             
+                            <Input 
 								name="password" autoCorrect={false}
 								value={this.state.password} secureTextEntry
 								onChangeText={password=>this.setState({password})}/>
 						</Item>
 
-
-                          <Item stackedLabel>
-                              <Label style={globalStyle.label} >Re-Type Password</Label>
-                            <Input  style={registrationStyle.textinput} 
+                            <Label style={globalStyle.label} >Re-Type Password</Label>
+                           <Item regular style={globalStyle.roundtextinput}>
+                              
+                            <Input 
 								name="retypepassword" autoCorrect={false}
 								value={this.state.retypepassword} secureTextEntry
 								onChangeText={retypepassword=>this.setState({retypepassword})}/>
 						
 						</Item>
-                          <Item stackedLabel>
-                              <Label style={globalStyle.label} >First Name</Label>
-                            <Input  style={registrationStyle.textinput} 
+                        <Label style={globalStyle.label} >First Name</Label>
+                        <Item regular style={globalStyle.roundtextinput}>
+                            <Input   
                                       maxLength={20}
                                       autoCapitalize="words"
 								name="firstname" autoCorrect={false}
 								value={this.state.firstname}
 								onChangeText={firstname=>this.setState({firstname})}/>
 						</Item>
-					
-                          <Item stackedLabel>
-                              <Label style={globalStyle.label} >Middle Name</Label>
-                        <Input  style={registrationStyle.textinput} 
+                        <Label style={globalStyle.label} >Middle Name</Label>
+                        <Item regular style={globalStyle.roundtextinput}>
+                              
+                        <Input   
                                       maxLength={20}
                                       autoCapitalize="words"
 								name="middlename" autoCorrect={false}
 								value={this.state.middlename}
 								onChangeText={middlename=>this.setState({middlename})}/>
 						</Item>
-					
-                          <Item stackedLabel>
-                              <Label style={globalStyle.label} >Last Name</Label>
-                            <Input  style={registrationStyle.textinput} 
+                        <Label style={globalStyle.label} >Last Name</Label>
+                        <Item regular style={globalStyle.roundtextinput}>
+                             
+                            <Input   
                                       name="lastname" autoCorrect={false} maxLength={20}
                                       autoCapitalize="words"
 								value={this.state.lastname}
 								onChangeText={lastname=>this.setState({lastname})}/>
 					</Item>
-                          <Item stackedLabel>
-                              <Label style={globalStyle.label} >Mobile No.</Label>
-                            <Input  style={registrationStyle.textinput} 
+                    <Label style={globalStyle.label} >Mobile No.</Label>
+                    <Item regular style={globalStyle.roundtextinput}>
+                              
+                            <Input   
 								name="mobileno" autoCorrect={false}
 								value={this.state.mobileno}
 								onChangeText={mobileno=>this.setState({mobileno})}/>
 						</Item>
-
-                         <Item stackedLabel>
-                              <Label style={globalStyle.label} >Birthdate</Label>
+                        <Label style={globalStyle.label} >Birthdate</Label>
+                              <Item regular style={globalStyle.roundtextinput}>
                               
                               <Input  style={[registrationStyle.textinput,{position:'absolute',top:20,left:5}]} 
 								name="mobileno" autoCorrect={false}
@@ -371,9 +370,8 @@ class Register extends Component {
 
                         />
 						</Item>
-
-                         <Item stackedLabel>
-                              <Label style={globalStyle.label} >Gender</Label>
+                        <Label style={globalStyle.label} >Gender</Label>
+                        <Item regular style={globalStyle.roundtextinput}>
                               <Picker
                                 mode="dropdown"
                                 iosHeader="Select Gender"
@@ -387,9 +385,9 @@ class Register extends Component {
                                 <Picker.Item label="Female" value="Female" />
                                 </Picker>
 						</Item>
-
-                        <Item stackedLabel>
-                              <Label style={globalStyle.label} >Country</Label>
+                        <Label style={globalStyle.label} >Country</Label>
+                          <Item regular style={globalStyle.roundtextinput}>
+                             
                               <Picker
                                 mode="dropdown"
                                 iosHeader="Select Country"

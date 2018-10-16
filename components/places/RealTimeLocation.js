@@ -46,21 +46,23 @@ class RealTimeLocation extends Component {
     }
 
     componentWillUnmount() {
-        this.setState({ isReady: false })
+        this.map=null;
     }
     
-    componentWillMount() {
-        this.setState({ isReady:true })
-        this.initialize();
+    componentDidMount() {
+        
+       
     }
        
 
-    initialize() {
+    mapReady() {
         let self = this;
-        if (this.state.isReady == true) {
+        this.setState({ isReady:true })
+      
         setTimeout(()=>{
            
                 firebase.database().ref('users/' + this.props.navigation.state.params.uid).on("value", function (snapshot) {
+                    if (self.map!=null) {
                     self.map.animateToRegion({
                         latitude: Number(snapshot.val().latitude),
                         longitude: Number(snapshot.val().longitude),
@@ -68,10 +70,10 @@ class RealTimeLocation extends Component {
                         latitudeDelta: LATITUDE_DELTA
                     })
                     self.setState({ latitude: Number(snapshot.val().latitude), longitude: Number(snapshot.val().longitude) })
+                }
 
                 });
             }, 500);
-        }
 
     }
     loading() {
@@ -159,6 +161,7 @@ class RealTimeLocation extends Component {
                             <Image style={[styles.marker, { opacity:0 }]}
                                         source={require('../../images/marker.png')} />
                                     <MapView ref={map => { this.map = map }}
+                                    onMapReady = { () => this.mapReady() }
                                     provider={PROVIDER_GOOGLE}
                                     customMapStyle={settings.retro}
                                     mapType={this.state.mapMode}

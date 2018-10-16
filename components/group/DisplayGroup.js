@@ -72,7 +72,7 @@ class DisplayGroup extends Component {
 
                 <Left style={globalStyle.listLeft}>
                     <View style={globalStyle.listAvatarContainer} >
-                        {group.emptyphoto === 1 ?<Text style={{fontSize:23,color:'#4b4c4c'}}>{group.firstletter}</Text>  :
+                        {group.emptyphoto === 1 ?<Text style={{fontSize:23,color:'white'}}>{group.firstletter}</Text>  :
                             <Thumbnail style={globalStyle.listAvatar} source={{ uri: group.firstletter }} />
                         }
 
@@ -92,7 +92,7 @@ class DisplayGroup extends Component {
         ));
         return (
             
-                <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps={"always"}>
+                <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps={"always"}>
                 <Content padder>
                     <View style={globalStyle.container}>
                         <List>

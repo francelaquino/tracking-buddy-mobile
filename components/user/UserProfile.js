@@ -198,7 +198,8 @@ class UserProfile extends Component {
                             </View>
 
                         </TouchableOpacity>
-                        <Label style={{ width: '100%', textAlign: 'center', color: '#16a085', marginBottom: 10 }}>{this.state.fullname}</Label>
+                        <Label style={{ width: '100%', textAlign: 'center', color: '#16a085', marginBottom: 5 }}>{this.state.fullname}</Label>
+                        <Text style={{ width: '100%', textAlign: 'center',  marginBottom: 10 }}>{this.state.email}</Text>
                         {(this.state.emptyphoto != '1') &&
                             <TouchableOpacity onPress={this.removePhoto.bind(this)}>
                                 <Text style={globalStyle.deleteButtonSmall} >Remove Photo</Text>
@@ -207,47 +208,43 @@ class UserProfile extends Component {
                         }
 
                     </View>
-                    <Item stackedLabel>
-                        <Label style={globalStyle.label} >Email</Label>
-                        <Input style={[globalStyle.textinput, { color: 'gray' }]} name="email" autoCorrect={false}
-                            value={this.state.email}
-                            onChangeText={email => this.setState({ email })} editable={false} />
-                    </Item>
+                   
 
-
-                    <Item stackedLabel>
                         <Label style={globalStyle.label} >First name</Label>
-                        <Input style={globalStyle.textinput} name="firstname" autoCorrect={false}
+                    <Item regular style={globalStyle.roundtextinput}>
+                        
+                        <Input  name="firstname" autoCorrect={false}
                             value={this.state.firstname} maxLength={10}
                             onChangeText={firstname => this.setState({ firstname })} />
                     </Item>
-
-                    <Item stackedLabel>
-                        <Label style={globalStyle.label} >Middle name</Label>
-                        <Input style={globalStyle.textinput} name="middlename" autoCorrect={false}
+                    <Label style={globalStyle.label} >Middle name</Label>
+                    <Item regular style={globalStyle.roundtextinput}>
+                       
+                        <Input  name="middlename" autoCorrect={false}
                             value={this.state.middlename} maxLength={10}
                             onChangeText={middlename => this.setState({ middlename })} />
                     </Item>
-
-                    <Item stackedLabel>
-                        <Label style={globalStyle.label} >Last name</Label>
-                        <Input style={globalStyle.textinput} name="lastname" autoCorrect={false}
+                    <Label style={globalStyle.label} >Last name</Label>
+                    <Item regular style={globalStyle.roundtextinput}>
+                       
+                        <Input  name="lastname" autoCorrect={false}
                             value={this.state.lastname} maxLength={10}
                             onChangeText={lastname => this.setState({ lastname })} />
                     </Item>
 
                   
-
-                    <Item stackedLabel>
-                        <Label style={globalStyle.label} >Mobile No.</Label>
-                        <Input style={globalStyle.textinput} name="mobileno" autoCorrect={false}
+                  <Label style={globalStyle.label} >Mobile No.</Label>
+                    <Item regular style={globalStyle.roundtextinput}>
+                       
+                        <Input  name="mobileno" autoCorrect={false}
                             value={this.state.mobileno} maxLength={20}
                             onChangeText={mobileno => this.setState({ mobileno })} />
                     </Item>
-                    <Item stackedLabel>
-                              <Label style={globalStyle.label} >Birthdate</Label>
+                    <Label style={globalStyle.label} >Birthdate</Label>
+                    <Item regular style={globalStyle.roundtextinput}>
                               
-                              <Input  style={[registrationStyle.textinput,{position:'absolute',top:20,left:5}]} 
+                              
+                              <Input  style={[registrationStyle.textinput,{position:'absolute',left:5}]} 
 								name="mobileno" autoCorrect={false}
 								value={this.state.birthdate}
 								/> 
@@ -275,9 +272,9 @@ class UserProfile extends Component {
 
                         />
 						</Item>
-
-                         <Item stackedLabel>
-                              <Label style={globalStyle.label} >Gender</Label>
+                        <Label style={globalStyle.label} >Gender</Label>
+                         <Item regular style={globalStyle.roundtextinput}>
+                             
                               <Picker
                                 mode="dropdown"
                                 iosHeader="Select Gender"
@@ -291,9 +288,9 @@ class UserProfile extends Component {
                                 <Picker.Item label="Female" value="Female" />
                                 </Picker>
 						</Item>
-
-                        <Item stackedLabel>
-                              <Label style={globalStyle.label} >Country</Label>
+                        <Label style={globalStyle.label} >Country</Label>
+                        <Item regular style={globalStyle.roundtextinput}>
+                             
                               <Picker
                                 mode="dropdown"
                                 iosHeader="Select Country"

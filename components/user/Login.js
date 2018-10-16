@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react';
-import {  BackHandler, AsyncStorage, NetInfo, Platform,  StyleSheet,  Text,  View, ScrollView,TextInput, TouchableOpacity, Image,ToastAndroid, NavigationActions  } from 'react-native';
-import { Root, Container, Header, Body, Title, Item, Input, Label, Button, Icon } from 'native-base';
+import {  StatusBar,BackHandler, AsyncStorage, NetInfo, Platform,  StyleSheet,  Text,  View, ScrollView,TextInput, TouchableOpacity, Image,ToastAndroid, NavigationActions  } from 'react-native';
+import {  Root, Container, Header, Body, Title, Item, Input, Label, Button, Icon } from 'native-base';
 import { connect } from 'react-redux';
 import { saveLocation  } from '../../redux/actions/locationActions' ;
 import { displayHomeMember } from '../../redux/actions/memberActions' ;
@@ -73,28 +73,34 @@ class Login extends Component {
             <Container style={registrationStyle.containerWrapper}>
           	<Loader loading={this.state.loading} />
                 <OfflineNotice />
+                <Header style={globalStyle.header}>
+                      <StatusBar backgroundColor="#16a085" />
+                      
+                      <Body style={globalStyle.headerBody}>
+                          <Title style={globalStyle.headerTitle}>MY GPS BUDDY</Title>
+                      </Body>
+                      
+
+                  </Header>
                 
-                
-            <ScrollView  contentContainerStyle={{flexGrow: 1}} keyboardShouldPersistTaps={"always"}>
+            <ScrollView  showsVerticalScrollIndicator={false} contentContainerStyle={{flexGrow: 1}} keyboardShouldPersistTaps={"always"}>
                     <View style={registrationStyle.container}>
                         <View style={registrationStyle.logoContainer}>
                         <Image  style={registrationStyle.logo} resizeMode='contain'  source={require('../../images/logo.png')} />
-                            <Text style={{ fontSize: 15, color:'#16a085',marginTop:10}}>My GPS Buddy</Text>
                         
                         </View>
-                       
-
-                        <Item stackedLabel>
-                            <Label style={globalStyle.label} >Email Address</Label>
-                        <Input style={registrationStyle.textinput} 
+                        <Label style={globalStyle.label} >Email Address</Label>
+                        <Item regular style={globalStyle.roundtextinput}>
+                        <Input 
                                 name="email" autoCorrect={false}
                                 autoCapitalize="none"
                             value={this.state.email}  maxLength = {50}
                             onChangeText={email=>this.setState({email})}/>
                         </Item>
-                        <Item stackedLabel>
-                            <Label style={globalStyle.label} >Password</Label>
-                            <Input style={registrationStyle.textinput} 
+                        
+                        <Label style={globalStyle.label} >Password</Label>
+                        <Item regular style={globalStyle.roundtextinput}>
+                            <Input 
                             name="password" autoCorrect={false} secureTextEntry
                             value={this.state.password}  maxLength = {50}
                             onChangeText={password=>this.setState({password})}/>

@@ -617,6 +617,7 @@ export const displayHomeMember = () => async dispatch => {
                                     members.push({
                                         uid: data.uid,
                                         firstname: data.firstname,
+                                        firstletter:data.firstletter,
                                         avatar: data.avatar,
                                         emptyphoto: data.emptyphoto,
                                         coordinates: {

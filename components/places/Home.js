@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { StatusBar , AppState, Modal, BackHandler, AsyncStorage, NetInfo, TouchableOpacity, Platform, StyleSheet, Text, View, ScrollView, TextInput, ToastAndroid, Image, Dimensions, FlatList } from 'react-native';
+import { Linking, StatusBar , AppState, Modal, BackHandler, AsyncStorage, NetInfo, TouchableOpacity, Platform, StyleSheet, Text, View, ScrollView, TextInput, ToastAndroid, Image, Dimensions, FlatList } from 'react-native';
 import { ActionSheet , Root, Container, Header, Body, Title, Item, Input, Label, Button, Icon, Content, List, ListItem,Left, Right,Switch, Thumbnail,Card,CardItem } from 'native-base';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -48,7 +48,7 @@ class HomePlaces extends Component {
             active: true,
             useruid:'',
             firstname:'',
-            isChildVisible:false,
+            isFloatingMenuVisible:false,
             mapMode:'standard',
             groupname: '',
             invitationcode:'',
@@ -56,6 +56,12 @@ class HomePlaces extends Component {
             memberReady: false,
             memberModal: false,
             fitToMap: true,
+            latitude: 0,
+            longitude: 0,
+            firstname:'',
+            avatar:'',
+            emptyphoto:'1',
+            firstletter:'',
             region: {
                 latitude: LATITUDE,
                 longitude: LONGITUDE,
@@ -68,7 +74,24 @@ class HomePlaces extends Component {
 
     }
 
+    startNavigation(){
+        if(Platform.OS === 'ios'){
+            navigator.geolocation.getCurrentPosition(
+                async (position) => {
+                    Linking.openURL('maps://app?saddr='+ position.coords.latitude +'+'+position.coords.longitude+'&daddr='+this.state.latitude+'+'+this.state.longitude)
 
+                    
+
+                },
+                (err) => {
+                },
+                { enableHighAccuracy: true, timeout: 10000 }
+            );
+            
+        } else{
+            Linking.openURL('google.navigation:q='+this.state.latitude+'+'+this.state.longitude)
+        }
+    }
      componentWillMount() {
 
         let self = this;
@@ -216,6 +239,7 @@ class HomePlaces extends Component {
 
 
     async fitToMap() {
+        this.setState({ isFloatingMenuVisible:false})
         let coordinates = [];
         if (this.props.members.length == 1) {
             this.map.animateToRegion({
@@ -249,6 +273,8 @@ class HomePlaces extends Component {
     }
 
     async changeMapMode() {
+        this.setState({ isFloatingMenuVisible:false})
+        this.markers[this.state.useruid].hideCallout();
         if (this.state.mapMode == "standard") {
             this.setState({
                 mapMode: 'satellite'
@@ -262,9 +288,9 @@ class HomePlaces extends Component {
     }
 
 
-    async centerToMarker(latitude, longitude,uid,firstname) {
+    async centerToMarker(latitude, longitude,uid,firstname,avatar,firstletter,emptyphoto) {
 
-       this.setState({ isChildVisible:true,  useruid:uid, firstname:firstname})
+       this.setState({ isFloatingMenuVisible:true,  useruid:uid, firstname:firstname,latitude:latitude,longitude:longitude, avatar:avatar,firstletter:firstletter,emptyphoto:emptyphoto})
         this.map.animateToRegion({
             latitude: latitude,
             longitude: longitude,
@@ -275,9 +301,13 @@ class HomePlaces extends Component {
 
 
 
+
+
     }
 
     async centerToUserMarker() {
+        this.setState({ isFloatingMenuVisible:false})
+        this.markers[this.state.useruid].hideCallout();
         navigator.geolocation.getCurrentPosition(
             async (position) => {
                 this.map.animateToRegion({
@@ -296,8 +326,9 @@ class HomePlaces extends Component {
     }
     async allMembers() {
         let self = this;
+        this.markers[this.state.useruid].hideCallout();
         userdetails.group = "";
-        this.setState({ isLoading: true, groupname: '', isChildVisible:false })
+        this.setState({ isLoading: true, groupname: '', isFloatingMenuVisible:false })
         await self.props.displayHomeMember().then(res => {
             setTimeout(async () => {
                 await self.fitToMap();
@@ -309,12 +340,13 @@ class HomePlaces extends Component {
    
     changeGroup = (groupname) => {
         this.reload();
-        this.setState({ groupname: groupname, isChildVisible:false });
+        this.setState({ groupname: groupname, isFloatingMenuVisible:false });
+        this.markers[this.state.useruid].hideCallout();
 
     }
     async reload() {
         let self = this;
-        this.setState({ isLoading: true, isChildVisible:false })
+        this.setState({ isLoading: true, isFloatingMenuVisible:false })
         await self.props.displayHomeMember().then(res => {
             setTimeout(async () => {
                 await self.fitToMap();
@@ -371,10 +403,10 @@ class HomePlaces extends Component {
                 horizontal={true}
                 data={this.props.members}
                 renderItem={({ item }) => (
-                    <TouchableOpacity key={item.uid.toString()} onPress={() => this.centerToMarker(item.coordinates.latitude, item.coordinates.longitude,item.uid,item.firstname)}>
+                    <TouchableOpacity key={item.uid.toString()} onPress={() => this.centerToMarker(item.coordinates.latitude, item.coordinates.longitude,item.uid,item.firstname,item.avatar,item.firstletter,item.emptyphoto)}>
                         <View style={{ flex: 1, flexDirection: 'column', alignItems: 'center', width: 55, height: 60, margin: 2,  }}>
                             <View style={globalStyle.listAvatarContainerSmall} >
-                                {item.emptyphoto === "1" ?  <Text style={{fontSize:23,color:'#4b4c4c'}}>{item.firstletter}</Text> :
+                                {item.emptyphoto === "1" ?  <Text style={{fontSize:23,color:'silver'}}>{item.firstletter}</Text> :
                                     <Thumbnail style={globalStyle.listAvatarHome} source={{ uri: item.avatar }} />
                                 }
                             </View>
@@ -431,7 +463,7 @@ class HomePlaces extends Component {
                                 </Button>
                             </Left>
                             <Body style={globalStyle.headerBody}>
-                                <Title numberOfLines={1} style={globalStyle.headerTitle}>My GPS Buddy </Title>
+                                <Title numberOfLines={1} style={globalStyle.headerTitle}>MY GPS BUDDY </Title>
                             </Body>
                             <Right style={globalStyle.headerRight} >
                                
@@ -455,7 +487,7 @@ class HomePlaces extends Component {
                         <View style={styles.mapContainer}>
                             <Image style={[styles.marker, { opacity:0 }]}
                                         source={require('../../images/marker.png')} />
-                                    <MapView ref={map => { this.map = map }}
+                                    <MapView ref={map => { this.map = map }} onPress={() => this.setState({ isFloatingMenuVisible:false})}
                                     provider={PROVIDER_GOOGLE}
                                     customMapStyle={settings.retro}
                                     mapType={this.state.mapMode}
@@ -540,28 +572,54 @@ class HomePlaces extends Component {
                             
                            
                             </View>
-                       
+                            
+
                             <View style={styles.memberContainer} >
-                            <AnimatedHideView
-  visible={this.state.isChildVisible}
-  style={{  padding:10,backgroundColor:'white',height:37,width:250,borderRadius:5,marginBottom:5 }}
->
-<Button success onPress={() =>  this.props.navigation.navigate("RealTimeLocation", { uid: this.state.useruid,name: this.state.firstname })}  
-style={{position:'absolute',left:0,width:100,margin:5,height:25,justifyContent: 'center',elevation: 0 }}>
-            <Text  style={{fontSize:11,alignSelf: "center",color:'white'}}>Track Realtime</Text>
-          </Button>
-          <Button success  onPress={() => { this.props.navigation.navigate("LocationPlaces", { uid: this.state.useruid, name: this.state.firstname })}} 
-          style={{position:'absolute',left:105,width:100,margin:5,height:25,justifyContent: 'center',elevation: 0 }}>
-            <Text style={{fontSize:11,alignSelf: "center",color:'white'}}>Location History</Text>
-          </Button>
-          <TouchableOpacity  onPress={() => this.setState({ isChildVisible:false})} transparent  style={{position:'absolute',right:0,width:30,margin:5,height:25,justifyContent: 'center'}}>
-            <SimpleLineIcons size={20} style={{color: 'gray' }} name="close" />
-          </TouchableOpacity>
-</AnimatedHideView>
+                            
                                 {this.state.memberReady &&
                                     this.renderMember()
                                 }
                         </View>
+                        <AnimatedHideView visible={this.state.isFloatingMenuVisible} duration={700}
+                            style={{  position:'absolute',bottom:80,right:1, padding:10,backgroundColor:'transparent',height:240,width:180,borderRadius:5,marginBottom:5 }}>
+                             <View style={{  flexDirection: 'column', alignItems: 'center', width: 120, height: 60, margin: 2,  }}>
+                            <View style={globalStyle.listAvatarContainerSmall} >
+                                {this.state.emptyphoto === "1" ?  <Text style={{fontSize:23,color:'silver'}}>{this.state.firstletter}</Text> :
+                                    <Thumbnail style={globalStyle.listAvatarHome} source={{ uri: this.state.avatar }} />
+                                }
+                            </View>
+                            <Text numberOfLines={1} style={[globalStyle.mapMenuLabel,{width:'100%',fontSize:12,color:'#d35400'}]} >{this.state.firstname}</Text>
+                        </View>
+                            <View style={{flexDirection:'row',height:40,marginBottom:5}}>
+                                <Text style={{ color:'white',padding:2,borderRadius:5,height:25,marginRight:5,width:120,textAlign:'center',marginTop:12,backgroundColor:'#2c3e50', textAlignVertical: 'center',fontSize:12}}>Real Time Location</Text>
+                            <TouchableOpacity style={globalStyle.mapMenuRealtime} onPress={() => this.props.navigation.navigate("RealTimeLocation", { uid: this.state.useruid,name: this.state.firstname })}  >
+                                <View style={globalStyle.mapMenuCircleContainer}>
+                                    <SimpleLineIcons  size={22} style={{ color: 'white' }} name="speedometer" />
+                                </View>
+                            </TouchableOpacity>
+                            </View>
+                            <View style={{flexDirection:'row',height:40,marginBottom:5}}>
+                                <Text style={{ color:'white',padding:2,borderRadius:5,height:25,marginRight:5,width:120,textAlign:'center',marginTop:12,backgroundColor:'#2c3e50', textAlignVertical: 'center',fontSize:12}}>Location History</Text>
+                            <TouchableOpacity style={globalStyle.mapMenuRealtime} onPress={() => this.props.navigation.navigate("LocationPlaces", { uid: this.state.useruid, name: this.state.firstname })}  >
+                                <View style={globalStyle.mapMenuCircleContainer}>
+                                    <SimpleLineIcons  size={22} style={{ color: 'white' }} name="map" />
+                                </View>
+                            </TouchableOpacity>
+                            </View>
+
+                            <View style={{flexDirection:'row',height:40}}>
+                                <Text style={{ color:'white',padding:2,borderRadius:5,height:25,marginRight:5,width:120,textAlign:'center',marginTop:12,backgroundColor:'#2c3e50', textAlignVertical: 'center',fontSize:12}}>Start Navigation</Text>
+                            <TouchableOpacity style={globalStyle.mapMenuRealtime} onPress={() =>  this.startNavigation() } >
+                                <View style={globalStyle.mapMenuCircleContainer}>
+                                    <SimpleLineIcons  size={22} style={{ color: 'white' }} name="cursor" />
+                                </View>
+                            </TouchableOpacity>
+                            </View>
+
+                           
+
+                           
+                            </AnimatedHideView>
 
                        
                         </View>
@@ -616,7 +674,7 @@ const styles = StyleSheet.create({
       
     },
     memberContainer: {
-        height: 120,
+        height: 80,
         width:'100%',
         paddingTop:2,
         alignItems: 'center',

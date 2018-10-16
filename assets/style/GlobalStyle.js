@@ -78,7 +78,8 @@ module.exports = StyleSheet.create({
         marginBottom: 10,
         width: '100%',
         alignSelf: "center",
-        borderRadius: 15,
+        borderRadius: 5,
+        elevation:0,
     },
     calloutButton:{
         marginBottom: 5,
@@ -125,6 +126,16 @@ module.exports = StyleSheet.create({
         fontSize: 15,
         textAlign: 'left',
     },
+    roundtextinput:{
+        borderRadius:5,
+        height:45,
+    },
+    formgroup:{
+        flex:1,
+        flexDirection:'column',
+        height: 30,
+    },
+    
     textinputCenter: {
         flex: 1,
         padding: 5,
@@ -241,15 +252,17 @@ module.exports = StyleSheet.create({
         height: 49,
         alignItems: 'center',
         justifyContent: 'center',
+        borderColor:'#1abc9c',
+        borderWidth:2,
        
     },
     listAvatarHome: {
-        width: 46,
-        height: 46,
-        borderColor:'#1abc9c',
-        borderWidth:2,
-        borderRadius: 25,
-        padding: 2,
+        width: 44,
+        height: 44,
+        //borderColor:'#1abc9c',
+        //borderWidth:2,
+        borderRadius: 22,
+        //padding: 2,
 
     },
     listItemSmall: {
@@ -311,6 +324,8 @@ module.exports = StyleSheet.create({
     label: {
         color: theme.primaryColor,
         fontSize: 14,
+        marginBottom:5,
+        marginTop:5,
     },
     value: {
         color: 'black',
@@ -552,6 +567,18 @@ module.exports = StyleSheet.create({
         borderColor: '#ecedef',
         borderWidth: 2,
         marginTop: 3,
+    },
+    mapMenuRealtime:{
+        width: 42,
+        height: 42,
+        backgroundColor: '#2ecc71',
+        borderRadius: 21,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderColor: '#ecedef',
+        borderWidth: 2,
+        marginTop: 3,
+      
     },
     mapMenuCircleMap: {
         width: 42,

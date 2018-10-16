@@ -62,8 +62,9 @@ class NewInvite extends Component {
                             <View style={globalStyle.container}>
                             
                             
-                                <Item stackedLabel>
-                                    <Input style={[globalStyle.textinput,{textAlign:'center'}]} placeholder="Enter Invitation Code" name="invitationcode" autoCorrect={false}
+                            <Label style={globalStyle.label} >Enter Invitation Code</Label>
+                                <Item regular style={globalStyle.roundtextinput}>
+                                    <Input name="invitationcode" autoCorrect={false}
                                         value={this.state.invitationcode} maxLength={20} autoCapitalize="characters"
                                         onChangeText={invitationcode => this.setState({ invitationcode })} />
                                 </Item>
