@@ -473,7 +473,7 @@ module.exports = StyleSheet.create({
 
     },
     callOutFix: {
-        width: 150,
+        width: 160,
         height: 50,
         alignItems: 'center',
         flexDirection: 'column',

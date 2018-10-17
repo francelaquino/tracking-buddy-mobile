@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { Linking, StatusBar , AppState, Modal, BackHandler, AsyncStorage, NetInfo, TouchableOpacity, Platform, StyleSheet, Text, View, ScrollView, TextInput, ToastAndroid, Image, Dimensions, FlatList } from 'react-native';
+import {  Linking, StatusBar , AppState, Modal, BackHandler, AsyncStorage, NetInfo, TouchableOpacity, Platform, StyleSheet, Text, View, ScrollView, TextInput, ToastAndroid, Image, Dimensions, FlatList } from 'react-native';
 import { ActionSheet , Root, Container, Header, Body, Title, Item, Input, Label, Button, Icon, Content, List, ListItem,Left, Right,Switch, Thumbnail,Card,CardItem } from 'native-base';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -52,7 +52,7 @@ class HomePlaces extends Component {
             mapMode:'standard',
             groupname: '',
             invitationcode:'',
-            isLoading: false,
+            isLoading: true,
             memberReady: false,
             memberModal: false,
             fitToMap: true,
@@ -96,7 +96,7 @@ class HomePlaces extends Component {
 
         let self = this;
        
-        /*BackgroundGeolocation.on('http', function(response) {
+        BackgroundGeolocation.on('http', function(response) {
             var status = response.status;
             var success = response.success;
             var responseText = response.responseText;
@@ -106,7 +106,7 @@ class HomePlaces extends Component {
             var status = response.status;
               var responseText = response.responseText;
               console.log(response)
-            });*/
+            });
         BackgroundGeolocation.on('heartbeat', function () {
             firebase.messaging().getToken()
                 .then(fcmToken => {
@@ -128,11 +128,12 @@ class HomePlaces extends Component {
                 cancelButton: "Cancel",
                 settingsButton: "Settings"
             },
+            locationAuthorizationRequest : "Always",
             notificationPriority: BackgroundGeolocation.NOTIFICATION_PRIORITY_MIN,
-            stopTimeout: 1,
+            stopTimeout: 5,
             logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
             debug: true,
-            desiredAccuracy: 0,
+            desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
             distanceFilter: 1,
             allowIdenticalLocations :false,
             maxDaysToPersist: 3,
@@ -155,13 +156,15 @@ class HomePlaces extends Component {
                 "manufacturer": Manufacturer
             }
         }).then(state => {
-            if (!state.enabled) {
+          
+            /*if (!state.enabled) {
                 BackgroundGeolocation.start(function () {
                 });
-            }
+            }*/
             }).catch(error => {
-        });
+            });
 
+        BackgroundGeolocation.start();
         
        
         /*BackgroundGeolocation.getCurrentPosition((location) => {
@@ -169,7 +172,9 @@ class HomePlaces extends Component {
         }, (error) => {
         }, { samples: 1, persist: true,desiredAccuracy: 10,timeout: 30 })*/
 
-        this.initialize();
+       
+
+       // this.initialize();
         
        
     }
@@ -179,6 +184,7 @@ class HomePlaces extends Component {
         
     }*/
      componentDidMount() {
+         BackHandler.addEventListener('hardwareBackPress', () => { return true });
         let self = this;
         firebase.messaging().requestPermission();
 
@@ -274,7 +280,9 @@ class HomePlaces extends Component {
 
     async changeMapMode() {
         this.setState({ isFloatingMenuVisible:false})
-        this.markers[this.state.useruid].hideCallout();
+        if (this.state.useruid !== "") {
+            this.markers[this.state.useruid].hideCallout();
+        }
         if (this.state.mapMode == "standard") {
             this.setState({
                 mapMode: 'satellite'
@@ -306,8 +314,10 @@ class HomePlaces extends Component {
     }
 
     async centerToUserMarker() {
-        this.setState({ isFloatingMenuVisible:false})
-        this.markers[this.state.useruid].hideCallout();
+        this.setState({ isFloatingMenuVisible: false })
+        if (this.state.useruid !== "") {
+            this.markers[this.state.useruid].hideCallout();
+        }
         navigator.geolocation.getCurrentPosition(
             async (position) => {
                 this.map.animateToRegion({
@@ -320,13 +330,15 @@ class HomePlaces extends Component {
             },
             (err) => {
             },
-            { enableHighAccuracy: true, timeout: 20000}
+            { enableHighAccuracy: false, timeout: 20000}
         );
 
     }
     async allMembers() {
         let self = this;
-        this.markers[this.state.useruid].hideCallout();
+        if (this.state.useruid !== "") {
+            this.markers[this.state.useruid].hideCallout();
+        }
         userdetails.group = "";
         this.setState({ isLoading: true, groupname: '', isFloatingMenuVisible:false })
         await self.props.displayHomeMember().then(res => {
@@ -341,7 +353,9 @@ class HomePlaces extends Component {
     changeGroup = (groupname) => {
         this.reload();
         this.setState({ groupname: groupname, isFloatingMenuVisible:false });
-        this.markers[this.state.useruid].hideCallout();
+        if (this.state.useruid !== "") {
+            this.markers[this.state.useruid].hideCallout();
+        }
 
     }
     async reload() {
@@ -360,8 +374,8 @@ class HomePlaces extends Component {
         let self = this;
        
        
-        setTimeout(() => {
-            this.setState({ isLoading: false })
+        //setTimeout(() => {
+            //this.setState({ isLoading: false })
             firebase.database().ref('users/' + userdetails.userid).child('members').on("value", function (snapshot) {
                 if (userdetails.userid !== "" && userdetails.userid !== null) {
                     self.props.displayHomeMember().then(res => {
@@ -379,7 +393,7 @@ class HomePlaces extends Component {
                 }
             });
 
-           }, 1000);
+           //}, 1000);
     }
     loading() {
         return (
@@ -487,7 +501,8 @@ class HomePlaces extends Component {
                         <View style={styles.mapContainer}>
                             <Image style={[styles.marker, { opacity:0 }]}
                                         source={require('../../images/marker.png')} />
-                                    <MapView ref={map => { this.map = map }} onPress={() => this.setState({ isFloatingMenuVisible:false})}
+                            <MapView ref={map => { this.map = map }} onPress={() => this.setState({ isFloatingMenuVisible: false })}
+                                onMapReady={() => this.initialize()}
                                     provider={PROVIDER_GOOGLE}
                                     customMapStyle={settings.retro}
                                     mapType={this.state.mapMode}
