@@ -157,14 +157,14 @@ class HomePlaces extends Component {
             }
         }).then(state => {
           
-            /*if (!state.enabled) {
+            if (!state.enabled) {
                 BackgroundGeolocation.start(function () {
                 });
-            }*/
+            }
             }).catch(error => {
             });
 
-        BackgroundGeolocation.start();
+        //BackgroundGeolocation.start();
         
        
         /*BackgroundGeolocation.getCurrentPosition((location) => {
