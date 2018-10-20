@@ -1,7 +1,7 @@
 ﻿
 import React, { Component } from 'react';
 import { StatusBar, TouchableOpacity, Platform, StyleSheet, Text, View, ScrollView, TextInput, ToastAndroid, Image, FlatList, Dimensions, Animated } from 'react-native';
-import { Separator, Root, Container, Header, Body, Title, Item, Input, Label, Button, Icon, Content, List, Left, Right, ListItem, Footer, FooterTab, Segment } from 'native-base';
+import { Radio, Separator, Root, Container, Header, Body, Title, Item, Input, Label, Button, Icon, Content, List, Left, Right, ListItem, Footer, FooterTab, Segment } from 'native-base';
 import { connect } from 'react-redux';
 import DatePicker from 'react-native-datepicker'
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -17,6 +17,7 @@ import Loading from '../shared/Loading';
 import Loader from '../shared/Loader';
 import OfflineNotice from '../shared/OfflineNotice';
 import Moment from 'moment';
+import SlidingUpPanel from 'rn-sliding-up-panel';
 var userdetails = require('../shared/userDetails');
 var settings = require('../../components/shared/Settings');
 var globalStyle = require('../../assets/style/GlobalStyle');
@@ -28,8 +29,8 @@ const LONGITUDE = 49.563482
 const centerOffset = { x: 0.5, y: 1 };
 const anchor = { x: 0.5, y: 0.1 };
 
-var LATITUDE_DELTA = .005;
-var LONGITUDE_DELTA = .005;
+var LATITUDE_DELTA = .010;
+var LONGITUDE_DELTA = .010;
 var cnt = 0;
 var plot;
 var coordinates = [];
@@ -39,8 +40,14 @@ class LocationPlaces extends Component {
         this.map = null;
         this.markers = [];
         this.state = {
+            visible:false,
             useruid: '',
-            addresslist:[],
+            speed: 200,
+            speed_normal: false,
+            speed_slow: false,
+            speed_fast:true,
+            addresslist: [],
+            isReady:false,
             name:'',
             coordinate: new MapView.AnimatedRegion({
                 latitude: LATITUDE,
@@ -54,9 +61,11 @@ class LocationPlaces extends Component {
             activitytype:'',
             route:'',
             pageStyle:'map',
-            loading: true,
+            loading: false,
             mapMode: 'standard',
-            busy: false,
+            isBusy: false,
+            loadOnce:true,
+            playMode:'',
             dateFilter: Moment(new Date).format("YYYY-MM-DD").toString(),
             dateDisplay: Moment(new Date).format('MMMM DD, YYYY'),
         };
@@ -66,31 +75,30 @@ class LocationPlaces extends Component {
 
    
     componentWillUnmount() {
+        this.setState({ isReady: false })
+        this.map = null;
         clearInterval(plot);
     }
 
-    async componentDidMount() {
-       
-        
-        await this.setState({ busy: true, useruid: this.props.navigation.state.params.uid, name: this.props.navigation.state.params.name })
-        await this.initialize();
-        
+    componentWillMount() {
+        this.setState({ isReady:true, useruid: this.props.navigation.state.params.uid, name: this.props.navigation.state.params.name })
     }
 
         
     initialize() {
-       
-
+        this.setState({ isReady:true })
         this.props.displayLocationsMap(this.state.useruid, this.state.dateFilter).then(res => {
-            this.setState({ loading: false, busy: false, addresslist: this.props.locationsmap })
+            this.setState({ isBusy: false, addresslist: this.props.locationsmap })
             setTimeout(() => {
                 this.fitToMap();
-                ToastAndroid.showWithGravityAndOffset("Autoplay after 3 seconds", ToastAndroid.SHORT, ToastAndroid.BOTTOM, 25, 50);
-
+                if (this.loadOnce == true) {
+                    ToastAndroid.showWithGravityAndOffset("Autoplay after 3 seconds", ToastAndroid.SHORT, ToastAndroid.BOTTOM, 25, 50);
+                    this.setState({ loadOnce:false})
+                }
                 setTimeout(() => {
                     this.startRoute();
-                }, 3000);
-                }, 100);
+                }, 4000);
+            }, 100);
         })
         
         
@@ -99,18 +107,18 @@ class LocationPlaces extends Component {
 
     async onDateChange(date) {
         coordinates = []
-        await this.setState({ busy: true, dateDisplay: Moment(date).format('MMMM DD, YYYY'), dateFilter: date, polyline: coordinates, route:'' }) 
+        await this.setState({ isBusy: true, dateDisplay: Moment(date).format('MMMM DD, YYYY'), dateFilter: date, polyline: coordinates, route:'' }) 
         this.props.displayLocationsMap(this.state.useruid, this.state.dateFilter).then(res => {
-            this.setState({ busy: false })
+            this.setState({ isBusy: false })
         })
     }
 
     
     async changePageStyle(style) {
 
-        await this.setState({ pageStyle: style, busy: true });
+        await this.setState({ pageStyle: style, isBusy: true });
         this.props.displayLocationsMap(this.state.useruid, this.state.dateFilter).then(res => {
-            this.setState({ busy: false })
+            this.setState({ isBusy: false })
             if (style == "map") {
                 setTimeout(() => {
                     this.fitToMap();
@@ -127,13 +135,13 @@ class LocationPlaces extends Component {
     
     startRoute() {
         let self = this;
-        if (self.map != null) {
+        if (this.state.isReady == true) {
             ToastAndroid.showWithGravityAndOffset("Play", ToastAndroid.SHORT, ToastAndroid.BOTTOM, 25, 50);
            
             if (this.state.route == '') {
                 this.setState({ polyline: coordinates })
             }
-            this.setState({ route: 'play' });
+            this.setState({ route: 'play', playMode:'play' });
             plot = setInterval(async function myTimer() {
                 if (self.map != null) {
                     const coord = {
@@ -165,7 +173,7 @@ class LocationPlaces extends Component {
                         ToastAndroid.showWithGravityAndOffset("End", ToastAndroid.SHORT, ToastAndroid.BOTTOM, 25, 50);
                     }
                 }
-            }, 500);
+            }, this.state.speed);
         }
         
     }
@@ -205,7 +213,7 @@ class LocationPlaces extends Component {
         await self.setState({ polyline: coordinates })
         cnt = 0;
         coordinates = [];
-        this.setState({ route: '', address: '' });
+        this.setState({ route: '', address: '', playMode:'end' });
         setTimeout(() => {
             self.fitToMap();
         }, 100);
@@ -215,7 +223,7 @@ class LocationPlaces extends Component {
         ToastAndroid.showWithGravityAndOffset("Pause", ToastAndroid.SHORT, ToastAndroid.BOTTOM, 25, 50);
         if (this.state.route == "play") {
             clearInterval(plot);
-            this.setState({ route: '' });
+            this.setState({ route: '', playMode:'pause' });
         }
         
     }
@@ -265,17 +273,33 @@ class LocationPlaces extends Component {
     
     zoomIn() {
         if (LATITUDE_DELTA > 0) {
-            LATITUDE_DELTA = LATITUDE_DELTA - .005;
-            LONGITUDE_DELTA = LONGITUDE_DELTA - .005;
+            LATITUDE_DELTA = LATITUDE_DELTA - .002;
+            LONGITUDE_DELTA = LONGITUDE_DELTA - .002;
         }
     }
     zoomOut() {
         if (LATITUDE_DELTA < 15) {
-            LATITUDE_DELTA = LATITUDE_DELTA + .005;
-            LONGITUDE_DELTA = LONGITUDE_DELTA + .005;
+            LATITUDE_DELTA = LATITUDE_DELTA + .002;
+            LONGITUDE_DELTA = LONGITUDE_DELTA + .002;
         }
     }
-
+    
+    changeSpeed(speed) {
+        this.setState({ speed })
+        console.log(speed)
+        this.setState({ speed_fast: false, speed_normal: false, speed_slow:false})
+        if (speed == 200) {
+            this.setState({ speed_fast:true })
+        } else if (speed == 1000) {
+            this.setState({ speed_normal: true })
+        } else if (speed == 3000) {
+            this.setState({ speed_slow: true })
+        }
+    }
+    showSpeedWindow() {
+        this.setState({ visible: true })
+        this.endRoute();
+    }
     searchFilterFunction = text => {
         if (text != "") {
             this.setState({ addresslist: [] })
@@ -370,7 +394,9 @@ class LocationPlaces extends Component {
                         style={styles.map}
                         provider={PROVIDER_GOOGLE}
                         customMapStyle={settings.retro}
+                        onMapReady={() => this.initialize()}
                         showsCompass={false}>
+                        
 
                        
                         <MapView.Polyline 
@@ -385,16 +411,27 @@ class LocationPlaces extends Component {
                    
 
                 </MapView>
-                    <View style={[globalStyle.mapMenu, { top: 1 }]}>
-                        <TouchableOpacity onPress={() => this.changeMapMode()} style={globalStyle.mapMenuCircleMap}>
-                            <View style={globalStyle.mapMenuCircleContainer}>
-                            <SimpleLineIcons size={23} style={{ color: 'white' }} name="globe" />
-                            </View>
-                        </TouchableOpacity>
-                        <Text style={globalStyle.mapMenuLabel}>Map Style </Text>
+                <View style={[globalStyle.mapMenu, { top: 1 }]}>
+                       
                         
                         {this.props.locationsmap.length > 1 &&
                             <View>
+                            <TouchableOpacity onPress={() => this.changeMapMode()} style={globalStyle.mapMenuCircleMap}>
+                                <View style={globalStyle.mapMenuCircleContainer}>
+                                    <SimpleLineIcons size={23} style={{ color: 'white' }} name="globe" />
+                                </View>
+                            </TouchableOpacity>
+                            <Text style={globalStyle.mapMenuLabel}>Map Style </Text>
+
+
+
+                            <Text style={globalStyle.mapMenuLabel}>Zoom In </Text>
+                            <TouchableOpacity onPress={() => this.showSpeedWindow()} style={globalStyle.mapMenuCircleMap}>
+                                <View style={globalStyle.mapMenuCircleContainer}>
+                                    <SimpleLineIcons size={23} style={{ color: 'white' }} name="graph" />
+                                </View>
+                            </TouchableOpacity>
+                            <Text style={globalStyle.mapMenuLabel}>Change Speed </Text>
                                 <TouchableOpacity onPress={() => this.fitToMap()} style={globalStyle.mapMenuCircleMap} >
                                     <View style={globalStyle.mapMenuCircleContainer}>
                                         <SimpleLineIcons size={23} style={{ color: 'white' }} name="size-actual" />
@@ -422,34 +459,42 @@ class LocationPlaces extends Component {
                 </View>
                
                
-                {this.state.address !== '' &&
-                    <View style={styles.addressContainer} >
-                        <View style={{ flex: 1,padding:5 }}>
-                            <Text numberOfLines={1} style={{ fontSize: 13, color: 'white', marginBottom: 5 }}> {this.state.address}</Text>
-                            <Text numberOfLines={1} style={{ fontSize: 13, color: 'white', }}>{this.state.datemovement} / {this.state.activitytype} </Text>
-                        </View>
-                    </View>
-                }
-                {this.props.locationsmap.length > 1 &&
+                
+                {this.state.playMode != ''  &&
                     <View style={styles.controlContainer} >
 
-                        <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }} >
-                            {this.state.route == '' &&
-                                <TouchableOpacity onPress={() => this.startRoute()} style={{ width: 60, alignItems: 'center' }}>
-                                    <Image style={{ width: 35, height: 35 }}
-                                        source={require('../../images/play.png')} />
-                                </TouchableOpacity>
-                            }
-                            {this.state.route == 'play' &&
-                                <TouchableOpacity onPress={() => this.pauseRoute()} style={{ width: 60, alignItems: 'center' }}>
-                                    <Image style={{ width: 35, height: 35 }}
-                                        source={require('../../images/pause.png')} />
-                                </TouchableOpacity>
-                            }
-                            <TouchableOpacity onPress={() => this.endRoute()} style={{ width: 60, alignItems: 'center' }}>
-                                <Image style={{ width: 35, height: 35 }}
-                                    source={require('../../images/end.png')} />
+                    <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                        {this.state.route == '' &&
+                            <View>
+                            <TouchableOpacity onPress={() => this.startRoute()} style={globalStyle.mapMenuCircleControl} >
+                                    <View style={globalStyle.mapMenuCircleContainer}>
+                                        <SimpleLineIcons size={20} style={{ color: 'white' }} name="control-play" />
+                                    </View>
                             </TouchableOpacity>
+                            <Text style={[globalStyle.mapMenuLabel, { fontSize:13 }]}>Play </Text>
+                            </View>
+                        }
+                        {this.state.route == 'play' &&
+                            <View>
+                            <TouchableOpacity onPress={() => this.pauseRoute()} style={globalStyle.mapMenuCircleControl} >
+                                    <View style={globalStyle.mapMenuCircleContainer}>
+                                        <SimpleLineIcons size={20} style={{ color: 'white' }} name="control-pause" />
+                                    </View>
+                                </TouchableOpacity>
+                            <Text style={[globalStyle.mapMenuLabel, { fontSize: 13 }]}>Pause </Text>
+                            </View>
+                        }
+                        <View>
+                            <TouchableOpacity onPress={() => this.endRoute()} style={globalStyle.mapMenuCircleControl} >
+                                <View style={globalStyle.mapMenuCircleContainer}>
+                                <SimpleLineIcons size={20} style={{ color: 'white' }} name="control-end" />
+                                </View>
+                            </TouchableOpacity>
+                            <Text style={[globalStyle.mapMenuLabel, { fontSize: 13 }]}>End </Text>
+
+                            </View>
+
+                           
                         </View>
 
                     </View>
@@ -508,8 +553,8 @@ class LocationPlaces extends Component {
                         />
                     </View>
                     <View style={{ flex: 3, height: 40 }} >
-                        <Text style={{ fontSize: 17, color: '#2c3e50' }}>{this.state.dateDisplay}</Text>
-                        <Text style={{ fontSize: 12 }}>{this.state.name}'s Location History</Text>
+                        <Text style={{ fontSize: 15, color: '#2c3e50' }}>{this.state.dateDisplay}</Text>
+                        <Text style={{ fontSize: 15 }}>{this.state.name}'s Location History</Text>
                     </View>
 
                 </View>
@@ -526,7 +571,53 @@ class LocationPlaces extends Component {
                          this.renderMap() 
                 }
                 
-               
+                <SlidingUpPanel
+                    allowDragging={false}
+                    visible={this.state.visible}
+                    onRequestClose={() => this.setState({ visible: false })}>
+                    <View style={styles.container}>
+                        <Content padder>
+                            <ListItem button onPress={() => this.changeSpeed( 200)}>
+                                <Left>
+                                    <Text>Fast</Text>
+                                </Left>
+                                <Right>
+                                    <Radio selected={this.state.speed_fast} />
+                                </Right>
+                            </ListItem>
+                            <ListItem button onPress={() => this.changeSpeed( 1000)}>
+                                <Left>
+                                    <Text>Normal</Text>
+                                </Left>
+                                <Right>
+                                    <Radio selected={this.state.speed_normal} />
+                                </Right>
+                            </ListItem>
+                            <ListItem button onPress={() => this.changeSpeed( 3000)} >
+                                <Left>
+                                    <Text>Slow</Text>
+                                </Left>
+                                <Right >
+                                    <Radio selected={this.state.speed_slow} />
+                                </Right>
+                            </ListItem>
+                            
+
+                       
+
+                        
+
+                        <Item style={{ borderBottomWidth: 0 }}>
+                           
+                            <Button
+                                onPress={() => this.setState({ visible: false })}
+                                bordered light full style={globalStyle.secondaryButton}>
+                                <Text style={{ color: 'white' }}>Close</Text>
+                            </Button>
+                        </Item>
+                        </Content>
+                    </View>
+                </SlidingUpPanel>
             </View>
         )
     }
@@ -537,7 +628,7 @@ class LocationPlaces extends Component {
             <Root>
                 <Container style={globalStyle.containerWrapper}>
                     <OfflineNotice />
-                    <Loader loading={this.state.busy} />
+                    <Loader loading={this.state.isBusy} />
                     <Header style={globalStyle.header} hasSegment>
                         <StatusBar backgroundColor="#149279" />
                         <Left style={globalStyle.headerLeft} >
@@ -631,17 +722,14 @@ const styles = StyleSheet.create({
         
     },
     controlContainer: {
-        height: 60,
+        height: 75,
         width: '100%',
-        paddingTop: 6,
+        position: 'absolute',
+        bottom:5,
         alignItems: 'center',
         //bottom: 0,
-        flexDirection: 'row',
-        //position: 'absolute',
-        backgroundColor: 'white',
-        alignItems: 'center', padding: 5,
-        borderTopWidth: 1,
-        borderTopColor: '#ecf0f1',
+        backgroundColor: 'transparent',
+        alignItems: 'center'
     },
     addressContainer: {
         height: 55,
@@ -656,6 +744,12 @@ const styles = StyleSheet.create({
         borderTopColor:'#ecf0f1',
 
     },
+    container: {
+        width: '100%',
+        flex: 1,
+        flexDirection: 'row',
+        backgroundColor: 'white',
+    }
 
 });
 

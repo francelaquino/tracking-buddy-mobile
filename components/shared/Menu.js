@@ -179,7 +179,7 @@ class Menu extends Component {
                                         <SimpleLineIcons style={{ fontSize: 20, color: '#16a085', margin: 0 }} name='arrow-right' />
                                     </Right>
                                 </ListItem>
-                                <ListItem icon button avatar style={globalStyle.listItem} onPress={() => this.props.navigation.navigate('HomeSettings')}>
+                                <ListItem icon button avatar style={globalStyle.listItem} onPress={() => this.props.navigation.navigate('Faqs')}>
                                     <Left >
                                         <SimpleLineIcons style={{ fontSize: 25, width: 30, color: '#16a085', marginLeft: 20 }} name="question" />
                                     </Left>

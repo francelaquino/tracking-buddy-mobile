@@ -591,6 +591,17 @@ module.exports = StyleSheet.create({
         borderWidth: 2,
         marginTop: 3,
     },
+    mapMenuCircleControl: {
+        width: 50,
+        height: 50,
+        backgroundColor: '#2c3e50',
+        borderRadius: 25,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderColor: '#ecedef',
+        borderWidth: 2,
+        marginTop: 3,
+    },
     mapMenuCircleContainer: {
         justifyContent: 'center',
         alignItems: 'center',
