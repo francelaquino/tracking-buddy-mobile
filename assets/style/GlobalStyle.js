@@ -616,6 +616,13 @@ module.exports = StyleSheet.create({
         textShadowOffset: { width:.5, height: .5 },
         textShadowRadius: 1,
     },
+    mapMenuLabelRight: {
+        color: 'white',
+        fontSize: 9,
+        fontWeight: 'bold',
+        width: 46,
+        textAlign: 'center',
+    },
     noteLabel:{
         paddingLeft:15,
         paddingRight:15,

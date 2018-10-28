@@ -476,7 +476,7 @@ export const displayLocationsMap = (useruid, date) => dispatch => {
                     }
 
                 }).catch(function (error) {
-
+                    console.log(error)
                     dispatch({
                         type: DISPLAY_LOCATION_MAP,
                         payload: []

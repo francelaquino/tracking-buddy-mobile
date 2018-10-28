@@ -82,6 +82,10 @@ class LocationPlaces extends Component {
 
     componentWillMount() {
         this.setState({ isReady:true, useruid: this.props.navigation.state.params.uid, name: this.props.navigation.state.params.name })
+        
+    }
+    componentDidMount() {
+        this.initialize();
     }
 
         
@@ -89,16 +93,18 @@ class LocationPlaces extends Component {
         this.setState({ isReady:true })
         this.props.displayLocationsMap(this.state.useruid, this.state.dateFilter).then(res => {
             this.setState({ isBusy: false, addresslist: this.props.locationsmap })
-            setTimeout(() => {
-                this.fitToMap();
-                if (this.loadOnce == true) {
-                    ToastAndroid.showWithGravityAndOffset("Autoplay after 3 seconds", ToastAndroid.SHORT, ToastAndroid.BOTTOM, 25, 50);
-                    this.setState({ loadOnce:false})
-                }
+            if(this.props.locationsmap.length>0){
                 setTimeout(() => {
-                    this.startRoute();
-                }, 4000);
-            }, 100);
+                    this.fitToMap();
+                    if (this.state.loadOnce == true) {
+                        ToastAndroid.showWithGravityAndOffset("Autoplay after 3 seconds", ToastAndroid.SHORT, ToastAndroid.CENTER, 25, 50);
+                        this.setState({ loadOnce:false})
+                    }
+                    setTimeout(() => {
+                        this.startRoute();
+                    }, 4000);
+                }, 100);
+            }
         })
         
         
@@ -136,7 +142,7 @@ class LocationPlaces extends Component {
     startRoute() {
         let self = this;
         if (this.state.isReady == true) {
-            ToastAndroid.showWithGravityAndOffset("Play", ToastAndroid.SHORT, ToastAndroid.BOTTOM, 25, 50);
+            ToastAndroid.showWithGravityAndOffset("Play", ToastAndroid.SHORT, ToastAndroid.CENTER, 25, 50);
            
             if (this.state.route == '') {
                 this.setState({ polyline: coordinates })
@@ -170,7 +176,7 @@ class LocationPlaces extends Component {
                         clearInterval(plot);
                         coordinates = [];
                         self.setState({ route: '', address: '' });
-                        ToastAndroid.showWithGravityAndOffset("End", ToastAndroid.SHORT, ToastAndroid.BOTTOM, 25, 50);
+                        ToastAndroid.showWithGravityAndOffset("End", ToastAndroid.SHORT, ToastAndroid.CENTER, 25, 50);
                     }
                 }
             }, this.state.speed);
@@ -185,7 +191,7 @@ class LocationPlaces extends Component {
         coordinates = [];
     }
     async endRoute() {
-        ToastAndroid.showWithGravityAndOffset("End", ToastAndroid.SHORT, ToastAndroid.BOTTOM, 25, 50);
+        ToastAndroid.showWithGravityAndOffset("End", ToastAndroid.SHORT, ToastAndroid.TOP, 25, 50);
         if (this.state.route == "play") {
             clearInterval(plot);
         }
@@ -220,7 +226,7 @@ class LocationPlaces extends Component {
     }
 
     pauseRoute() {
-        ToastAndroid.showWithGravityAndOffset("Pause", ToastAndroid.SHORT, ToastAndroid.BOTTOM, 25, 50);
+        ToastAndroid.showWithGravityAndOffset("Pause", ToastAndroid.SHORT, ToastAndroid.CENTER, 25, 50);
         if (this.state.route == "play") {
             clearInterval(plot);
             this.setState({ route: '', playMode:'pause' });
@@ -394,7 +400,7 @@ class LocationPlaces extends Component {
                         style={styles.map}
                         provider={PROVIDER_GOOGLE}
                         customMapStyle={settings.retro}
-                        onMapReady={() => this.initialize()}
+                      
                         showsCompass={false}>
                         
 

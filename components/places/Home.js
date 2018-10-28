@@ -524,7 +524,7 @@ class HomePlaces extends Component {
 
                         {this.state.groupname !== '' &&
                             <View>
-                            <View style={{ flexDirection: 'column', opacity: .5, backgroundColor: '#16a085', marginVertical: 5, width: '100%', alignItems: 'center', position: 'absolute', top: -5, height: 40, }}>
+                            <View style={{ flexDirection: 'column', backgroundColor: '#16a085', marginVertical: 5, width: '100%', alignItems: 'center', position: 'absolute', top: -5, height: 40 }}>
 
                             </View>
                             <View>
@@ -597,41 +597,52 @@ class HomePlaces extends Component {
                                 }
                         </View>
                         <AnimatedHideView visible={this.state.isFloatingMenuVisible} duration={700}
-                            style={{  position:'absolute',bottom:80,right:1, padding:10,backgroundColor:'transparent',height:240,width:180,borderRadius:5,marginBottom:5 }}>
-                             <View style={{  flexDirection: 'column', alignItems: 'center', width: 120, height: 60, margin: 2,  }}>
-                            <View style={globalStyle.listAvatarContainerSmall} >
-                                {this.state.emptyphoto === "1" ?  <Text style={{fontSize:23,color:'silver'}}>{this.state.firstletter}</Text> :
-                                    <Thumbnail style={globalStyle.listAvatarHome} source={{ uri: this.state.avatar }} />
-                                }
-                            </View>
-                            <Text numberOfLines={1} style={[globalStyle.mapMenuLabel,{width:'100%',fontSize:12,color:'#d35400'}]} >{this.state.firstname}</Text>
-                        </View>
-                            <View style={{flexDirection:'row',height:40,marginBottom:5}}>
-                                <Text style={{ color:'white',padding:2,borderRadius:5,height:25,marginRight:5,width:120,textAlign:'center',marginTop:12,backgroundColor:'#2c3e50', textAlignVertical: 'center',fontSize:12}}>Real Time Location</Text>
-                            <TouchableOpacity style={globalStyle.mapMenuRealtime} onPress={() => this.props.navigation.navigate("RealTimeLocation", { uid: this.state.useruid,name: this.state.firstname })}  >
-                                <View style={globalStyle.mapMenuCircleContainer}>
-                                    <SimpleLineIcons  size={22} style={{ color: 'white' }} name="speedometer" />
+                            style={{ position: 'absolute', bottom: 80, right: -2, padding: 2, backgroundColor: '#34495e', height: 295, width: 70, borderBottomLeftRadius: 10,borderTopLeftRadius:10,marginBottom:2 }}>
+                            <View style={{ flexDirection: 'column', alignItems: 'center', width: 65, height: 60, margin: 2}}>
+                                <View style={globalStyle.listAvatarContainerSmall} >
+                                    {this.state.emptyphoto === "1" ? <Text style={{ fontSize: 23, color: 'silver' }}>{this.state.firstletter}</Text> :
+                                        <Thumbnail style={globalStyle.listAvatarHome} source={{ uri: this.state.avatar }} />
+                                    }
                                 </View>
-                            </TouchableOpacity>
-                            </View>
-                            <View style={{flexDirection:'row',height:40,marginBottom:5}}>
-                                <Text style={{ color:'white',padding:2,borderRadius:5,height:25,marginRight:5,width:120,textAlign:'center',marginTop:12,backgroundColor:'#2c3e50', textAlignVertical: 'center',fontSize:12}}>Location History</Text>
-                            <TouchableOpacity style={globalStyle.mapMenuRealtime} onPress={() => this.props.navigation.navigate("LocationPlaces", { uid: this.state.useruid, name: this.state.firstname })}  >
-                                <View style={globalStyle.mapMenuCircleContainer}>
-                                    <SimpleLineIcons  size={22} style={{ color: 'white' }} name="map" />
-                                </View>
-                            </TouchableOpacity>
+                                <Text numberOfLines={1} style={[globalStyle.mapMenuLabelRight, { width: '100%', fontSize: 12 }]} >{this.state.firstname}</Text>
                             </View>
 
-                            <View style={{flexDirection:'row',height:40}}>
-                                <Text style={{ color:'white',padding:2,borderRadius:5,height:25,marginRight:5,width:120,textAlign:'center',marginTop:12,backgroundColor:'#2c3e50', textAlignVertical: 'center',fontSize:12}}>Start Navigation</Text>
-                            <TouchableOpacity style={globalStyle.mapMenuRealtime} onPress={() =>  this.startNavigation() } >
-                                <View style={globalStyle.mapMenuCircleContainer}>
-                                    <SimpleLineIcons  size={22} style={{ color: 'white' }} name="cursor" />
-                                </View>
-                            </TouchableOpacity>
+                            <View style={{ alignItems: 'center', position: 'absolute', top: 80, width: 70,opacity:1 }}>
+
+                                <TouchableOpacity style={globalStyle.mapMenuRealtime} onPress={() => this.props.navigation.navigate("RealTimeLocation", { uid: this.state.useruid, name: this.state.firstname })} >
+                                    <View style={globalStyle.mapMenuCircleContainer}>
+                                        <SimpleLineIcons size={23} style={{ color: 'white' }} name="speedometer" />
+                                    </View>
+                                </TouchableOpacity>
+                                <Text style={globalStyle.mapMenuLabelRight}>Real Time Location</Text>
+
+
+                                <TouchableOpacity style={globalStyle.mapMenuRealtime} onPress={() => this.props.navigation.navigate("LocationPlaces", { uid: this.state.useruid, name: this.state.firstname })}  >
+                                    <View style={globalStyle.mapMenuCircleContainer}>
+                                        <SimpleLineIcons size={23} style={{ color: 'white' }} name="map" />
+                                    </View>
+                                </TouchableOpacity>
+                                <Text style={globalStyle.mapMenuLabelRight}>Location History</Text>
+
+
+                                <TouchableOpacity style={globalStyle.mapMenuRealtime} onPress={() => this.startNavigation()}>
+                                    <View style={globalStyle.mapMenuCircleContainer}>
+                                        <SimpleLineIcons size={23} style={{ color: 'white' }} name="cursor" />
+                                    </View>
+                                </TouchableOpacity >
+                                <Text style={globalStyle.mapMenuLabelRight}>Start Navigation </Text>
+
+                                
+
+
+
+
+
                             </View>
 
+
+
+                           
                            
 
                            
