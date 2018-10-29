@@ -28,7 +28,6 @@ import RealTimeLocation from '../places/RealTimeLocation';
 import LocationPlaces from '../places/LocationPlaces';
 import LocationDetails from '../places/LocationDetails';
 import LocationView from '../places/LocationView';
-import Faqs from '../faqs/Faqs';
 import HomeSettings from '../settings/HomeSettings';
 import ChangePassword from '../user/ChangePassword';
 import PlaceNotifications from '../places/PlaceNotifications';
@@ -42,14 +41,6 @@ export const Stack = createStackNavigator({
 
     Splash: {
         screen: Splash,
-        headerMode: 'none',
-        navigationOptions: {
-            header: null
-        },
-
-    },
-    Faqs: {
-        screen: Faqs,
         headerMode: 'none',
         navigationOptions: {
             header: null

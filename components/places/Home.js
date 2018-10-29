@@ -47,7 +47,6 @@ class HomePlaces extends Component {
             //appState:AppState.currentState,
             active: true,
             useruid:'',
-            firstname:'',
             isFloatingMenuVisible:false,
             mapMode:'standard',
             groupname: '',
@@ -66,7 +65,7 @@ class HomePlaces extends Component {
                 latitude: LATITUDE,
                 longitude: LONGITUDE,
                 latitudeDelta: LATITUDE_DELTA,
-                longitudeDelta: LONGITUDE_DELTA,
+                longitudeDelta: LONGITUDE_DELTA
             },
         };
 
@@ -74,24 +73,7 @@ class HomePlaces extends Component {
 
     }
 
-    startNavigation(){
-        if(Platform.OS === 'ios'){
-            navigator.geolocation.getCurrentPosition(
-                async (position) => {
-                    Linking.openURL('maps://app?saddr='+ position.coords.latitude +'+'+position.coords.longitude+'&daddr='+this.state.latitude+'+'+this.state.longitude)
-
-                    
-
-                },
-                (err) => {
-                },
-                { enableHighAccuracy: true, timeout: 10000 }
-            );
-            
-        } else{
-            Linking.openURL('google.navigation:q='+this.state.latitude+'+'+this.state.longitude)
-        }
-    }
+    
      componentWillMount() {
 
         let self = this;
@@ -119,53 +101,54 @@ class HomePlaces extends Component {
 
       
 
-        BackgroundGeolocation.configure({
+         BackgroundGeolocation.configure({
 
-            locationAuthorizationAlert: {
-                titleWhenNotEnabled: "Location services not enabled",
-                titleWhenOff: "Location services is off",
-                instructions: "You must enable in location services",
-                cancelButton: "Cancel",
-                settingsButton: "Settings"
-            },
-            locationAuthorizationRequest : "Always",
-            notificationPriority: BackgroundGeolocation.NOTIFICATION_PRIORITY_MIN,
-            stopTimeout: 5,
-            logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
-            debug: true,
-            desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
-            distanceFilter: 1,
-            allowIdenticalLocations :false,
-            maxDaysToPersist: 3,
-            heartbeatInterval:120,
-            notificationTitle: 'My GPS Buddy',
-            notificationText: 'Using GPS',
-            notificationChannelName:'My GPS Buddy',
-            stopOnTerminate: false, 
-            startOnBoot: true, 
-            foregroundService: true,
-            forceReloadOnBoot: true,
-            url: 'http://tracking.findplace2stay.com/index.php/api/place/savelocation',
-            method: 'POST',
-            batchSync: false,       
-            autoSync: true,       
-            params: {             
-                "useruid": userdetails.userid,
-                "fcmtoken": userdetails.fcmtoken,
-                "model": Model,
-                "timezone": timeZone,
-                "manufacturer": Manufacturer
-            }
-        }).then(state => {
+             locationAuthorizationAlert: {
+                 titleWhenNotEnabled: "Location services not enabled",
+                 titleWhenOff: "Location services is off",
+                 instructions: "You must enable in location services",
+                 cancelButton: "Cancel",
+                 settingsButton: "Settings"
+             },
+             locationAuthorizationRequest: "Always",
+             notificationPriority: BackgroundGeolocation.NOTIFICATION_PRIORITY_MIN,
+             stopTimeout: 5,
+             logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
+             debug: true,
+             desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
+             distanceFilter: 1,
+             allowIdenticalLocations: false,
+             maxDaysToPersist: 3,
+             heartbeatInterval: 120,
+             notificationTitle: 'My GPS Buddy',
+             notificationText: 'Using GPS',
+             notificationChannelName: 'My GPS Buddy',
+             stopOnTerminate: false,
+             startOnBoot: true,
+             foregroundService: true,
+             forceReloadOnBoot: true,
+             url: 'http://tracking.findplace2stay.com/index.php/api/place/savelocation',
+             method: 'POST',
+             batchSync: false,
+             autoSync: true,
+             params: {
+                 "useruid": userdetails.userid,
+                 "fcmtoken": userdetails.fcmtoken,
+                 "model": Model,
+                 "timezone": timeZone,
+                 "manufacturer": Manufacturer
+             }
+         });
+            /*.then(state => {
           
             if (!state.enabled) {
                 BackgroundGeolocation.start(function () {
                 });
             }
             }).catch(error => {
-            });
+            });*/
 
-        //BackgroundGeolocation.start();
+        BackgroundGeolocation.start();
         
        
         /*BackgroundGeolocation.getCurrentPosition((location) => {
@@ -184,9 +167,13 @@ class HomePlaces extends Component {
         this.setState({appState: nextAppState});
         
     }*/
-     componentDidMount() {
-         BackHandler.addEventListener('hardwareBackPress', () => { return true });
+
+
+    componentDidMount() {
         let self = this;
+        this.initialize();
+         BackHandler.addEventListener('hardwareBackPress', () => { return true });
+       
         firebase.messaging().requestPermission();
 
         firebase.messaging().getToken()
@@ -198,7 +185,6 @@ class HomePlaces extends Component {
             
 
 
-        //AppState.addEventListener('change',this.haddleAppStateChange);
 
         firebase.messaging().onMessage((notification: RemoteMessage) => {
             const channel = new firebase.notifications.Android.Channel('My GPS Buddy', 'My GPS Buddy', firebase.notifications.Android.Importance.Max)
@@ -217,7 +203,7 @@ class HomePlaces extends Component {
             
         });
 
-        this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen: NotificationOpen) => {
+        /*this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen: NotificationOpen) => {
             this.props.navigation.navigate("PlaceNotifications");
         });
 
@@ -228,7 +214,7 @@ class HomePlaces extends Component {
                     this.props.navigation.navigate("PlaceNotifications");
                 }
             });
-
+         */
        
 
        
@@ -240,7 +226,27 @@ class HomePlaces extends Component {
         //AppState.removeEventListener('change',this.haddleAppStateChange);
         BackgroundGeolocation.removeListeners();
         this.notificationOpenedListener();
+        this.map = null;
        
+    }
+
+    startNavigation() {
+        if (Platform.OS === 'ios') {
+            navigator.geolocation.getCurrentPosition(
+                async (position) => {
+                    Linking.openURL('maps://app?saddr=' + position.coords.latitude + '+' + position.coords.longitude + '&daddr=' + this.state.latitude + '+' + this.state.longitude)
+
+
+
+                },
+                (err) => {
+                },
+                { enableHighAccuracy: true, timeout: 10000 }
+            );
+
+        } else {
+            Linking.openURL('google.navigation:q=' + this.state.latitude + '+' + this.state.longitude)
+        }
     }
     
 
@@ -297,16 +303,17 @@ class HomePlaces extends Component {
     }
 
 
-    async centerToMarker(latitude, longitude,uid,firstname,avatar,firstletter,emptyphoto) {
-
-       this.setState({ isFloatingMenuVisible:true,  useruid:uid, firstname:firstname,latitude:latitude,longitude:longitude, avatar:avatar,firstletter:firstletter,emptyphoto:emptyphoto})
-        this.map.animateToRegion({
-            latitude: latitude,
-            longitude: longitude,
-            latitudeDelta: 0.005,
-            longitudeDelta: 0.005
-        })
-        this.markers[uid].showCallout();
+     centerToMarker(latitude, longitude,uid,firstname,avatar,firstletter,emptyphoto) {
+         if (this.map != null) {
+             this.setState({ isFloatingMenuVisible: true, useruid: uid, firstname: firstname, latitude: latitude, longitude: longitude, avatar: avatar, firstletter: firstletter, emptyphoto: emptyphoto })
+             this.map.animateToRegion({
+                 latitude: latitude,
+                 longitude: longitude,
+                 latitudeDelta: 0.005,
+                 longitudeDelta: 0.005
+             })
+             this.markers[uid].showCallout();
+         }
 
 
 
@@ -316,23 +323,25 @@ class HomePlaces extends Component {
 
     async centerToUserMarker() {
         this.setState({ isFloatingMenuVisible: false })
-        if (this.state.useruid !== "") {
-            this.markers[this.state.useruid].hideCallout();
-        }
-        navigator.geolocation.getCurrentPosition(
-            async (position) => {
-                this.map.animateToRegion({
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                    latitudeDelta: 0.005,
-                    longitudeDelta: 0.005
-                })
+        if (this.map != null) {
+            if (this.state.useruid !== "") {
+                this.markers[this.state.useruid].hideCallout();
+            }
+            navigator.geolocation.getCurrentPosition(
+                async (position) => {
+                    this.map.animateToRegion({
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                        latitudeDelta: 0.005,
+                        longitudeDelta: 0.005
+                    })
 
-            },
-            (err) => {
-            },
-            { enableHighAccuracy: false, timeout: 20000}
-        );
+                },
+                (err) => {
+                },
+                { enableHighAccuracy: false, timeout: 20000 }
+            );
+        }
 
     }
     async allMembers() {
@@ -435,7 +444,7 @@ class HomePlaces extends Component {
     ready() {
 
 
-        const markers = this.props.members.map(marker => (
+        const m = this.props.members.map(marker => (
             <MapView.Marker key={marker.uid}
                 identifier={marker.uid}
                 ref={ref => { this.markers[marker.uid] = ref }}
@@ -503,7 +512,7 @@ class HomePlaces extends Component {
                             <Image style={[styles.marker, { opacity:0 }]}
                                         source={require('../../images/marker.png')} />
                             <MapView ref={map => { this.map = map }} onPress={() => this.setState({ isFloatingMenuVisible: false })}
-                                onMapReady={() => this.initialize()}
+                              
                                     provider={PROVIDER_GOOGLE}
                                     customMapStyle={settings.retro}
                                     mapType={this.state.mapMode}
@@ -514,7 +523,7 @@ class HomePlaces extends Component {
                                 zoomEnabled={true}
                                     style={styles.map}
                             >
-                                {markers}
+                                {m}
 
                                 </MapView>
                                 
