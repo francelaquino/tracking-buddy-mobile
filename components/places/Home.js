@@ -101,7 +101,7 @@ class HomePlaces extends Component {
 
       
 
-         BackgroundGeolocation.configure({
+         BackgroundGeolocation.ready({
 
              locationAuthorizationAlert: {
                  titleWhenNotEnabled: "Location services not enabled",
@@ -110,6 +110,7 @@ class HomePlaces extends Component {
                  cancelButton: "Cancel",
                  settingsButton: "Settings"
              },
+             reset:true,
              locationAuthorizationRequest: "Always",
              notificationPriority: BackgroundGeolocation.NOTIFICATION_PRIORITY_MIN,
              stopTimeout: 5,
@@ -127,6 +128,7 @@ class HomePlaces extends Component {
              startOnBoot: true,
              foregroundService: true,
              forceReloadOnBoot: true,
+             preventSuspend: true,
              url: 'http://tracking.findplace2stay.com/index.php/api/place/savelocation',
              method: 'POST',
              batchSync: false,
@@ -203,18 +205,7 @@ class HomePlaces extends Component {
             
         });
 
-        /*this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen: NotificationOpen) => {
-            this.props.navigation.navigate("PlaceNotifications");
-        });
-
-        firebase.notifications().getInitialNotification()
-            .then((notificationOpen: NotificationOpen) => {
-                if (notificationOpen) {
-
-                    this.props.navigation.navigate("PlaceNotifications");
-                }
-            });
-         */
+        
        
 
        
@@ -223,7 +214,6 @@ class HomePlaces extends Component {
     }
 
     componentWillUnmount() {
-        //AppState.removeEventListener('change',this.haddleAppStateChange);
         BackgroundGeolocation.removeListeners();
         this.notificationOpenedListener();
         this.map = null;
@@ -383,9 +373,7 @@ class HomePlaces extends Component {
     initialize() {
         let self = this;
        
-       
-        //setTimeout(() => {
-            //this.setState({ isLoading: false })
+       if(this.map!=null){
             firebase.database().ref('users/' + userdetails.userid).child('members').on("value", function (snapshot) {
                 if (userdetails.userid !== "" && userdetails.userid !== null) {
                     self.props.displayHomeMember().then(res => {
@@ -402,8 +390,8 @@ class HomePlaces extends Component {
                     });
                 }
             });
+        }
 
-           //}, 1000);
     }
     loading() {
         return (

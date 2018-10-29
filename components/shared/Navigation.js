@@ -31,6 +31,7 @@ import LocationView from '../places/LocationView';
 import HomeSettings from '../settings/HomeSettings';
 import ChangePassword from '../user/ChangePassword';
 import PlaceNotifications from '../places/PlaceNotifications';
+import Terms from '../user/Terms';
 import Menu from '../shared/Menu';
 import Splash from './Splash';
 
@@ -39,6 +40,7 @@ import  { createStackNavigator }  from 'react-navigation';
 
 export const Stack = createStackNavigator({
 
+   
     Splash: {
         screen: Splash,
         headerMode: 'none',
@@ -47,6 +49,16 @@ export const Stack = createStackNavigator({
         },
 
     },
+
+    Terms: {
+        screen: Terms,
+        headerMode: 'none',
+        navigationOptions: {
+            header: null
+        },
+
+    },
+
 
    
     

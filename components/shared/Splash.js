@@ -25,10 +25,12 @@ class Splash extends Component {
         let lastname = await AsyncStorage.getItem("lastname");
         let avatar = await AsyncStorage.getItem("avatar");
         let emptyphoto = await AsyncStorage.getItem("emptyphoto");
+        let agree=await AsyncStorage.getItem("agree");
         
         
 
         await setTimeout(async () => {
+            if(agree=="yes"){
             if (userid === "" || userid === null) {
                 self.props.navigation.navigate('Login');
             } else {
@@ -47,8 +49,11 @@ class Splash extends Component {
 
 
             }
+         }else{
+            self.props.navigation.navigate('Terms');
+         }
 
-        }, 500);
+        }, 1000);
     }
 
     render() {

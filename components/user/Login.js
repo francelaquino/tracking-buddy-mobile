@@ -28,7 +28,7 @@ class Login extends Component {
       
   
      componentDidMount() {
-         
+        AsyncStorage.setItem("agree", "yes");
          BackHandler.addEventListener('hardwareBackPress', function () {
              return true;
          });
