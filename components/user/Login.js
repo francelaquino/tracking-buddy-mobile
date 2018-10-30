@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import {  StatusBar,BackHandler, AsyncStorage, NetInfo, Platform,  StyleSheet,  Text,  View, ScrollView,TextInput, TouchableOpacity, Image,ToastAndroid, NavigationActions  } from 'react-native';
+import { Linking, StatusBar,BackHandler, AsyncStorage, NetInfo, Platform,  StyleSheet,  Text,  View, ScrollView,TextInput, TouchableOpacity, Image,ToastAndroid, NavigationActions  } from 'react-native';
 import {  Root, Container, Header, Body, Title, Item, Input, Label, Button, Icon } from 'native-base';
 import { connect } from 'react-redux';
 import { saveLocation  } from '../../redux/actions/locationActions' ;
@@ -18,8 +18,8 @@ class Login extends Component {
         super(props)
         this.state = {
             loading:false,
-            email: '',
-            password:'',
+            email: 'aquinof@rchsp.med.sa',
+            password:'111111',
             
         };
        
@@ -116,7 +116,7 @@ class Login extends Component {
                            
                         </View>
                         <View style={{ alignSelf: 'flex-end', marginTop: 10 }}>
-                            <TouchableOpacity underlayColor={'transparent'} onPress={() => navigate('ForgotPassword')}>
+                            <TouchableOpacity underlayColor={'transparent'} onPress={() => Linking.openURL('http://mygpsbuddy.findplace2stay.com/forgotpassword')}>
                                 <Text style={{ color: '#16a085', fontSize: 16 }}>Forgot Password?</Text>
                             </TouchableOpacity>
                         </View>

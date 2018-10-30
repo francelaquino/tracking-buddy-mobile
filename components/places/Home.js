@@ -140,17 +140,16 @@ class HomePlaces extends Component {
                  "timezone": timeZone,
                  "manufacturer": Manufacturer
              }
-         });
-            /*.then(state => {
+         }).then(state => {
           
             if (!state.enabled) {
                 BackgroundGeolocation.start(function () {
                 });
             }
             }).catch(error => {
-            });*/
+            });
 
-        BackgroundGeolocation.start();
+        //BackgroundGeolocation.start();
         
        
         /*BackgroundGeolocation.getCurrentPosition((location) => {
@@ -215,7 +214,7 @@ class HomePlaces extends Component {
 
     componentWillUnmount() {
         BackgroundGeolocation.removeListeners();
-        this.notificationOpenedListener();
+        //this.notificationOpenedListener();
         this.map = null;
        
     }
