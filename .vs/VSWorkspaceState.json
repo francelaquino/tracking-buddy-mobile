@@ -1,8 +1,6 @@
 {
   "ExpandedNodes": [
     "",
-    "\\android\\app",
-    "\\android\\app\\src",
     "\\components",
     "\\components\\places",
     "\\components\\settings",
@@ -11,6 +9,6 @@
     "\\redux",
     "\\redux\\actions"
   ],
-  "SelectedNode": "\\redux\\actions\\userActions.js",
+  "SelectedNode": "\\components\\user\\ChangePassword.js",
   "PreviewInSolutionExplorer": false
 }

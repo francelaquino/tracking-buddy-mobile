@@ -109,22 +109,34 @@ class ChangePassword extends Component {
                     <ScrollView  contentContainerStyle={{flexGrow: 1}} keyboardShouldPersistTaps={"always"}>
                     <View style={globalStyle.container}>
 
-                                <Item stackedLabel>
-                                    <Label style={globalStyle.label} >Current Password</Label>
-                                    <Input style={globalStyle.textinput} value={this.state.currentpassword} maxLength={50} secureTextEntry
-                                        onChangeText={currentpassword => this.setState({ currentpassword })} />
-                                </Item>
-                                <Item stackedLabel>
-                                    <Label style={globalStyle.label} >New Password</Label>
-                                    <Input style={globalStyle.textinput} value={this.state.newpassword} maxLength={50} secureTextEntry
-                                        onChangeText={newpassword => this.setState({ newpassword })} />
-                                </Item>
-                                <Item stackedLabel>
-                                    <Label style={globalStyle.label} >Re-type Password</Label>
-                                    <Input style={globalStyle.textinput} value={this.state.retypepassword} maxLength={50} secureTextEntry
-                                        onChangeText={retypepassword => this.setState({ retypepassword })} />
-                                </Item>
+                        <Label style={globalStyle.label} >Enter current password</Label>
+                              <Item regular style={globalStyle.roundtextinput}>
+                              <Input 
+							name="currentpassword" autoCorrect={false} maxLength = {50}
+                                      value={this.state.currentpassword}
+                                      autoCapitalize="none" secureTextEntry
+							onChangeText={currentpassword=>this.setState({currentpassword})}/>
+						</Item>
 
+                         <Label style={globalStyle.label} >Enter new password</Label>
+                              <Item regular style={globalStyle.roundtextinput}>
+                              <Input 
+							name="newpassword" autoCorrect={false} maxLength = {50}
+                                      value={this.state.newpassword}
+                                      autoCapitalize="none" secureTextEntry
+							onChangeText={newpassword=>this.setState({newpassword})}/>
+						</Item>
+
+                         <Label style={globalStyle.label} >Retype new password</Label>
+                              <Item regular style={globalStyle.roundtextinput}>
+                              <Input 
+							name="currentpassword" autoCorrect={false} maxLength = {50}
+                                      value={this.state.retypepassword}
+                                      autoCapitalize="none" secureTextEntry
+							onChangeText={retypepassword=>this.setState({retypepassword})}/>
+						</Item>
+                                
+                               
                         
                         
 
