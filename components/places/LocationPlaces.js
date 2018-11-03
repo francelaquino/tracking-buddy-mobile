@@ -191,7 +191,7 @@ class LocationPlaces extends Component {
         coordinates = [];
     }
     async endRoute() {
-        ToastAndroid.showWithGravityAndOffset("End", ToastAndroid.SHORT, ToastAndroid.TOP, 25, 50);
+        ToastAndroid.showWithGravityAndOffset("End", ToastAndroid.SHORT, ToastAndroid.CENTER, 25, 50);
         if (this.state.route == "play") {
             clearInterval(plot);
         }
@@ -399,8 +399,6 @@ class LocationPlaces extends Component {
                 <MapView ref={map => { this.map = map }} mapType={this.state.mapMode}
                         style={styles.map}
                         provider={PROVIDER_GOOGLE}
-                        customMapStyle={settings.retro}
-                      
                         showsCompass={false}>
                         
 

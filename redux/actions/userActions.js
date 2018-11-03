@@ -45,12 +45,14 @@ export const userLogin = (email, password) => async dispatch => {
                                     userdetails.lastname = response.data.results.lastname;
                                     userdetails.emptyphoto = response.data.results.emptyphoto;
                                     userdetails.avatar = response.data.results.avatar;
+                                    userdetails.firstletter = response.data.results.firstletter;
                                     AsyncStorage.setItem("emptyphoto", userdetails.emptyphoto);
                                     AsyncStorage.setItem("avatar", userdetails.avatar);
                                     AsyncStorage.setItem("userid", userdetails.userid);
                                     AsyncStorage.setItem("email", userdetails.email);
                                     AsyncStorage.setItem("firstname", userdetails.firstname);
                                     AsyncStorage.setItem("lastname", userdetails.lastname);
+                                    AsyncStorage.setItem("firstletter", userdetails.firstletter);
                                     resolve(true);
                                 }else{
                                     resolve(false);
@@ -75,8 +77,47 @@ export const userLogin = (email, password) => async dispatch => {
     })
 
 };
-//Update code
 
+export const changePassword = (data) => async dispatch => {
+
+    return new Promise(async (resolve) => {
+        try {
+            
+
+
+                    await axios.post(settings.baseURL + 'member/changepassword',{
+                        email: data.email,
+                        userid:data.userid,
+                        currentpassword: data.currentpassword,
+                        newpassword: data.newpassword
+                        }).then(function (response) {
+                            if (response.data.status == "202") {
+                                if(response.data.message==""){
+                                    ToastAndroid.showWithGravityAndOffset("Password successfully changed", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
+                                    resolve(true);
+                                }else{
+                                    resolve(false);
+                                    ToastAndroid.showWithGravityAndOffset(response.data.message, ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
+                                }
+
+                            } else {
+                                resolve(false)
+                                ToastAndroid.showWithGravityAndOffset("Something went wrong. Please try again.", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
+                            }
+
+                        }).catch(function (error) {
+                            resolve(false)
+                            ToastAndroid.showWithGravityAndOffset("Something went wrong. Please try again.", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
+                        });
+               
+        } catch (error) {
+            ToastAndroid.showWithGravityAndOffset("Something went wrong. Please try again.", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
+            resolve(false)
+        }
+
+    })
+
+};
 
 export const updateProfile = (profile) => async dispatch => {
     let avatar = "";

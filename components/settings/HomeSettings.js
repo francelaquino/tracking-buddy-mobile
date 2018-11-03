@@ -59,23 +59,7 @@ class HomeSettings extends Component {
                                         </Right>
                                     </ListItem>
 
-                                    <ListItem avatar button style={globalStyle.listItem} onPress={() => {
-                                        this.props.navigation.navigate("GenerateInviteCode");
-                                    }}>
-                                        <Left >
-
-                                            <MaterialCommunityIcons style={{ fontSize: 30, color: '#16a085' }} name="table-row" />
-                                        </Left>
-
-                                        <Body style={globalStyle.listBody} >
-                                            <Text style={globalStyle.listHeading}>INVITATION CODE</Text>
-                                        </Body>
-                                        <Right style={globalStyle.listRight} >
-                                            <SimpleLineIcons style={globalStyle.listRightOptionIcon} name='arrow-right' />
-                                        </Right>
-                                    </ListItem>
-
-
+                                   
 
                                 </List>
 

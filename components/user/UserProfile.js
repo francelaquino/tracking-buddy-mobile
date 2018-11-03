@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react';
 import {   Platform,  StyleSheet,  Text,  View, ScrollView,TextInput, TouchableOpacity, ToastAndroid, Alert, Image, Picker } from 'react-native';
-import { Root, Container, Header, Body, Title, Item, Input, Label, Button, Icon, Left, Right, List, ListItem, Content } from 'native-base';
+import { Thumbnail, Root, Container, Header, Body, Title, Item, Input, Label, Button, Icon, Left, Right, List, ListItem, Content } from 'native-base';
 import { connect } from 'react-redux';
 import DatePicker from 'react-native-datepicker'
 import { getProfile, updateProfile, getcountry } from '../../redux/actions/userActions';
@@ -50,6 +50,7 @@ class UserProfile extends Component {
                     isbusy:false,
                     firstname: this.props.profile.firstname,
                     email: this.props.profile.email,
+                    firstletter: this.props.profile.firstletter,
                     fullname: this.props.profile.fullname,
                     mobileno: this.props.profile.mobileno,
                     gender: this.props.profile.gender,
@@ -192,9 +193,12 @@ class UserProfile extends Component {
                     <View style={{ marginTop: 20, marginBottom: 10 }}>
                         <TouchableOpacity onPress={this.selectPhoto.bind(this)}>
                             <View style={globalStyle.avatarContainer}>
-                                {this.state.emptyphoto === '1' ? <Ionicons size={75} style={{ color: '#2c3e50' }} name="ios-person" /> :
+                               
+
+                                  {this.state.emptyphoto === "1" ? <Text style={{fontSize:50,color:'#16a085'}}>{this.state.firstletter}</Text> :
                                     <Image style={globalStyle.avatarBig} source={this.state.avatarsource} />
                                 }
+
                             </View>
 
                         </TouchableOpacity>
@@ -206,6 +210,7 @@ class UserProfile extends Component {
                             </TouchableOpacity>
 
                         }
+
 
                     </View>
                    

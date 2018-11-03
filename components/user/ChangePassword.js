@@ -2,17 +2,18 @@
 import React, { Component } from 'react';
 import {  StatusBar, Platform,  StyleSheet,  Text,  View, ScrollView,TextInput, TouchableOpacity, ToastAndroid,  } from 'react-native';
 import { Root, Container, Header, Body, Title, Item, Input, Label, Button, Icon, Left, Right, Content} from 'native-base';
-import Loading from '../shared/Loading';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Loader from '../shared/Loader';
+import { connect } from 'react-redux';
 import OfflineNotice  from '../shared/OfflineNotice';
-//import firebase from 'react-native-firebase';
+import { changePassword } from '../../redux/actions/userActions' ;
 var globalStyle = require('../../assets/style/GlobalStyle');
 var userdetails = require('../shared/userDetails');
 
 
 class ChangePassword extends Component {
     constructor(props) {
+        
         super(props)
         this.state = {
             loading: false,
@@ -22,10 +23,7 @@ class ChangePassword extends Component {
         };
       }
 
-    componentWillMount() {
-    }
-            
-  
+   
     onSubmit(){
         if(this.state.currentpassword=="" ){
             ToastAndroid.showWithGravityAndOffset("Please enter current password",ToastAndroid.LONG,ToastAndroid.BOTTOM, 25, 50);
@@ -41,38 +39,18 @@ class ChangePassword extends Component {
         }
         
         
-
-        let self = this;
-        firebase.database().ref(".info/connected").on("value", function (snap) {
-            if (snap.val() === true) {
-                this.setState({ loading: true })
-                let user = firebase.auth().currentUser;
-                let credentails = firebase.auth.EmailAuthProvider.credential(userdetails.email, this.state.currentpassword);
-                user.reauthenticateAndRetrieveDataWithCredential(credentails).then(function () {
-                    user.updatePassword(self.state.newpassword).then(function () {
-                        self.setState({ loading: false })
-                        self.setState({
-                            currentpassword: '',
-                            newpassword: '',
-                            retypepassword: ''
-                        })
-                        ToastAndroid.showWithGravityAndOffset("Password successfully changed", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
-                    }).catch(function (err) {
-                        if (err.code == "auth/weak-password") {
-                            ToastAndroid.showWithGravityAndOffset("The given password is invalid. Password should be at least 6 characters", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
-                        } else {
-                            ToastAndroid.showWithGravityAndOffset("Something went wrong...", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
-                        }
-                        self.setState({ loading: false })
-                    });
-                }).catch(function (err) {
-                    ToastAndroid.showWithGravityAndOffset("The current password is invalid", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
-                    self.setState({ loading: false })
-                });
-            } else {
-                ToastAndroid.showWithGravityAndOffset("Network connection error", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
-            }
+        let user = {
+            currentpassword: this.state.currentpassword,
+            newpassword: this.state.newpassword,
+            email: userdetails.email,
+            userid:userdetails.userid,
+        }
+        this.setState({ loading: true })
+        this.props.changePassword(user).then(async (res) => {
+                this.setState({ loading: false, currentpassword: '', newpassword: '',retypepassword:'' })
         });
+       
+        
 
 
         
@@ -80,11 +58,6 @@ class ChangePassword extends Component {
 
 
    
-    loading(){
-        return (
-          <Loading/>
-        )
-    }
     ready(){
         return (
             <Root>
@@ -111,7 +84,7 @@ class ChangePassword extends Component {
 
                         <Label style={globalStyle.label} >Enter current password</Label>
                               <Item regular style={globalStyle.roundtextinput}>
-                              <Input 
+                              <Input  
 							name="currentpassword" autoCorrect={false} maxLength = {50}
                                       value={this.state.currentpassword}
                                       autoCapitalize="none" secureTextEntry
@@ -127,10 +100,10 @@ class ChangePassword extends Component {
 							onChangeText={newpassword=>this.setState({newpassword})}/>
 						</Item>
 
-                         <Label style={globalStyle.label} >Retype new password</Label>
+                         <Label style={globalStyle.label} >Re-type new password</Label>
                               <Item regular style={globalStyle.roundtextinput}>
                               <Input 
-							name="currentpassword" autoCorrect={false} maxLength = {50}
+							name="retypepassword" autoCorrect={false} maxLength = {50}
                                       value={this.state.retypepassword}
                                       autoCapitalize="none" secureTextEntry
 							onChangeText={retypepassword=>this.setState({retypepassword})}/>
@@ -172,4 +145,12 @@ class ChangePassword extends Component {
 
   
   
+const mapStateToProps = state => ({
+    
+})
+
+
+
+ChangePassword = connect(mapStateToProps, { changePassword})(ChangePassword);
+
 export default ChangePassword;

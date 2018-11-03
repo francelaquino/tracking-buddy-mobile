@@ -26,7 +26,7 @@ class Splash extends Component {
         let avatar = await AsyncStorage.getItem("avatar");
         let emptyphoto = await AsyncStorage.getItem("emptyphoto");
         let agree=await AsyncStorage.getItem("agree");
-        
+        let firstletter=await AsyncStorage.getItem("firstletter");
         
 
         await setTimeout(async () => {
@@ -40,12 +40,13 @@ class Splash extends Component {
                 userdetails.avatar = avatar;
                 userdetails.firstname = firstname;
                 userdetails.lastname = lastname;
-
-                await self.props.saveLocation();
+                userdetails.firstletter = firstletter;
+                self.props.navigation.navigate('Home');
+                /*await self.props.saveLocation();
                 await setTimeout(() => {
                     self.props.displayHomeMember();
-                    self.props.navigation.navigate('Home');
-                }, 1000);
+                  
+                }, 1000);*/
 
 
             }

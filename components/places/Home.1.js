@@ -15,13 +15,13 @@ import OfflineNotice  from '../shared/OfflineNotice';
 import { connect } from 'react-redux';
 import Moment from 'moment';
 import DeviceInfo from 'react-native-device-info';
-import { displayHomeMember, updateToken } from '../../redux/actions/memberActions';
+import { displayHomeMember, displayMember, updateToken } from '../../redux/actions/memberActions';
 import BackgroundGeolocation from "react-native-background-geolocation";
 import firebase from 'react-native-firebase';
 import type {  RemoteMessage, Notification, NotificationOpen } from 'react-native-firebase';
 import AnimatedHideView from 'react-native-animated-hide-view';
 var settings = require('../../components/shared/Settings');
-const {screenHeight, screenWidth} = Dimensions.get('window');
+var screenHeight = Dimensions.get('window').height; 
 
 
 var globalStyle = require('../../assets/style/GlobalStyle');
@@ -42,16 +42,14 @@ class HomePlaces extends Component {
        
         let self = this;
         this.map = null;
-        this.firebaseConnection=null;
         this.markers=[];
         this.state = {
-            appState:AppState.currentState,
+            //appState:AppState.currentState,
             active: true,
             useruid:'',
             isFloatingMenuVisible:false,
             mapMode:'standard',
             groupname: '',
-            isPageReady:false,
             invitationcode:'',
             isLoading: true,
             memberReady: false,
@@ -80,7 +78,7 @@ class HomePlaces extends Component {
 
         let self = this;
        
-      /*  BackgroundGeolocation.on('http', function(response) {
+        BackgroundGeolocation.on('http', function(response) {
             var status = response.status;
             var success = response.success;
             var responseText = response.responseText;
@@ -90,7 +88,7 @@ class HomePlaces extends Component {
             var status = response.status;
               var responseText = response.responseText;
               console.log(response)
-            });*/
+            });
         BackgroundGeolocation.on('heartbeat', function () {
             firebase.messaging().getToken()
                 .then(fcmToken => {
@@ -103,7 +101,7 @@ class HomePlaces extends Component {
 
       
 
-         BackgroundGeolocation.configure({
+         BackgroundGeolocation.ready({
 
              locationAuthorizationAlert: {
                  titleWhenNotEnabled: "Location services not enabled",
@@ -115,15 +113,14 @@ class HomePlaces extends Component {
              reset:true,
              locationAuthorizationRequest: "Always",
              notificationPriority: BackgroundGeolocation.NOTIFICATION_PRIORITY_MIN,
-             stopTimeout: 1,
+             stopTimeout: 5,
              logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
              debug: true,
-             desiredAccuracy: 0,
+             desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
              distanceFilter: 1,
-             stationaryRadius: 5,
              allowIdenticalLocations: false,
              maxDaysToPersist: 3,
-             heartbeatInterval: 60,
+             heartbeatInterval: 120,
              notificationTitle: 'My GPS Buddy',
              notificationText: 'Using GPS',
              notificationChannelName: 'My GPS Buddy',
@@ -145,26 +142,36 @@ class HomePlaces extends Component {
              }
          }).then(state => {
           
-            /*if (!state.enabled) {
+            if (!state.enabled) {
                 BackgroundGeolocation.start(function () {
                 });
-            }*/
+            }
             }).catch(error => {
             });
 
-            BackgroundGeolocation.start();
-      
+        //BackgroundGeolocation.start();
+        
+       
+        /*BackgroundGeolocation.getCurrentPosition((location) => {
+            console.log(location)
+        }, (error) => {
+        }, { samples: 1, persist: true,desiredAccuracy: 10,timeout: 30 })*/
+
+       
+
+       // this.initialize();
         
        
     }
        
-   
+    /*haddleAppStateChange = (nextAppState) => {
+        this.setState({appState: nextAppState});
+        
+    }*/
+
 
     componentDidMount() {
-       
         let self = this;
-        AppState.addEventListener('change', this._handleAppStateChange);
-        
         this.initialize();
          BackHandler.addEventListener('hardwareBackPress', () => { return true });
        
@@ -206,18 +213,11 @@ class HomePlaces extends Component {
     }
 
     componentWillUnmount() {
-        AppState.removeEventListener('change', this._handleAppStateChange);
         BackgroundGeolocation.removeListeners();
+        //this.notificationOpenedListener();
         this.map = null;
        
     }
-    _handleAppStateChange = (nextAppState) => {
-        this.setState({appState: nextAppState});
-        if(nextAppState=="active"){
-        }else{
-            this.firebaseConnection.off('value');
-        }
-      }
 
     startNavigation() {
         if (Platform.OS === 'ios') {
@@ -240,8 +240,7 @@ class HomePlaces extends Component {
     
 
 
-     fitToMap() {
-        
+    async fitToMap() {
         this.setState({ isFloatingMenuVisible:false})
         let coordinates = [];
         if (this.props.members.length == 1) {
@@ -311,7 +310,7 @@ class HomePlaces extends Component {
 
     }
 
-     centerToUserMarker() {
+    async centerToUserMarker() {
         this.setState({ isFloatingMenuVisible: false })
         if (this.map != null) {
             if (this.state.useruid !== "") {
@@ -373,13 +372,11 @@ class HomePlaces extends Component {
     initialize() {
         let self = this;
        
-       if(this.state.appState=="active"){
-        this.setState({isPageReady:true})
-            this.firebaseConnection=firebase.database().ref('users/' + userdetails.userid).child('members');
-            this.firebaseConnection.on("value", function (snapshot) {
+       if(this.map!=null){
+            firebase.database().ref('users/' + userdetails.userid).child('members').on("value", function (snapshot) {
                 if (userdetails.userid !== "" && userdetails.userid !== null) {
                     self.props.displayHomeMember().then(res => {
-                        //setTimeout( () => {
+                        setTimeout( () => {
                             if (self.state.fitToMap == true) {
                                  self.fitToMap();
                             }
@@ -387,9 +384,7 @@ class HomePlaces extends Component {
                                 self.centerToUserMarker();
                             }
                             self.setState({ memberReady: true, isLoading: false })
-                        //}, 500);
-           
-                        
+                        }, 500);
 
                     });
                 }
@@ -422,7 +417,7 @@ class HomePlaces extends Component {
                     <TouchableOpacity key={item.uid.toString()} onPress={() => this.centerToMarker(item.coordinates.latitude, item.coordinates.longitude,item.uid,item.firstname,item.avatar,item.firstletter,item.emptyphoto)}>
                         <View style={{ flex: 1, flexDirection: 'column', alignItems: 'center', width: 55, height: 60, margin: 2,  }}>
                             <View style={globalStyle.listAvatarContainerSmall} >
-                                {item.emptyphoto === "1" ?  <Text style={{fontSize:23,color:'#16a085'}}>{item.firstletter}</Text> :
+                                {item.emptyphoto === "1" ?  <Text style={{fontSize:23,color:'silver'}}>{item.firstletter}</Text> :
                                     <Thumbnail style={globalStyle.listAvatarHome} source={{ uri: item.avatar }} />
                                 }
                             </View>
@@ -485,8 +480,8 @@ class HomePlaces extends Component {
                                
                             <TouchableOpacity onPress={() => this.props.navigation.navigate('UserProfile')}>
                                 <View style={[globalStyle.listAvatarContainerSmall, { height: 40, width: 40, marginTop: 2, borderWidth: 1, borderColor:'#127461' }]} >
-                                {userdetails.emptyphoto === "1" ? <Text style={{fontSize:23,color:'#16a085'}}>{userdetails.firstletter}</Text> :
-                                   <Thumbnail style={[globalStyle.listAvatar, { height: 36, width: 36 }]} source={{ uri: userdetails.avatar }} />
+                                    {userdetails.emptyphoto === "1" ? <Ionicons size={36} style={{ color: '#127461' }} name="ios-person" /> :
+                                        <Thumbnail style={[globalStyle.listAvatar, { height: 36, width: 36 }]} source={{ uri: userdetails.avatar }} />
                                     }
                                 </View>
                                 </TouchableOpacity>
@@ -506,12 +501,13 @@ class HomePlaces extends Component {
                             <MapView ref={map => { this.map = map }} onPress={() => this.setState({ isFloatingMenuVisible: false })}
                               
                                     provider={PROVIDER_GOOGLE}
+                                    customMapStyle={settings.retro}
                                     mapType={this.state.mapMode}
                                     showsUserLocation={true}
                                     showsMyLocationButton={false}
                                     followsUserLocation={true}
                                     loadingEnabled={true}
-                                    zoomEnabled={true}
+                                zoomEnabled={true}
                                     style={styles.map}
                             >
                                 {m}
@@ -664,17 +660,9 @@ class HomePlaces extends Component {
     }
 
 
-    loading(){
-        return (
-          <Loading/>
-        )
-    }
+
     render() {
-            if(!this.state.isPageReady){
-                return this.loading();
-             }else{
-                return this.ready();
-            }   
+                return this.ready()
 
     }
 }
@@ -722,11 +710,7 @@ const styles = StyleSheet.create({
     },
    
       map: {
-        flex:1,
-        width: screenWidth, 
-        height: screenHeight,
-       
-        //  height:'104%',
+          height:'104%',
         ...StyleSheet.absoluteFillObject,
       },
       marker: {
@@ -760,6 +744,6 @@ const mapStateToProps = state => ({
   
   
   
-HomePlaces = connect(mapStateToProps, { displayHomeMember, updateToken})(HomePlaces);
+HomePlaces = connect(mapStateToProps, { displayHomeMember, displayMember, updateToken})(HomePlaces);
   
 export default HomePlaces;

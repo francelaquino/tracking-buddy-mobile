@@ -72,7 +72,7 @@ class DisplayGroup extends Component {
 
                 <Left style={globalStyle.listLeft}>
                     <View style={globalStyle.listAvatarContainer} >
-                        {group.emptyphoto === 1 ?<Text style={{fontSize:23,color:'white'}}>{group.firstletter}</Text>  :
+                        {group.emptyphoto === 1 ?<Text style={{fontSize:23,color:'#16a085'}}>{group.firstletter}</Text>  :
                             <Thumbnail style={globalStyle.listAvatar} source={{ uri: group.firstletter }} />
                         }
 

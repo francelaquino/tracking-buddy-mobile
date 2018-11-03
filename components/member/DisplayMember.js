@@ -53,11 +53,11 @@ class DisplayMember extends Component {
                 data={this.props.members}
                 renderItem={({ item }) => (
 
-                        <ListItem key={item.uid}  button avatar style={globalStyle.listItem}  onPress={() => {this.props.navigation.navigate("InfoMember",{memberuid:item.uid,firstname:item.firstname})}}>
+                        <ListItem key={item.uid}  button avatar style={globalStyle.listItem}  onPress={() => {this.props.navigation.navigate("InfoMember",{firstletter: item.firstletter,memberuid:item.uid,firstname:item.firstname})}}>
                             <Left style={globalStyle.listLeft}>
                                 <View style={globalStyle.listAvatarContainer} >
                                
-                                {item.emptyphoto === "1" ? <Text style={{fontSize:23,color:'white'}}>{item.firstletter}</Text> :
+                                {item.emptyphoto === "1" ? <Text style={{fontSize:23,color:'#16a085'}}>{item.firstletter}</Text> :
                                     <Thumbnail style={globalStyle.listAvatar} source={{ uri: item.avatar }} />
                                 }
                                 </View>

@@ -41,13 +41,13 @@ class EditGroup extends Component {
                 groupname: this.props.navigation.state.params.group.groupname,
                 emptyphoto: this.props.navigation.state.params.group.emptyphoto,
                 groupid: this.props.navigation.state.params.group.id,
+                firstletter: this.props.navigation.state.params.group.firstletter,
                 isbusy: false,
             })
         }, 500);
     }
     removePhoto(){
 		this.setState({
-            //avatarsource:{uri:''},
             isPhotoChange: true,
             emptyphoto:1,
         });
@@ -150,8 +150,8 @@ class EditGroup extends Component {
                             <TouchableOpacity style={{ marginTop: 20 }} onPress={this.selectPhoto.bind(this)}>
                                 <View style={globalStyle.avatarContainer}>
                                    
-
-                                        {this.state.emptyphoto === 1 ? <Ionicons size={75} style={{ color: '#2c3e50' }} name="ios-people" /> :
+                               
+                                        {this.state.emptyphoto === 1 ? <Text style={{fontSize:43,color:'#16a085'}}>{this.state.firstletter}</Text>  :
                                             <Image style={globalStyle.avatarBig} source={this.state.avatarsource} />
                                         }
 

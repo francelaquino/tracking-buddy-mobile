@@ -53,9 +53,13 @@ class PlaceList extends Component {
                 data={this.props.places}
                 renderItem={({ item }) => (
                     <ListItem icon key={item.id} button avatar style={globalStyle.listItem}  onPress={() => {this.props.navigation.navigate("PlaceView",{place:item})}}>
-                    <Left >
                     
-                            <Entypo style={{ fontSize: 30, color:'#16a085'}} name="location"/>
+                    <Left style={globalStyle.listLeft}>
+                                <View style={globalStyle.listAvatarContainer} >
+                               
+                                <Text style={{fontSize:23,color:'#16a085'}}>{item.firstletter}</Text> 
+                                </View>
+                            
                 </Left>
                         <Body style={globalStyle.listBody} >
                             <Text numberOfLines={1} style={globalStyle.listHeading}>{item.place}</Text>

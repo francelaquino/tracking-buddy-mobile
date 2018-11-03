@@ -163,9 +163,10 @@ class InfoMember extends Component {
                             <View style={{ marginTop: 10, paddingBottom: 10 }}>
                            
                     <View style={globalStyle.avatarContainer}>
-                        {this.props.member.emptyphoto === '1' ? <Ionicons size={75} style={{ color: '#2c3e50' }} name="ios-person" /> :
+                        {this.props.member.emptyphoto === '1' ? <Text style={{fontSize:43,color:'#16a085'}}>{this.props.member.firstletter}</Text> :
                             <Image style={globalStyle.avatarBig} source={{ uri: this.props.member.avatar }} />
                         }
+
 
                             
                                     </View>

@@ -105,7 +105,7 @@ class CreateGroup extends Component {
                                 <TouchableOpacity style={{ marginTop: 20 }} onPress={this.selectPhoto.bind(this)}>
                             <View style={globalStyle.avatarContainer}>
 
-                                {this.state.emptyphoto === '1' ? <Ionicons size={75} style={{ color: '#2c3e50' }} name="ios-people" />  :
+                                {this.state.emptyphoto === '1' ?  <Text style={{fontSize:43,color:'#16a085'}}>G</Text>  :
                                             <Image style={globalStyle.avatarBig} source={this.state.avatarsource} />
                                         }
 

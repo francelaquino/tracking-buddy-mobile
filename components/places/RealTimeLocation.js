@@ -163,7 +163,6 @@ class RealTimeLocation extends Component {
                                     <MapView ref={map => { this.map = map }}
                                     onMapReady = { () => this.mapReady() }
                                     provider={PROVIDER_GOOGLE}
-                                    customMapStyle={settings.retro}
                                     mapType={this.state.mapMode}
                                     showsUserLocation={true}
                                     showsMyLocationButton={false}

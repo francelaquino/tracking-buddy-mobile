@@ -228,20 +228,19 @@ module.exports = StyleSheet.create({
     },
     listAvatarContainer: {
         borderRadius: 22,
-        backgroundColor: '#e9ebeb',
+        backgroundColor: 'white',
         width: 46,
         height: 46,
         alignItems: 'center',
         justifyContent: 'center',
-        /*borderColor: '#127461',
-        borderWidth: 1,*/
+        borderColor: '#0f735f',
+        borderWidth: 1,
         position: 'absolute',
         top: 2,
     },
     listAvatar: {
         width: 46,
         height: 46,
-
     },
     listAvatarContainerSmall: {
         marginTop: 5,
@@ -252,7 +251,7 @@ module.exports = StyleSheet.create({
         height: 49,
         alignItems: 'center',
         justifyContent: 'center',
-        borderColor:'#1abc9c',
+        borderColor:'#0f735f',
         borderWidth:2,
        
     },
@@ -296,8 +295,8 @@ module.exports = StyleSheet.create({
         alignSelf: "center",
         flexDirection: 'column',
         justifyContent: 'center',
-        borderColor: '#383939',
-        borderWidth: 1,
+        borderColor: '#0f735f',
+        borderWidth: 2,
     },
 
     avatarcontainerbottom: {
@@ -311,6 +310,7 @@ module.exports = StyleSheet.create({
         borderRadius: 38,
         width: 76,
         height: 76,
+       
     },
     avatar: {
         width: 46,

@@ -48,7 +48,6 @@ class Login extends Component {
           
             if (res == true) {
                 setTimeout(async () => {
-                    //await this.props.saveLocation();
                     setTimeout(() => {
                         this.props.displayHomeMember();
                         this.props.navigation.navigate('Home');
