@@ -56,9 +56,9 @@ class LocationsMember extends Component {
                             <Left style={globalStyle.listLeft}>
                                 <View style={globalStyle.listAvatarContainer} >
                                
-                                {item.emptyphoto === "1" ? <Ionicons size={46} style={{ color: '#2c3e50' }} name="ios-person" /> :
-                                    <Thumbnail style={globalStyle.listAvatar} source={{ uri: item.avatar }} />
-                                }
+                                 {item.emptyphoto === "1" ? <Text style={{fontSize:23,color:'#16a085'}}>{item.firstletter}</Text> :
+                                         <Thumbnail style={globalStyle.listAvatar} source={{ uri: item.avatar }} />
+                                         }
                                 </View>
                             </Left>
                             <Body style={globalStyle.listBody} >
@@ -94,9 +94,10 @@ class LocationsMember extends Component {
                                 <Left style={globalStyle.listLeft}>
                                     <View style={globalStyle.listAvatarContainer} >
 
-                                        {userdetails.emptyphoto === "1" ? <Ionicons size={46} style={{ color: '#2c3e50' }} name="ios-person" /> :
+                                        {userdetails.emptyphoto === "1" ?   <Text style={{fontSize:23,color:'#16a085'}}>{userdetails.firstletter}</Text>   :
                                             <Thumbnail style={globalStyle.listAvatar} source={{ uri: userdetails.avatar }} />
                                         }
+                                       
                                     </View>
                                 </Left>
                                 <Body style={globalStyle.listBody} >

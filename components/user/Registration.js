@@ -26,13 +26,13 @@ class Register extends Component {
           longitude: '',
           address: '',
           isLoading: true,
-          email: '',
-          password: '',
-          retypepassword: '',
-          mobileno: '',
-          firstname: '',
-          middlename: '',
-          lastname: '',
+          email: 'lazarak@rchsp.med.sa',
+          password: '1',
+          retypepassword: '1',
+          mobileno: '1',
+          firstname: 'kathleen',
+          middlename: 'santos',
+          lastname: 'lazara',
           avatar: '',
           avatarsource: '',
           gender:'',
@@ -86,7 +86,7 @@ class Register extends Component {
 
   
   
-    async onSubmit() {
+     onSubmit() {
 
 
         let self = this;
@@ -142,7 +142,6 @@ class Register extends Component {
         try {
             navigator.geolocation.getCurrentPosition(
                 async (position) => {
-
                     await axios.get("https://maps.googleapis.com/maps/api/geocode/json?latlng=" + position.coords.latitude + "," + position.coords.longitude + "&sensor=false&key=AIzaSyCHZ-obEHL8TTP4_8vPfQKAyzvRrrlmi5Q")
                         .then(function (res) {
                             let address = res.data.results[0].formatted_address
@@ -166,12 +165,12 @@ class Register extends Component {
 
                             self.props.registerUser(user).then((res) => {
                                 if (res == true) {
-
-                                    self.props.saveLocation();
+                                    //self.props.saveLocation();
                                     //self.resetState();
                                     self.props.navigation.navigate('Login');
+                                    self.setState({ loading: false })
                                 }
-                                self.setState({ loading: false })
+                               
                             })
 
 
@@ -186,10 +185,13 @@ class Register extends Component {
                 },
                 (err) => {
                 },
-                { enableHighAccuracy: true, timeout: 10000 }
+                { enableHighAccuracy: false, timeout: 10000 }
             );
         } catch (error) {
         }
+
+
+        
 
 
         

@@ -29,7 +29,7 @@ export const clearHomeMembers=()=> dispatch=> {
 
 
 
-export const updateToken = () =>  dispatch => {
+export const updateToken = () =>  async dispatch => {
 
              axios.post(settings.baseURL + 'member/updateToken', {
                  fcmtoken: userdetails.fcmtoken,
@@ -37,9 +37,6 @@ export const updateToken = () =>  dispatch => {
             }).then(function (res) {
                 }).catch(function (error) {
             });
-
-
-       
 
 };
 

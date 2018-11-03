@@ -15,12 +15,14 @@ import OfflineNotice  from '../shared/OfflineNotice';
 import { connect } from 'react-redux';
 import Moment from 'moment';
 import DeviceInfo from 'react-native-device-info';
-import { displayHomeMember, updateToken } from '../../redux/actions/memberActions';
+import { displayHomeMember } from '../../redux/actions/memberActions';
 import BackgroundGeolocation from "react-native-background-geolocation";
 import firebase from 'react-native-firebase';
 import type {  RemoteMessage, Notification, NotificationOpen } from 'react-native-firebase';
 import AnimatedHideView from 'react-native-animated-hide-view';
+import axios from 'axios';
 var settings = require('../../components/shared/Settings');
+
 const {screenHeight, screenWidth} = Dimensions.get('window');
 
 
@@ -75,7 +77,18 @@ class HomePlaces extends Component {
 
     }
 
-    
+    async updateToken(){
+        firebase.messaging().getToken()
+        .then(fcmToken => {
+            axios.post(settings.baseURL + 'member/updateToken', {
+                fcmtoken: fcmToken,
+               userid: userdetails.userid,
+           }).then(function (res) {
+               }).catch(function (error) {
+           });
+        });
+      
+    }
      componentWillMount() {
 
         let self = this;
@@ -92,11 +105,8 @@ class HomePlaces extends Component {
               console.log(response)
             });*/
         BackgroundGeolocation.on('heartbeat', function () {
-            firebase.messaging().getToken()
-                .then(fcmToken => {
-                    userdetails.fcmtoken = fcmToken;
-                    self.props.updateToken();
-                });
+            self.updateToken();
+           
         });
 
       
@@ -164,19 +174,13 @@ class HomePlaces extends Component {
        
         let self = this;
         AppState.addEventListener('change', this._handleAppStateChange);
-        
-        this.initialize();
+        this.setState({isPageReady:true,isLoading: false,memberReady: true, })
+        //this.initialize();
          BackHandler.addEventListener('hardwareBackPress', () => { return true });
        
         firebase.messaging().requestPermission();
-
-        firebase.messaging().getToken()
-            .then(fcmToken => {
-                userdetails.fcmtoken = fcmToken;
-                self.props.updateToken();
-
-            });
-            
+        this.updateToken();
+       
 
 
 
@@ -334,16 +338,16 @@ class HomePlaces extends Component {
         }
 
     }
-    async allMembers() {
+    allMembers() {
         let self = this;
         if (this.state.useruid !== "") {
             this.markers[this.state.useruid].hideCallout();
         }
         userdetails.group = "";
         this.setState({ isLoading: true, groupname: '', isFloatingMenuVisible:false })
-        await self.props.displayHomeMember().then(res => {
+        self.props.displayHomeMember().then(res => {
             setTimeout(async () => {
-                await self.fitToMap();
+                self.fitToMap();
                 this.setState({ isLoading: false })
             }, 10);
         });
@@ -358,12 +362,12 @@ class HomePlaces extends Component {
         }
 
     }
-    async reload() {
+    reload() {
         let self = this;
         this.setState({ isLoading: true, isFloatingMenuVisible:false })
-        await self.props.displayHomeMember().then(res => {
+        self.props.displayHomeMember().then(res => {
             setTimeout(async () => {
-                await self.fitToMap();
+                self.fitToMap();
                 this.setState({ isLoading: false })
             }, 10);
         });
@@ -379,7 +383,6 @@ class HomePlaces extends Component {
             this.firebaseConnection.on("value", function (snapshot) {
                 if (userdetails.userid !== "" && userdetails.userid !== null) {
                     self.props.displayHomeMember().then(res => {
-                        //setTimeout( () => {
                             if (self.state.fitToMap == true) {
                                  self.fitToMap();
                             }
@@ -387,7 +390,6 @@ class HomePlaces extends Component {
                                 self.centerToUserMarker();
                             }
                             self.setState({ memberReady: true, isLoading: false })
-                        //}, 500);
            
                         
 
@@ -760,6 +762,6 @@ const mapStateToProps = state => ({
   
   
   
-HomePlaces = connect(mapStateToProps, { displayHomeMember, updateToken})(HomePlaces);
+HomePlaces = connect(mapStateToProps, { displayHomeMember})(HomePlaces);
   
 export default HomePlaces;

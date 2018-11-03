@@ -339,7 +339,6 @@ export const registerUser = (profile) => async dispatch => {
                             lastname: profile.lastname,
                             middlename: profile.middlename,
                             mobileno: profile.mobileno,
-                            password: profile.password,
                             gender: profile.gender,
                             address: profile.address,
                             latitude: profile.latitude,
