@@ -58,7 +58,6 @@ class HomePlaces extends Component {
             isLoading: true,
             memberReady: false,
             memberModal: false,
-            fitToMap: true,
             latitude: 0,
             longitude: 0,
             firstname:'',
@@ -219,7 +218,7 @@ class HomePlaces extends Component {
         this.setState({appState: nextAppState});
         if(nextAppState=="active"){
         }else{
-            this.firebaseConnection.off('value');
+            //this.firebaseConnection.off('value');
         }
       }
 
@@ -275,7 +274,6 @@ class HomePlaces extends Component {
 
 
         }
-        this.setState({ fitToMap:false})
 
     }
 
@@ -366,10 +364,8 @@ class HomePlaces extends Component {
         let self = this;
         this.setState({ isLoading: true, isFloatingMenuVisible:false })
         self.props.displayHomeMember().then(res => {
-            setTimeout(async () => {
                 self.fitToMap();
                 this.setState({ isLoading: false })
-            }, 10);
         });
     }
 
@@ -383,11 +379,11 @@ class HomePlaces extends Component {
             this.firebaseConnection.on("value", function (snapshot) {
                 if (userdetails.userid !== "" && userdetails.userid !== null) {
                     self.props.displayHomeMember().then(res => {
-                            if (self.state.fitToMap == true) {
-                                 self.fitToMap();
-                            }
+                                
                             if (self.props.members.length <= 0) {
                                 self.centerToUserMarker();
+                            }else{
+                                self.fitToMap();
                             }
                             self.setState({ memberReady: true, isLoading: false })
            
@@ -438,7 +434,7 @@ class HomePlaces extends Component {
     ready() {
 
 
-        const m = this.props.members.map(marker => (
+        const memberMarkers = this.props.members.map(marker => (
             <MapView.Marker key={marker.uid}
                 identifier={marker.uid}
                 ref={ref => { this.markers[marker.uid] = ref }}
@@ -516,7 +512,7 @@ class HomePlaces extends Component {
                                     zoomEnabled={true}
                                     style={styles.map}
                             >
-                                {m}
+                                {memberMarkers}
 
                                 </MapView>
                                 

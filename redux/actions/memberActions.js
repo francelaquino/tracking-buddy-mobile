@@ -605,8 +605,15 @@ export const displayHomeMember = () => async dispatch => {
 
                 await axios.get(settings.baseURL + 'member/gethomemembers/' + userdetails.userid)
                     .then(function (res) {
+                        console.log("test")
+                        console.log(res)
                         if (res.data.status == "202") {
-                            count = res.data.results.length;
+                            dispatch({
+                                type: DISPLAY_HOME_MEMBER,
+                                payload: res.data.results
+                            });
+                            resolve(true)
+                           /* count = res.data.results.length;
                             let x = 0;
                             if (count > 0) {
                                 res.data.results.forEach(data => {
@@ -639,7 +646,7 @@ export const displayHomeMember = () => async dispatch => {
                                     payload: []
                                 });
                                 resolve(true)
-                            }
+                            }*/
                         } else {
                             dispatch({
                                 type: DISPLAY_HOME_MEMBER,
