@@ -112,7 +112,7 @@ class HomePlaces extends Component {
 
       
 
-         BackgroundGeolocation.configure({
+         BackgroundGeolocation.ready({
 
              locationAuthorizationAlert: {
                  titleWhenNotEnabled: "Location services not enabled",
@@ -124,14 +124,16 @@ class HomePlaces extends Component {
              reset:true,
              locationAuthorizationRequest: "Always",
              notificationPriority: BackgroundGeolocation.NOTIFICATION_PRIORITY_MIN,
-             stopTimeout: 1,
+             stopTimeout: 10,
              logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
              debug: true,
-             desiredAccuracy: 0,
-             distanceFilter: 1,
+             desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
+             distanceFilter: 10,
+             minimumActivityRecognitionConfidence:1,
              stationaryRadius: 5,
              allowIdenticalLocations: false,
              maxDaysToPersist: 3,
+             desiredOdometerAccuracy: 10,
              heartbeatInterval: 60,
              notificationTitle: 'My GPS Buddy',
              notificationText: 'Using GPS',
@@ -139,6 +141,7 @@ class HomePlaces extends Component {
              stopOnTerminate: false,
              startOnBoot: true,
              foregroundService: true,
+             forceReloadOnHeartbeat:true,
              forceReloadOnBoot: true,
              preventSuspend: true,
              url: 'http://tracking.findplace2stay.com/index.php/api/place/savelocation',
@@ -153,17 +156,13 @@ class HomePlaces extends Component {
                  "manufacturer": Manufacturer
              }
          }).then(state => {
-          
-            /*if (!state.enabled) {
-                BackgroundGeolocation.start(function () {
-                });
-            }*/
+                BackgroundGeolocation.start();
             }).catch(error => {
             });
 
-            BackgroundGeolocation.start();
+            //BackgroundGeolocation.start();
       
-        
+            
        
     }
        
