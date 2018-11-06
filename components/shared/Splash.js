@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { AsyncStorage, View, Text, NetInfo, Dimensions, StyleSheet, Image } from 'react-native';
+import { AsyncStorage, View, Text, NetInfo, Dimensions, StyleSheet, Image,ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import { displayHomeMember } from '../../redux/actions/memberActions';
 import { saveLocation } from '../../redux/actions/locationActions';
@@ -54,28 +54,23 @@ class Splash extends Component {
             self.props.navigation.navigate('Terms');
          }
 
-        }, 1000);
+        }, 500);
     }
 
     render() {
             return (
                 <View style={{  zIndex: 99999, height: height+30, backgroundColor:'#16a085' }} >
-                 <View style={{
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    height:100,
-                }}>
-                    <Text style={{ fontSize: 25, color: 'white',position:'absolute',bottom:10 }}>My GPS Buddy</Text>
-
-                </View>
+                 
                 <View style={{
                     flex: 1,
                     justifyContent: 'center',
                     alignItems: 'center',
                 }}>
-                    <Image style={{ height: 200, marginTop: -150,marginBottom:50 }} resizeMode='contain' source={require('../../images/logo_splash.png')} />
-                    <Text style={{ fontSize: 18, color: 'white',fontStyle: 'italic'}}>Keeping your Family and Friends</Text>
-                    <Text style={{ fontSize: 18, color: 'white',fontStyle: 'italic' }}>Safer and Closer.</Text>
+                  <Image style={{ height: 200, marginTop: -150,marginBottom:50 }} resizeMode='contain' source={require('../../images/logo_splash.png')} />
+                  <ActivityIndicator color="white" size="large"
+                            animating={this.props.loading} />
+                        <Text style={{ color: 'white' }}>Loading...</Text>
+
 
                 </View>
                

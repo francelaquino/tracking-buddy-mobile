@@ -53,6 +53,7 @@ class HomePlaces extends Component {
             isFloatingMenuVisible:false,
             mapMode:'standard',
             groupname: '',
+            isMapReady:false,
             isPageReady:false,
             invitationcode:'',
             isLoading: true,
@@ -125,8 +126,8 @@ class HomePlaces extends Component {
              locationAuthorizationRequest: "Always",
              notificationPriority: BackgroundGeolocation.NOTIFICATION_PRIORITY_MIN,
              stopTimeout: 10,
-             logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
-             debug: true,
+             /*logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
+             debug: true,*/
              desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
              distanceFilter: 10,
              minimumActivityRecognitionConfidence:1,
@@ -140,7 +141,7 @@ class HomePlaces extends Component {
              minimumActivityRecognitionConfidence: 75,
              maxDaysToPersist: 3,
              desiredOdometerAccuracy: 100,
-             heartbeatInterval: 60,
+             heartbeatInterval: 10800,
              notificationTitle: 'My GPS Buddy',
              notificationText: 'Using GPS',
              notificationChannelName: 'My GPS Buddy',
@@ -166,7 +167,6 @@ class HomePlaces extends Component {
             }).catch(error => {
             });
 
-            //BackgroundGeolocation.start();
       
             
        
@@ -179,7 +179,7 @@ class HomePlaces extends Component {
         let self = this;
         AppState.addEventListener('change', this._handleAppStateChange);
         this.setState({isPageReady:true,isLoading: false,memberReady: true, })
-        //this.initialize();
+        this.initialize();
          BackHandler.addEventListener('hardwareBackPress', () => { return true });
        
         firebase.messaging().requestPermission();
@@ -222,8 +222,9 @@ class HomePlaces extends Component {
     _handleAppStateChange = (nextAppState) => {
         this.setState({appState: nextAppState});
         if(nextAppState=="active"){
+            this.connectToFirebase();
         }else{
-            //this.firebaseConnection.off('value');
+            this.firebaseConnection.off('value');
         }
       }
 
@@ -376,30 +377,27 @@ class HomePlaces extends Component {
 
 
     initialize() {
-        let self = this;
-       
-       if(this.state.appState=="active"){
-        this.setState({isPageReady:true})
-            this.firebaseConnection=firebase.database().ref('users/' + userdetails.userid).child('members');
-            this.firebaseConnection.on("value", function (snapshot) {
-                if (userdetails.userid !== "" && userdetails.userid !== null) {
-                    self.props.displayHomeMember().then(res => {
-                                
-                            if (self.props.members.length <= 0) {
-                                self.centerToUserMarker();
-                            }else{
-                                self.fitToMap();
-                            }
-                            self.setState({ memberReady: true, isLoading: false })
-           
-                        
-
-                    });
-                }
-            });
-        }
+        
+        this.connectToFirebase();
 
     }
+
+    connectToFirebase(){
+        let self = this;
+        this.firebaseConnection=firebase.database().ref('users/' + userdetails.userid).child('members');
+        this.firebaseConnection.on("value", function (snapshot) {
+                self.props.displayHomeMember().then(res => {
+                        if (self.props.members.length <= 0) {
+                            self.centerToUserMarker();
+                        }else{
+                            self.fitToMap();
+                        }
+                        self.setState({ memberReady: true, isLoading: false })
+
+                });
+        });
+    }
+
     loading() {
         return (
             <Root>
@@ -516,7 +514,7 @@ class HomePlaces extends Component {
                                     loadingEnabled={true}
                                     zoomEnabled={true}
                                     style={styles.map}
-                            >
+                            >   
                                 {memberMarkers}
 
                                 </MapView>
