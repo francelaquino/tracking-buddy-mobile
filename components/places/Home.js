@@ -91,6 +91,7 @@ class HomePlaces extends Component {
     }
     
     async requestLocationPermission() {
+        let self= this;
         const chckLocationPermission = PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION);
         if (chckLocationPermission === PermissionsAndroid.RESULTS.GRANTED) {
             alert("You've access for the location");
@@ -138,7 +139,7 @@ class HomePlaces extends Component {
                          startOnBoot: true,
                          foregroundService: true,
                          forceReloadOnHeartbeat:true,
-                         forceReloadOnBoot: true,
+                         forceReloadOnBoot: false,
                          preventSuspend: true,
                          url: 'http://tracking.findplace2stay.com/index.php/api/place/savelocation',
                          method: 'POST',
@@ -167,7 +168,6 @@ class HomePlaces extends Component {
      componentWillMount() {
 
         this.requestLocationPermission();
-        let self = this;
        
       /*  BackgroundGeolocation.on('http', function(response) {
             var status = response.status;
