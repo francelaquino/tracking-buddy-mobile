@@ -92,12 +92,12 @@ export const changePassword = (data) => async dispatch => {
                         newpassword: data.newpassword
                         }).then(function (response) {
                             if (response.data.status == "202") {
-                                if(response.data.message==""){
+                                if(response.data.results==""){
                                     ToastAndroid.showWithGravityAndOffset("Password successfully changed", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
                                     resolve(true);
                                 }else{
                                     resolve(false);
-                                    ToastAndroid.showWithGravityAndOffset(response.data.message, ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
+                                    ToastAndroid.showWithGravityAndOffset(response.data.results, ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
                                 }
 
                             } else {
@@ -375,7 +375,7 @@ export const registerUser = (profile) => async dispatch => {
             } else {
                 await axios.post(settings.baseURL + 'member/register', {
                     email: profile.email,
-                    uid: profile.password,
+                    password: profile.password,
                     firstname: profile.firstname,
                     lastname: profile.lastname,
                     middlename: profile.middlename,

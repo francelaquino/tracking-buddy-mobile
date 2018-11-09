@@ -26,13 +26,13 @@ class Register extends Component {
           longitude: '',
           address: '',
           isLoading: true,
-          email: 'lazarak@rchsp.med.sa',
+          email: 'aquinof@rchsp.med.sa',
           password: '1',
           retypepassword: '1',
           mobileno: '1',
-          firstname: 'kathleen',
-          middlename: 'santos',
-          lastname: 'lazara',
+          firstname: 'Francel',
+          middlename: 'Dizon',
+          lastname: 'Aquino',
           avatar: '',
           avatarsource: '',
           gender:'',
@@ -344,14 +344,13 @@ class Register extends Component {
                         <Label style={globalStyle.label} >Birthdate</Label>
                               <Item regular style={globalStyle.roundtextinput}>
                               
-                              <Input  style={[registrationStyle.textinput,{position:'absolute',top:20,left:5}]} 
+                              <Input  style={[registrationStyle.textinput,{position:'absolute',top:0,left:5}]} 
 								name="mobileno" autoCorrect={false}
 								value={this.state.birthdate}
 								/> 
                            <DatePicker
                             style={{width:'100%' }}
                             mode="date"
-                            maxDate="2013-06-01"
                             date={this.state.birthdate}
                             format="DD-MMM-YYYY"
                             confirmBtnText="Confirm"

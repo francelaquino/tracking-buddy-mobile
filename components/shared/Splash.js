@@ -28,31 +28,26 @@ class Splash extends Component {
         let agree=await AsyncStorage.getItem("agree");
         let firstletter=await AsyncStorage.getItem("firstletter");
         
-
         await setTimeout(async () => {
+          
             if(agree=="yes"){
-            if (userid === "" || userid === null) {
-                self.props.navigation.navigate('Login');
-            } else {
-                userdetails.emptyphoto = emptyphoto;
-                userdetails.userid = userid;
-                userdetails.email = email;
-                userdetails.avatar = avatar;
-                userdetails.firstname = firstname;
-                userdetails.lastname = lastname;
-                userdetails.firstletter = firstletter;
-                self.props.navigation.navigate('Home');
-                /*await self.props.saveLocation();
-                await setTimeout(() => {
-                    self.props.displayHomeMember();
-                  
-                }, 1000);*/
+                if (userid === "" || userid === null) {
+                    self.props.navigation.navigate('Login');
+                } else {
+                    userdetails.emptyphoto = emptyphoto;
+                    userdetails.userid = userid;
+                    userdetails.email = email;
+                    userdetails.avatar = avatar;
+                    userdetails.firstname = firstname;
+                    userdetails.lastname = lastname;
+                    userdetails.firstletter = firstletter;
+                    self.props.navigation.navigate('Home');
 
 
+                }
+            }else{
+                self.props.navigation.navigate('Terms');
             }
-         }else{
-            self.props.navigation.navigate('Terms');
-         }
 
         }, 500);
     }

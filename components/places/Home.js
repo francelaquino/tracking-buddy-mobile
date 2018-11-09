@@ -176,8 +176,10 @@ class HomePlaces extends Component {
        
         let self = this;
         AppState.addEventListener('change', this._handleAppStateChange);
-        this.setState({isPageReady:true,isLoading: false,memberReady: true, })
-        this.initialize();
+        this.setState({isPageReady:true,isLoading: false,memberReady: true,appState:'active' })
+        setTimeout(()=>{
+            this.initialize();
+        },1000);
          BackHandler.addEventListener('hardwareBackPress', () => { return true });
        
         firebase.messaging().requestPermission();
@@ -375,8 +377,9 @@ class HomePlaces extends Component {
 
 
     initialize() {
-        
-        this.connectToFirebase();
+        if(this.state.appState=="active"){
+            this.connectToFirebase();
+        }
 
     }
 
