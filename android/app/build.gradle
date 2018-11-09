@@ -157,6 +157,7 @@ dependencies {
 	implementation "com.google.firebase:firebase-database:11.8.0"
     implementation "com.google.firebase:firebase-auth:11.8.0"
 	implementation "com.google.firebase:firebase-messaging:11.8.0"
+    implementation "com.google.firebase:firebase-ads:11.8.0"
 	implementation 'me.leolin:ShortcutBadger:1.1.21@aar' 
 	/*implementation(project(':react-native-push-notification')) {
         exclude group: 'com.google.android.gms', module: 'play-services-gcm'

@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { StatusBar, Platform, StyleSheet, View, TextInput, TouchableOpacity, ScrollView,  Alert, ToastAndroid, Form, Image } from 'react-native';
+import { PermissionsAndroid, StatusBar, Platform, StyleSheet, View, TextInput, TouchableOpacity, ScrollView,  Alert, ToastAndroid, Form, Image } from 'react-native';
 import { Picker , Root, Container, Header, Body, Title, Item, Input, Label, Button, Text, Icon, Content, Left, Right } from 'native-base';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import DatePicker from 'react-native-datepicker'
@@ -84,12 +84,97 @@ class Register extends Component {
     }
 
 
-  
+    async requestLocationPermission() {
+        let self = this;
+        const chckLocationPermission = PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION);
+        if (chckLocationPermission === PermissionsAndroid.RESULTS.GRANTED) {
+            alert("You've access for the location");
+        } else {
+            try {
+                const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
+                if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                    navigator.geolocation.getCurrentPosition(
+                        async (position) => {
+                            await axios.get("https://maps.googleapis.com/maps/api/geocode/json?latlng=" + position.coords.latitude + "," + position.coords.longitude + "&sensor=false&key=AIzaSyCHZ-obEHL8TTP4_8vPfQKAyzvRrrlmi5Q")
+                                .then(function (res) {
+                                    let address = res.data.results[0].formatted_address
+                                    let latitude = position.coords.latitude;
+                                    let longitude = position.coords.longitude;
+                                    let user = {
+                                        email: self.state.email,
+                                        password: self.state.password,
+                                        firstname: self.state.firstname,
+                                        lastname: self.state.lastname,
+                                        middlename: self.state.middlename,
+                                        mobileno: self.state.mobileno,
+                                        address: address,
+                                        latitude: latitude,
+                                        longitude: longitude,
+                                        gender: self.state.gender,
+                                        country: self.state.country,
+                                        birthdate: self.state.birthdate,
+                                        avatarsource: self.state.avatarsource
+                                    }
+        
+                                    self.props.registerUser(user).then((res) => {
+                                        if (res == true) {
+                                            self.props.navigation.navigate('Login');
+                                            self.setState({ loading: false })
+                                        }
+                                       
+                                    })
+        
+        
+                                    
+                                }).catch(function (error) {
+                                });
+        
+        
+        
+        
+        
+                        },
+                        (err) => {
+                        },
+                        { enableHighAccuracy: false, timeout: 10000 }
+                    );
+                     
+                } else {
+                        let address = "Unknown Addrss"
+                        let latitude = 0;
+                        let longitude = 0;
+                        let user = {
+                            email: self.state.email,
+                            password: self.state.password,
+                            firstname: self.state.firstname,
+                            lastname: self.state.lastname,
+                            middlename: self.state.middlename,
+                            mobileno: self.state.mobileno,
+                            address: address,
+                            latitude: latitude,
+                            longitude: longitude,
+                            gender: self.state.gender,
+                            country: self.state.country,
+                            birthdate: self.state.birthdate,
+                            avatarsource: self.state.avatarsource
+                        }
+                        self.props.registerUser(user).then((res) => {
+                            if (res == true) {
+                                self.props.navigation.navigate('Login');
+                                self.setState({ loading: false })
+                            }
+                         })
+                }
+            } catch (err) {
+            }
+        }
+    };
+
   
      onSubmit() {
 
 
-        let self = this;
+       
 
 
         if (this.state.email == "") {
@@ -139,56 +224,7 @@ class Register extends Component {
             return false;
         }
         this.setState({ loading: true })
-        try {
-            navigator.geolocation.getCurrentPosition(
-                async (position) => {
-                    await axios.get("https://maps.googleapis.com/maps/api/geocode/json?latlng=" + position.coords.latitude + "," + position.coords.longitude + "&sensor=false&key=AIzaSyCHZ-obEHL8TTP4_8vPfQKAyzvRrrlmi5Q")
-                        .then(function (res) {
-                            let address = res.data.results[0].formatted_address
-                            let latitude = position.coords.latitude;
-                            let longitude = position.coords.longitude;
-                            let user = {
-                                email: self.state.email,
-                                password: self.state.password,
-                                firstname: self.state.firstname,
-                                lastname: self.state.lastname,
-                                middlename: self.state.middlename,
-                                mobileno: self.state.mobileno,
-                                address: address,
-                                latitude: latitude,
-                                longitude: longitude,
-                                gender: self.state.gender,
-                                country: self.state.country,
-                                birthdate: self.state.birthdate,
-                                avatarsource: self.state.avatarsource
-                            }
-
-                            self.props.registerUser(user).then((res) => {
-                                if (res == true) {
-                                    //self.props.saveLocation();
-                                    //self.resetState();
-                                    self.props.navigation.navigate('Login');
-                                    self.setState({ loading: false })
-                                }
-                               
-                            })
-
-
-                            
-                        }).catch(function (error) {
-                        });
-
-
-
-
-
-                },
-                (err) => {
-                },
-                { enableHighAccuracy: false, timeout: 10000 }
-            );
-        } catch (error) {
-        }
+        this.requestLocationPermission();
 
 
         

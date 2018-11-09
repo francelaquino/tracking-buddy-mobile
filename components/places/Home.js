@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import {  Linking, StatusBar , AppState, Modal, BackHandler, AsyncStorage, NetInfo, TouchableOpacity, Platform, StyleSheet, Text, View, ScrollView, TextInput, ToastAndroid, Image, Dimensions, FlatList } from 'react-native';
+import {  PermissionsAndroid,Linking, StatusBar , AppState, Modal, BackHandler, AsyncStorage, NetInfo, TouchableOpacity, Platform, StyleSheet, Text, View, ScrollView, TextInput, ToastAndroid, Image, Dimensions, FlatList } from 'react-native';
 import { ActionSheet , Root, Container, Header, Body, Title, Item, Input, Label, Button, Icon, Content, List, ListItem,Left, Right,Switch, Thumbnail,Card,CardItem } from 'native-base';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -89,8 +89,84 @@ class HomePlaces extends Component {
         });
       
     }
+    
+    async requestLocationPermission() {
+        const chckLocationPermission = PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION);
+        if (chckLocationPermission === PermissionsAndroid.RESULTS.GRANTED) {
+            alert("You've access for the location");
+        } else {
+            try {
+                const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
+                if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                    BackgroundGeolocation.on('heartbeat', function () {
+                        self.updateToken();
+                       
+                    });
+                       
+                     BackgroundGeolocation.ready({
+            
+                         locationAuthorizationAlert: {
+                             titleWhenNotEnabled: "Location services not enabled",
+                             titleWhenOff: "Location services is off",
+                             instructions: "You must enable in location services",
+                             cancelButton: "Cancel",
+                             settingsButton: "Settings"
+                         },
+                         reset:true,
+                         locationAuthorizationRequest: "Always",
+                         notificationPriority: BackgroundGeolocation.NOTIFICATION_PRIORITY_MIN,
+                         stopTimeout: 10,
+                         /*logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
+                         debug: true,*/
+                         desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
+                         distanceFilter: 10,
+                         minimumActivityRecognitionConfidence:1,
+                         stationaryRadius: 25,
+                         useSignificantChangesOnly:true,
+                         allowIdenticalLocations: false,
+                         activityRecognitionInterval: 60000,
+                         stopOnStationary: false,
+                         stopAfterElapsedMinutes: 0,
+                         disableElasticity: true,
+                         desiredOdometerAccuracy:10,
+                         maxDaysToPersist: 3,
+                         heartbeatInterval: 320,
+                         notificationTitle: 'My GPS Buddy',
+                         notificationText: 'Using GPS',
+                         notificationChannelName: 'My GPS Buddy',
+                         stopOnTerminate: false,
+                         startOnBoot: true,
+                         foregroundService: true,
+                         forceReloadOnHeartbeat:true,
+                         forceReloadOnBoot: true,
+                         preventSuspend: true,
+                         url: 'http://tracking.findplace2stay.com/index.php/api/place/savelocation',
+                         method: 'POST',
+                         batchSync: false,
+                         autoSync: true,
+                         params: {
+                             "useruid": userdetails.userid,
+                             "fcmtoken": userdetails.fcmtoken,
+                             "model": Model,
+                             "timezone": timeZone,
+                             "manufacturer": Manufacturer
+                         }
+                        }, () => {
+                            BackgroundGeolocation.start();
+                        });
+                     
+                } else {
+                    alert("You don't have access for the location");
+                }
+            } catch (err) {
+            }
+        }
+    };
+
+
      componentWillMount() {
 
+        this.requestLocationPermission();
         let self = this;
        
       /*  BackgroundGeolocation.on('http', function(response) {
@@ -104,79 +180,17 @@ class HomePlaces extends Component {
               var responseText = response.responseText;
               console.log(response)
             });*/
-        BackgroundGeolocation.on('heartbeat', function () {
-            self.updateToken();
-           
-        });
+        
 
-      
-
-      
-
-         BackgroundGeolocation.ready({
-
-             locationAuthorizationAlert: {
-                 titleWhenNotEnabled: "Location services not enabled",
-                 titleWhenOff: "Location services is off",
-                 instructions: "You must enable in location services",
-                 cancelButton: "Cancel",
-                 settingsButton: "Settings"
-             },
-             reset:true,
-             locationAuthorizationRequest: "Always",
-             notificationPriority: BackgroundGeolocation.NOTIFICATION_PRIORITY_MIN,
-             stopTimeout: 10,
-             /*logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
-             debug: true,*/
-             desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
-             distanceFilter: 10,
-             minimumActivityRecognitionConfidence:1,
-             stationaryRadius: 25,
-             useSignificantChangesOnly:true,
-             allowIdenticalLocations: false,
-             activityRecognitionInterval: 60000,
-             stopOnStationary: false,
-             stopAfterElapsedMinutes: 0,
-             disableElasticity: false,
-             maxDaysToPersist: 3,
-             heartbeatInterval: 120,
-             notificationTitle: 'My GPS Buddy',
-             notificationText: 'Using GPS',
-             notificationChannelName: 'My GPS Buddy',
-             stopOnTerminate: false,
-             startOnBoot: true,
-             foregroundService: true,
-             forceReloadOnHeartbeat:true,
-             forceReloadOnBoot: true,
-             preventSuspend: true,
-             url: 'http://tracking.findplace2stay.com/index.php/api/place/savelocation',
-             method: 'POST',
-             batchSync: false,
-             autoSync: true,
-             params: {
-                 "useruid": userdetails.userid,
-                 "fcmtoken": userdetails.fcmtoken,
-                 "model": Model,
-                 "timezone": timeZone,
-                 "manufacturer": Manufacturer
-             }
-         }).then(state => {
-                BackgroundGeolocation.start();
-            }).catch(error => {
-            });
-
-      
-            
        
     }
        
    
-
     componentDidMount() {
        
         let self = this;
         AppState.addEventListener('change', this._handleAppStateChange);
-        this.setState({isPageReady:true,isLoading: false,memberReady: true,appState:'active' })
+        this.setState({isPageReady:true,memberReady: true,appState:'active' })
         setTimeout(()=>{
             this.initialize();
         },1000);
@@ -379,6 +393,7 @@ class HomePlaces extends Component {
     initialize() {
         if(this.state.appState=="active"){
             this.connectToFirebase();
+            this.setState({ isLoading: false })
         }
 
     }
@@ -526,11 +541,11 @@ class HomePlaces extends Component {
 
                         {this.state.groupname !== '' &&
                             <View>
-                            <View style={{ flexDirection: 'column', backgroundColor: '#16a085', marginVertical: 5, width: '100%', alignItems: 'center', position: 'absolute', top: -5, height: 40 }}>
+                            <View style={{ flexDirection: 'column', backgroundColor: '#1abc9c', opacity:.5,marginVertical: 5, width: '100%', alignItems: 'center', position: 'absolute', top: -5, height: 40 }}>
 
                             </View>
                             <View>
-                                <Text style={{ fontSize: 15, paddingTop: 9, zIndex: 99999, width: 250, height: 30, color: 'white', textAlign: 'center', alignSelf: "center", flexDirection: 'column' }}>{this.state.groupname} Group</Text>
+                                <Text style={{ fontSize: 15, paddingTop: 9, zIndex: 99999, width: 250, height: 30, color: '#2c3e50', textAlign: 'center', alignSelf: "center", flexDirection: 'column' }}>{this.state.groupname} Group</Text>
                             </View>
                         </View>
                             }

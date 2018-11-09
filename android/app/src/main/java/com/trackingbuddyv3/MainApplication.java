@@ -4,8 +4,9 @@ import android.app.Application;
 import com.transistorsoft.rnbackgroundgeolocation.*;
 import com.transistorsoft.rnbackgroundfetch.RNBackgroundFetchPackage;
 import com.facebook.react.ReactApplication;
+import io.invertase.firebase.admob.RNFirebaseAdMobPackage; 
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
-//import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
+
 import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.messaging.RNFirebaseMessagingPackage; 
 import com.airbnb.android.react.maps.MapsPackage;
@@ -33,8 +34,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+             new RNFirebaseAdMobPackage() ,
             new RNDeviceInfo(),
-            //new ReactNativePushNotificationPackage(),
             new RNFirebasePackage(),
             new MapsPackage(),
 			new RNFirebaseStoragePackage(),

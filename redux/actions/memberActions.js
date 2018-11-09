@@ -595,9 +595,6 @@ export const displayGroupMember=(groupid)=> dispatch=> {
 
 
 export const displayHomeMember = () => async dispatch => {
-    let members = [];
-    let count = 0;
-    let cnt = 0;
     if (userdetails.group == "") {
         return new Promise(async (resolve) => {
             try {
@@ -605,48 +602,13 @@ export const displayHomeMember = () => async dispatch => {
 
                 await axios.get(settings.baseURL + 'member/gethomemembers/' + userdetails.userid)
                     .then(function (res) {
-                        console.log("test")
-                        console.log(res)
                         if (res.data.status == "202") {
                             dispatch({
                                 type: DISPLAY_HOME_MEMBER,
                                 payload: res.data.results
                             });
                             resolve(true)
-                           /* count = res.data.results.length;
-                            let x = 0;
-                            if (count > 0) {
-                                res.data.results.forEach(data => {
-
-                                    members.push({
-                                        uid: data.uid,
-                                        firstname: data.firstname,
-                                        firstletter:data.firstletter,
-                                        avatar: data.avatar,
-                                        emptyphoto: data.emptyphoto,
-                                        coordinates: {
-                                            longitude: data.longitude,
-                                            latitude: data.latitude
-                                        },
-                                        address: data.address,
-                                    });
-
-                                    cnt++;
-                                    if (cnt >= count) {
-                                        dispatch({
-                                            type: DISPLAY_HOME_MEMBER,
-                                            payload: members
-                                        });
-                                        resolve(true)
-                                    }
-                                })
-                            } else {
-                                dispatch({
-                                    type: DISPLAY_HOME_MEMBER,
-                                    payload: []
-                                });
-                                resolve(true)
-                            }*/
+                           
                         } else {
                             dispatch({
                                 type: DISPLAY_HOME_MEMBER,
@@ -687,39 +649,14 @@ export const displayHomeMember = () => async dispatch => {
             try {
                 await axios.get(settings.baseURL + 'group/gethomemembers/' + userdetails.group + "/" + userdetails.userid)
                     .then(function (res) {
-                      
+                      console.log(res)
                         if (res.data.status == "202") {
-                            count = res.data.results.length;
-                            if (count > 0) {
-                                res.data.results.forEach(data => {
-                                    members.push({
-                                        uid: data.uid,
-                                        firstname: data.firstname,
-                                        avatar: data.avatar,
-                                        emptyphoto: data.emptyphoto,
-                                        coordinates: {
-                                            longitude: data.longitude,
-                                            latitude: data.latitude
-                                        },
-                                        address: data.address,
-                                    });
-
-                                    cnt++;
-                                    if (cnt >= count) {
-                                        dispatch({
-                                            type: DISPLAY_HOME_MEMBER,
-                                            payload: members
-                                        });
-                                        resolve(true)
-                                    }
-                                })
-                            } else {
-                                dispatch({
-                                    type: DISPLAY_HOME_MEMBER,
-                                    payload: []
-                                });
-                                resolve(true)
-                            }
+                            dispatch({
+                                type: DISPLAY_HOME_MEMBER,
+                                payload: res.data.results
+                            });
+                            resolve(true)
+                            
                         } else {
                             dispatch({
                                 type: DISPLAY_HOME_MEMBER,

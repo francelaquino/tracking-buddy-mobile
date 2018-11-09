@@ -9,10 +9,13 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import OfflineNotice  from '../shared/OfflineNotice';
 import { generateInvitationCode, getInvitationCode  } from '../../redux/actions/memberActions' ;
+import firebase from 'react-native-firebase';
 var globalStyle = require('../../assets/style/GlobalStyle');
 var userdetails = require('../shared/userDetails');
 
-
+const Banner = firebase.admob.Banner;
+const AdRequest = firebase.admob.AdRequest;
+const request = new AdRequest();
 class GenerateInviteCode extends Component {
     constructor(props) {
         super(props)
@@ -104,7 +107,11 @@ class GenerateInviteCode extends Component {
                             </Content>
                             <Text style={globalStyle.noteLabel} >To invite a member you have to generate a Invitation Code. </Text>
                         <Text style={globalStyle.noteLabel} >Send the Invitation code to the person you want to  be a member.</Text>
-
+                        <Banner
+                        size="LARGE_BANNER"
+                        unitId="ca-app-pub-3378338881762914/3233723808"
+                        request={request.build()}
+                        />
                     </View>
                     </Content>
                     </ScrollView>

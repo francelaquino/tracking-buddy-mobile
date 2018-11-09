@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { AsyncStorage, View, Text, NetInfo, Dimensions, StyleSheet, Image,ActivityIndicator } from 'react-native';
+import { PermissionsAndroid ,AsyncStorage, View, Text, NetInfo, Dimensions, StyleSheet, Image,ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import { displayHomeMember } from '../../redux/actions/memberActions';
 import { saveLocation } from '../../redux/actions/locationActions';
@@ -9,14 +9,38 @@ var userdetails = require('../shared/userDetails');
 
 class Splash extends Component {
 
+    async requestLocationPermission() {
+        let self = this;
+        const chckLocationPermission = PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION);
+        if (chckLocationPermission === PermissionsAndroid.RESULTS.GRANTED) {
+            alert("You've access for the location");
+        } else {
+            try {
+                const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
+                if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                    navigator.geolocation.getCurrentPosition(
+                        async (position) => {
+                        },
+                        (err) => {
+                        },
+                        { enableHighAccuracy: true, timeout: 10000 }
+                    );
+
+                   
+                     
+                } else {
+                    alert("You don't have access for the location");
+                    self.props.navigation.goBack(null);
+                }
+            } catch (err) {
+            }
+        }
+    };
+
     async componentDidMount() {
-        navigator.geolocation.getCurrentPosition(
-            async (position) => {
-            },
-            (err) => {
-            },
-            { enableHighAccuracy: true, timeout: 10000 }
-        );
+        
+    this.requestLocationPermission();
+        
         
         let self = this;
         let userid = await AsyncStorage.getItem("userid");

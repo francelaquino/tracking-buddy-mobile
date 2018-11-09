@@ -55,7 +55,7 @@ class UserProfile extends Component {
                     mobileno: this.props.profile.mobileno,
                     gender: this.props.profile.gender,
                     country: this.props.profile.country,
-                    birthdate: this.props.profile.birthdate,
+                    birthdate: this.props.profile.birthdate,                    
                     middlename: this.props.profile.middlename,
                     lastname: this.props.profile.lastname,
                     emptyphoto: this.props.profile.emptyphoto,
