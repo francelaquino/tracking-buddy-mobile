@@ -324,7 +324,7 @@ class UserProfile extends Component {
         return (
             <Root>
                 <Container style={globalStyle.containerWrapper}>
-                    <OfflineNotice />
+                   
                     <View style={globalStyle.container}>
                         <Loader loading={this.state.loading} />
                         <Header style={globalStyle.header}>

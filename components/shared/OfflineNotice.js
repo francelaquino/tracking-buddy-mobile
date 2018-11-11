@@ -23,8 +23,7 @@ class OfflineNotice extends PureComponent {
   render() {
     if (!this.props.isConnected) {
       return (
-        <View style={styles.offlineContainer}>
-        <Text style={styles.offlineText}>No Internet Connection</Text>
+        <View>
         </View>
       )
     }else{

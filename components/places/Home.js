@@ -483,7 +483,7 @@ class HomePlaces extends Component {
 
             <Root>
                     <Loader loading={this.state.isLoading} />
-                    <OfflineNotice />
+                   
                     <Container style={globalStyle.containerWrapper}>
 
                    

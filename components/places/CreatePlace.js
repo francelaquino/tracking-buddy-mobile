@@ -386,7 +386,7 @@ class CreatePlace extends Component {
             <Root>
                 <Container style={globalStyle.containerWrapper}>
                     <Loader loading={this.state.loading} />
-                    <OfflineNotice />
+                   
 
 
                     <Header style={globalStyle.header}>

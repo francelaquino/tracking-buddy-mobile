@@ -136,7 +136,7 @@ class RealTimeLocation extends Component {
         return (
 
             <Root>
-                    <OfflineNotice />
+                   
                     <Container style={globalStyle.containerWrapper}>
 
                    <Header style={globalStyle.header}>

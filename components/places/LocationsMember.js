@@ -123,7 +123,7 @@ class LocationsMember extends Component {
 
             <Root>
                 <Container style={globalStyle.containerWrapper}>
-                    <OfflineNotice />
+                   
                     <Header style={globalStyle.header}>
                         <StatusBar backgroundColor="#149279" />
                         <Left style={globalStyle.headerLeft} >

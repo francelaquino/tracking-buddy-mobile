@@ -63,7 +63,7 @@ class ForgotPassword extends Component {
             <Container style={registrationStyle.containerWrapper}>
         	   
           	<Loader loading={this.state.loading} />
-                <OfflineNotice />
+               
                 <Header style={globalStyle.header}>
                     <StatusBar backgroundColor="#149279" />
                     <Left style={globalStyle.headerLeft} >

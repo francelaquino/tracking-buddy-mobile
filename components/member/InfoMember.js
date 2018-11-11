@@ -216,7 +216,7 @@ class InfoMember extends Component {
                 <Container style={globalStyle.containerWrapper}>
                     <View style={globalStyle.container}>
                         <Loader loading={this.state.isbusy} />
-                        <OfflineNotice />
+                       
                         <Header hasTabs style={globalStyle.header}>
                             <StatusBar backgroundColor="#149279" />
                             <Left style={globalStyle.headerLeft} >

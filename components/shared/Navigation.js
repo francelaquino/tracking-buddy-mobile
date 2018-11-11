@@ -41,6 +41,9 @@ import  { createStackNavigator }  from 'react-navigation';
 export const Stack = createStackNavigator({
 
    
+    
+    
+
     Splash: {
         screen: Splash,
         headerMode: 'none',
@@ -50,6 +53,14 @@ export const Stack = createStackNavigator({
 
     },
 
+    
+    GenerateInviteCode: { 
+        screen: GenerateInviteCode,
+        headerMode: 'none',
+        navigationOptions: {
+            header: null
+        } 
+    },
     Terms: {
         screen: Terms,
         headerMode: 'none',
@@ -369,39 +380,8 @@ export const Stack = createStackNavigator({
     },
 
    
-   
-   
-    
-   
- 
-   
-
-    
-   
-   
-    
-   
-  
-    
-   
-    
-    
-    GenerateInviteCode: { 
-        screen: GenerateInviteCode,
-        headerMode: 'none',
-        navigationOptions: {
-            header: null
-        } 
-    },
     
 
-   
-   
-
-   
-   
-  
-    
     SelectGroup: { 
         screen: SelectGroup,
         headerMode: 'none',

@@ -16,6 +16,7 @@ var userdetails = require('../shared/userDetails');
 const Banner = firebase.admob.Banner;
 const AdRequest = firebase.admob.AdRequest;
 const request = new AdRequest();
+
 class GenerateInviteCode extends Component {
     constructor(props) {
         super(props)
@@ -72,6 +73,7 @@ class GenerateInviteCode extends Component {
             
                 
             <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps={"always"}>
+          
                 <Content padder>
                         <View style={globalStyle.container}>
                         
@@ -107,11 +109,7 @@ class GenerateInviteCode extends Component {
                             </Content>
                             <Text style={globalStyle.noteLabel} >To invite a member you have to generate a Invitation Code. </Text>
                         <Text style={globalStyle.noteLabel} >Send the Invitation code to the person you want to  be a member.</Text>
-                        <Banner
-                        size="LARGE_BANNER"
-                        unitId="ca-app-pub-3378338881762914/3233723808"
-                        request={request.build()}
-                        />
+                        
                     </View>
                     </Content>
                     </ScrollView>
@@ -125,9 +123,9 @@ class GenerateInviteCode extends Component {
         return (
             <Root>
                 <Loader loading={this.state.loading} />
-                <OfflineNotice />
+               
                 <Container style={globalStyle.containerWrapper}>
-
+                
                     <Header style={globalStyle.header}>
                         <StatusBar backgroundColor="#149279" />
                         <Left style={globalStyle.headerLeft} >

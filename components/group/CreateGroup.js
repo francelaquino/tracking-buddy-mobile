@@ -147,7 +147,7 @@ class CreateGroup extends Component {
         return (
             <Root>
                 <Loader loading={this.state.loading} />
-                <OfflineNotice />
+               
                 <Container style={globalStyle.containerWrapper}>
                     <Header style={globalStyle.header}>
                         <StatusBar backgroundColor="#149279" />

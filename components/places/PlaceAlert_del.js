@@ -151,7 +151,7 @@ class PlaceAlert extends Component {
         return (
             <Root>
                 <Loader loading={this.state.busy} />
-                <OfflineNotice />
+               
                 <Container style={globalStyle.containerWrapper}>
                     <Header style={globalStyle.header}>
                         <StatusBar backgroundColor="#149279" />

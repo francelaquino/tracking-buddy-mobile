@@ -631,7 +631,7 @@ class LocationPlaces extends Component {
         return (
             <Root>
                 <Container style={globalStyle.containerWrapper}>
-                    <OfflineNotice />
+                   
                     <Loader loading={this.state.isBusy} />
                     <Header style={globalStyle.header} hasSegment>
                         <StatusBar backgroundColor="#149279" />

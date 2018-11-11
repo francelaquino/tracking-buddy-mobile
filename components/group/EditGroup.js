@@ -204,7 +204,7 @@ class EditGroup extends Component {
                 <Container style={globalStyle.containerWrapper}>
                     <Loader loading={this.state.loading} />
 
-                    <OfflineNotice />
+                   
                     
                     <Header style={globalStyle.header}>
                         <StatusBar backgroundColor="#149279" />

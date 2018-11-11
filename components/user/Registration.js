@@ -26,13 +26,13 @@ class Register extends Component {
           longitude: '',
           address: '',
           isLoading: true,
-          email: 'aquinof@rchsp.med.sa',
-          password: '1',
-          retypepassword: '1',
-          mobileno: '1',
-          firstname: 'Francel',
-          middlename: 'Dizon',
-          lastname: 'Aquino',
+          email: '',
+          password: '',
+          retypepassword: '',
+          mobileno: '',
+          firstname: '',
+          middlename: '',
+          lastname: '',
           avatar: '',
           avatarsource: '',
           gender:'',
@@ -284,7 +284,7 @@ class Register extends Component {
 
               <Container style={globalStyle.containerWrapper} >
       <Loader loading={this.state.loading} />
-                  <OfflineNotice />
+                 
                   <Header style={globalStyle.header}>
                       <StatusBar backgroundColor="#16a085" />
                       <Left style={globalStyle.headerLeft} >

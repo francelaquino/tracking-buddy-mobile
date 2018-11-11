@@ -71,7 +71,7 @@ class Login extends Component {
         <Root>
             <Container style={registrationStyle.containerWrapper}>
           	<Loader loading={this.state.loading} />
-                <OfflineNotice />
+               
                 <Header style={globalStyle.header}>
                       <StatusBar backgroundColor="#16a085" />
                       
