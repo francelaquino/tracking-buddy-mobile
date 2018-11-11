@@ -10,9 +10,13 @@ import { connect } from 'react-redux';
 import { displayMember  } from '../../redux/actions/memberActions' ;
 import Loading  from '../shared/Loading';
 import OfflineNotice  from '../shared/OfflineNotice';
+import firebase from 'react-native-firebase';
 var globalStyle = require('../../assets/style/GlobalStyle');
 
 
+const Banner = firebase.admob.Banner;
+const AdRequest = firebase.admob.AdRequest;
+const request = new AdRequest();
 
 class DisplayMember extends Component {
     constructor(props) {
@@ -94,8 +98,15 @@ class DisplayMember extends Component {
                             <List>
                                 {this.renderMember()}
                             </List>
-                            
+                           
                             </View>
+                            <View style={{width:'99%',marginTop:10}}>
+                           <Banner
+                            size={"SMART_BANNER"}
+                            unitId="ca-app-pub-3378338881762914/1400949141"
+                            request={request.build()}
+                            />
+                               </View>
                         </ScrollView>
                         </Content>
         )

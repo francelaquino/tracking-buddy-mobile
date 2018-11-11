@@ -18,6 +18,7 @@ import Loader from '../shared/Loader';
 import OfflineNotice from '../shared/OfflineNotice';
 import Moment from 'moment';
 import SlidingUpPanel from 'rn-sliding-up-panel';
+import firebase from 'react-native-firebase';
 var userdetails = require('../shared/userDetails');
 var settings = require('../../components/shared/Settings');
 var globalStyle = require('../../assets/style/GlobalStyle');
@@ -34,6 +35,13 @@ var LONGITUDE_DELTA = .010;
 var cnt = 0;
 var plot;
 var coordinates = [];
+
+const advert = firebase.admob().interstitial('ca-app-pub-3378338881762914/1693535138');
+
+const Banner = firebase.admob.Banner;
+const AdRequest = firebase.admob.AdRequest;
+const request = new AdRequest();
+
 class LocationPlaces extends Component {
     constructor(props) {
         super(props)
@@ -85,6 +93,11 @@ class LocationPlaces extends Component {
         
     }
     componentDidMount() {
+            advert.loadAd(request.build());
+            advert.on('onAdLoaded', () => {
+                advert.show();
+            });
+           
         this.initialize();
     }
 

@@ -75,8 +75,9 @@ class GenerateInviteCode extends Component {
             <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps={"always"}>
           
                 <Content padder>
+                
                         <View style={globalStyle.container}>
-                        
+                       
                         { this.props.invitationcode.code !='' &&
                                     <View >
                             <Text style={{ justifyContent: 'center', alignItems: 'center', alignSelf: "center", flexDirection: 'column', fontSize: 40, marginBottom: 2, color: 'green' }}>{this.props.invitationcode.code}</Text>
@@ -106,10 +107,17 @@ class GenerateInviteCode extends Component {
                                     <Text style={{ color: 'white' }}>Send Invitation Code</Text>
                                 </Button>
                             </View>
+                           
                             </Content>
                             <Text style={globalStyle.noteLabel} >To invite a member you have to generate a Invitation Code. </Text>
                         <Text style={globalStyle.noteLabel} >Send the Invitation code to the person you want to  be a member.</Text>
-                        
+                        <View style={{width:'99%',marginTop:10}}>
+                            <Banner
+                            size={"SMART_BANNER"}
+                            unitId="ca-app-pub-3378338881762914/8059347520"
+                            request={request.build()}
+                            />
+                        </View>
                     </View>
                     </Content>
                     </ScrollView>

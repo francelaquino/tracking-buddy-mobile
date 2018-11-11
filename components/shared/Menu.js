@@ -9,14 +9,22 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import BackgroundGeolocation from "react-native-background-geolocation";
+
 var globalStyle = require('../../assets/style/GlobalStyle');
 var userdetails = require('../../components/shared/userDetails');
+
 
 class Menu extends Component {
     constructor(props) {
         super(props)
         
       }
+     
+  
+     
+    
+
+
 
     onLogout() {
         //refreshToken();

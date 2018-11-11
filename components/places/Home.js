@@ -103,6 +103,12 @@ class HomePlaces extends Component {
                         self.updateToken();
                        
                     });
+
+                       BackgroundGeolocation.on('http', function(response) {
+                        console.log("1");
+                        }, function(response) {console.log(response)
+           
+                });
                        
                      BackgroundGeolocation.ready({
             
@@ -121,25 +127,19 @@ class HomePlaces extends Component {
                          debug: true,*/
                          desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
                          distanceFilter: 10,
-                         minimumActivityRecognitionConfidence:1,
-                         stationaryRadius: 25,
-                         useSignificantChangesOnly:true,
+                         //minimumActivityRecognitionConfidence:1,
                          allowIdenticalLocations: false,
-                         activityRecognitionInterval: 60000,
-                         stopOnStationary: false,
-                         stopAfterElapsedMinutes: 0,
-                         disableElasticity: true,
-                         desiredOdometerAccuracy:10,
+                         //desiredOdometerAccuracy:10,
+                         //fastestLocationUpdateInterval:1,
                          maxDaysToPersist: 3,
-                         heartbeatInterval: 320,
+                         heartbeatInterval: 60,
                          notificationTitle: 'My GPS Buddy',
                          notificationText: 'Using GPS',
                          notificationChannelName: 'My GPS Buddy',
                          stopOnTerminate: false,
                          startOnBoot: true,
                          foregroundService: true,
-                         forceReloadOnHeartbeat:true,
-                         forceReloadOnBoot: false,
+                         forceReloadOnBoot: true,
                          preventSuspend: true,
                          url: 'http://tracking.findplace2stay.com/index.php/api/place/savelocation',
                          method: 'POST',
@@ -169,17 +169,7 @@ class HomePlaces extends Component {
 
         this.requestLocationPermission();
        
-      /*  BackgroundGeolocation.on('http', function(response) {
-            var status = response.status;
-            var success = response.success;
-            var responseText = response.responseText;
-            console.log(response)
-          }, function(response) {
-            var success = response.success;
-            var status = response.status;
-              var responseText = response.responseText;
-              console.log(response)
-            });*/
+     
         
 
        
