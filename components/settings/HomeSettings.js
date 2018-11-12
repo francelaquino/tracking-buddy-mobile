@@ -10,7 +10,11 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 var globalStyle = require('../../assets/style/GlobalStyle');
 
+import firebase from 'react-native-firebase';
 
+const Banner = firebase.admob.Banner;
+const AdRequest = firebase.admob.AdRequest;
+const request = new AdRequest();
 
 class HomeSettings extends Component {
     constructor(props) {
@@ -65,6 +69,13 @@ class HomeSettings extends Component {
 
 
                             </View>
+                            <View  style={globalStyle.banner300x250} >
+                                    <Banner
+                                    size={"MEDIUM_RECTANGLE"}
+                                    unitId="ca-app-pub-3378338881762914/9101870411"
+                                    request={request.build()}
+                                    />
+                                </View>
                         </ScrollView>
                     </Content>
                 </Container>

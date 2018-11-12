@@ -111,10 +111,10 @@ class GenerateInviteCode extends Component {
                             </Content>
                             <Text style={globalStyle.noteLabel} >To invite a member you have to generate a Invitation Code. </Text>
                         <Text style={globalStyle.noteLabel} >Send the Invitation code to the person you want to  be a member.</Text>
-                        <View style={{width:'99%',marginTop:10}}>
+                        <View  style={globalStyle.banner300x250} >
                             <Banner
-                            size={"SMART_BANNER"}
-                            unitId="ca-app-pub-3378338881762914/8059347520"
+                            size={"MEDIUM_RECTANGLE"}
+                            unitId="ca-app-pub-3378338881762914/9101870411"
                             request={request.build()}
                             />
                         </View>

@@ -15,6 +15,13 @@ var globalStyle = require('../../assets/style/GlobalStyle');
 
 
 
+import firebase from 'react-native-firebase';
+
+const Banner = firebase.admob.Banner;
+const AdRequest = firebase.admob.AdRequest;
+const request = new AdRequest();
+
+
 class SelectGroup extends Component {
     constructor(props) {
         super(props)
@@ -98,6 +105,13 @@ class SelectGroup extends Component {
 
                          
                             </View>
+                            <View  style={globalStyle.banner300x250} >
+                                    <Banner
+                                    size={"MEDIUM_RECTANGLE"}
+                                    unitId="ca-app-pub-3378338881762914/9101870411"
+                                    request={request.build()}
+                                    />
+                                </View>
                              </Content>
                     </ScrollView>
                    

@@ -290,7 +290,7 @@ class HomePlaces extends Component {
     async changeMapMode() {
         this.setState({ isFloatingMenuVisible:false})
         if (this.state.useruid !== "") {
-            this.markers[this.state.useruid].hideCallout();
+            //this.markers[this.state.useruid].hideCallout();
         }
         if (this.state.mapMode == "standard") {
             this.setState({
@@ -327,7 +327,7 @@ class HomePlaces extends Component {
         this.setState({ isFloatingMenuVisible: false })
         if (this.map != null) {
             if (this.state.useruid !== "") {
-                this.markers[this.state.useruid].hideCallout();
+                //this.markers[this.state.useruid].hideCallout();
             }
             navigator.geolocation.getCurrentPosition(
                 async (position) => {
@@ -349,7 +349,7 @@ class HomePlaces extends Component {
     allMembers() {
         let self = this;
         if (this.state.useruid !== "") {
-            this.markers[this.state.useruid].hideCallout();
+            //this.markers[this.state.useruid].hideCallout();
         }
         userdetails.group = "";
         this.setState({ isLoading: true, groupname: '', isFloatingMenuVisible:false })
@@ -366,7 +366,7 @@ class HomePlaces extends Component {
         this.reload();
         this.setState({ groupname: groupname, isFloatingMenuVisible:false });
         if (this.state.useruid !== "") {
-            this.markers[this.state.useruid].hideCallout();
+            //this.markers[this.state.useruid].hideCallout();
         }
 
     }

@@ -12,6 +12,11 @@ import { createGroup,displayGroup  } from '../../redux/actions/groupActions' ;
 var globalStyle = require('../../assets/style/GlobalStyle');
 var registrationStyle = require('../../assets/style/Registration');
 
+import firebase from 'react-native-firebase';
+
+const Banner = firebase.admob.Banner;
+const AdRequest = firebase.admob.AdRequest;
+const request = new AdRequest();
 
 
 class CreateGroup extends Component {
@@ -105,7 +110,7 @@ class CreateGroup extends Component {
                                 <TouchableOpacity style={{ marginTop: 20 }} onPress={this.selectPhoto.bind(this)}>
                             <View style={globalStyle.avatarContainer}>
 
-                                {this.state.emptyphoto === '1' ?  <Text style={{fontSize:43,color:'#16a085'}}>G</Text>  :
+                                {this.state.emptyphoto === '1' ?  <Text style={{fontSize:15,color:'#16a085'}}>Photo</Text>  :
                                             <Image style={globalStyle.avatarBig} source={this.state.avatarsource} />
                                         }
 
@@ -133,6 +138,13 @@ class CreateGroup extends Component {
                                         bordered light full  >
                                         <Text style={{ color: 'white' }}>Save</Text>
                                     </Button>
+                                </View>
+                                        <View  style={globalStyle.banner300x250} >
+                                    <Banner
+                                    size={"MEDIUM_RECTANGLE"}
+                                    unitId="ca-app-pub-3378338881762914/9101870411"
+                                    request={request.build()}
+                                    />
                                 </View>
 
                             </View>

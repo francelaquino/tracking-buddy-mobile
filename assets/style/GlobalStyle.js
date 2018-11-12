@@ -632,6 +632,10 @@ module.exports = StyleSheet.create({
         fontSize: 16,
         lineHeight: 20,
     }
+    ,banner300x250:{
+        width:'100%',
+        marginTop:10
+    }
   
 
 });

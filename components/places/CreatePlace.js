@@ -228,68 +228,9 @@ class CreatePlace extends Component {
                     
                 <View style={styles.mainContainer}>
                    
-                    <View style={styles.searchContainer}>
                         
-                                <GooglePlacesAutocomplete
-                                    ref={c => this.googlePlacesAutocomplete = c}
-
-                                    placeholder='Search Location'
-                                    minLength={2} // minimum length of text to search
-                                    autoFocus={false}
-                                    returnKeyType={'search'} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
-                                    listViewDisplayed='auto'    // true/false/undefined
-                                    fetchDetails={true}
-                                    renderDescription={row => row.description} // custom description render
-                                    onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
-                                       
-                                        this.updateLocation(details);
-                                        this.googlePlacesAutocomplete._handleChangeText('')
-                                       
-                                    }}
-                                   
-                                    getDefaultValue={() => ''}
-
-                                    query={{
-                                        // available options: https://developers.google.com/places/web-service/autocomplete
-                                        key: 'AIzaSyCHZ-obEHL8TTP4_8vPfQKAyzvRrrlmi5Q',
-                                        language: 'en', // language of the results
-                                    }}
-
-                                    styles={{
-                                        textInputContainer: {
-                                            width: '100%',
-                                            height: 56,
-                                            backgroundColor: '#16a085',
-                                            borderBottomWidth:0,
-                                            
-                                        },
-                                        textInput: {
-                                            height:40,
-                                        },
-                                        description: {
-                                            color:'black'
-                                        },
-                                    }}
-                                    
-                                    currentLocation={false} 
-                                    nearbyPlacesAPI='GooglePlacesSearch' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
-                                    GoogleReverseGeocodingQuery={{
-                                        // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
-                                    }}
-                                    GooglePlacesSearchQuery={{
-                                        // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
-                                        rankby: 'distance',
-                                        types: 'food'
-                                    }}
-
-                                    filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
-
-                                    debounce={200}
-                                    renderRightButton={() => <Feather onPress={() => { this.googlePlacesAutocomplete._handleChangeText('') }} size={25} style={{ color: 'white', height: 30, marginTop: 13, marginRight: 15 }} name='delete' />}
-                                />
                                 
-                            </View>
-                            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps={"always"}>
+                            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ flexGrow: 1 }}  keyboardShouldPersistTaps={"always"}>
                             <View style={styles.mapContainer}>
                                 <MapView ref={map => { this.map = map }}
                                     zoomEnabled={true}
@@ -322,7 +263,7 @@ class CreatePlace extends Component {
                                     
                                     
                     </View>
-                    <View style={[globalStyle.mapMenu, { top: 50 }]}>
+                    <View style={[globalStyle.mapMenu, { top: 1 }]}>
 
 
                         <TouchableOpacity style={globalStyle.mapMenuCircleMap} onPress={() => this.changeMapMode()} >
@@ -386,7 +327,7 @@ class CreatePlace extends Component {
             <Root>
                 <Container style={globalStyle.containerWrapper}>
                     <Loader loading={this.state.loading} />
-                   
+                    <OfflineNotice />
 
 
                     <Header style={globalStyle.header}>
@@ -434,20 +375,18 @@ const styles = StyleSheet.create({
     },
     
     mapContainer: {
-        //flex: 2,
         justifyContent: 'center',
         height:450,
-        alignItems: 'center'
+        alignItems: 'center',
       
     },
     searchContainer: {
-        //flex: 1,
-        //flexDirection: 'row',
+        flex: 1,
         height:55,
         width:'100%',
         backgroundColor:'white',
         position: 'absolute',
-        zIndex: 9999,
+        zIndex: 99999999,
         borderRadius: 5,
         borderWidth: 0,
         

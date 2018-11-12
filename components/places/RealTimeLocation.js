@@ -29,6 +29,13 @@ const screen = Dimensions.get('window');
 var LATITUDE_DELTA = .005;
 var LONGITUDE_DELTA = .005;
 
+
+const advert = firebase.admob().interstitial('ca-app-pub-3378338881762914/1693535138');
+
+const Banner = firebase.admob.Banner;
+const AdRequest = firebase.admob.AdRequest;
+const request = new AdRequest();
+
 class RealTimeLocation extends Component {
     constructor(props) {
         super(props)
@@ -51,7 +58,10 @@ class RealTimeLocation extends Component {
     
     componentDidMount() {
         
-       
+        advert.loadAd(request.build());
+            advert.on('onAdLoaded', () => {
+                advert.show();
+            });
     }
        
 

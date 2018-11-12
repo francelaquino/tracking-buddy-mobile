@@ -90,6 +90,7 @@ class LocationPlaces extends Component {
 
     componentWillMount() {
         this.setState({ isReady:true, useruid: this.props.navigation.state.params.uid, name: this.props.navigation.state.params.name })
+        this.map = null;
         
     }
     componentDidMount() {

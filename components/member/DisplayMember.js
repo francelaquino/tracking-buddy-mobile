@@ -100,13 +100,13 @@ class DisplayMember extends Component {
                             </List>
                            
                             </View>
-                            <View style={{width:'99%',marginTop:10}}>
-                           <Banner
-                            size={"SMART_BANNER"}
-                            unitId="ca-app-pub-3378338881762914/1400949141"
+                            <View  style={globalStyle.banner300x250} >
+                            <Banner
+                            size={"MEDIUM_RECTANGLE"}
+                            unitId="ca-app-pub-3378338881762914/9101870411"
                             request={request.build()}
                             />
-                               </View>
+                        </View>
                         </ScrollView>
                         </Content>
         )
