@@ -121,7 +121,7 @@ class PlaceList extends Component {
                             <Title>PLACES</Title>
                         </Body>
                         <Right style={globalStyle.headerRight} >
-                            <Button transparent onPress={() => this.props.navigation.navigate('CreatePlace')}>
+                            <Button transparent onPress={() => this.props.navigation.navigate('CreatePlace', { address:""})}>
                                 <MaterialIcons size={28} style={{ color: 'white' }} name='add-circle' />
                             </Button>
 

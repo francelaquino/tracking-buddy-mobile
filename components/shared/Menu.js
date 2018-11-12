@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { Linking, StatusBar, AsyncStorage, Platform, StyleSheet, Text, View, ScrollView, TextInput, TouchableOpacity, ToastAndroid, } from 'react-native';
+import { BackHandler, Linking, StatusBar, AsyncStorage, Platform, StyleSheet, Text, View, ScrollView, TextInput, TouchableOpacity, ToastAndroid, } from 'react-native';
 import { Root, Container, Header, Body, Title, Item, Input, Label, Button, Icon, Left, Right, Content, List, ListItem } from 'native-base';
 import OfflineNotice from '../shared/OfflineNotice';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -41,6 +41,12 @@ class Menu extends Component {
         AsyncStorage.setItem("firstname", "");
         AsyncStorage.setItem("lastname", "");
         BackgroundGeolocation.stop();
+        BackHandler.addEventListener('hardwareBackPress', function() {
+            // this.onMainScreen and this.goBack are just examples, you need to use your own implementation here
+            // Typically you would use the navigator here to go to the last state.
+          
+              this.goBack();
+          });
         setTimeout(() => {
             this.props.navigation.navigate("Login");
         }, 1000);
@@ -211,6 +217,7 @@ class Menu extends Component {
     
 
     render() {
+      
             return this.ready();
     }
 }

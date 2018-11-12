@@ -50,15 +50,23 @@ class GenerateInviteCode extends Component {
 
 
     onShare() {
-        Share.share({
-            message: this.props.invitationcode.code
-        }).then(res => {
-        });
+        if(this.props.invitationcode.code==""){
+            ToastAndroid.showWithGravityAndOffset("Invalid invitation code", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
+        }else{
+            Share.share({
+                message: this.props.invitationcode.code
+            }).then(res => {
+            });
+        }
     }
 
     onCopy() {
-        Clipboard.setString(this.props.invitationcode.code)
-        ToastAndroid.showWithGravityAndOffset("Copied to clipboard", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
+        if(this.props.invitationcode.code==""){
+            ToastAndroid.showWithGravityAndOffset("Invalid invitation code", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
+        }else{
+            Clipboard.setString(this.props.invitationcode.code)
+            ToastAndroid.showWithGravityAndOffset("Copied to clipboard", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
+        }
     }
 
 

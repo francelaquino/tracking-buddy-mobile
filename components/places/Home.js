@@ -46,6 +46,7 @@ class HomePlaces extends Component {
         this.map = null;
         this.firebaseConnection=null;
         this.markers=[];
+        
         this.state = {
             appState:AppState.currentState,
             active: true,
@@ -89,73 +90,84 @@ class HomePlaces extends Component {
         });
       
     }
-    
+  
+    geoLocationSetup(){
+        let self = this;
+        BackgroundGeolocation.on('heartbeat', function () {
+            self.updateToken();
+           
+        });
+
+          /* BackgroundGeolocation.on('http', function(response) {
+            console.log("1");
+            }, function(response) {console.log(response)
+
+    });*/
+           
+         BackgroundGeolocation.ready({
+
+             locationAuthorizationAlert: {
+                 titleWhenNotEnabled: "Location services not enabled",
+                 titleWhenOff: "Location services is off",
+                 instructions: "You must enable in location services",
+                 cancelButton: "Cancel",
+                 settingsButton: "Settings"
+             },
+             reset:true,
+             locationAuthorizationRequest: "Always",
+             notificationPriority: BackgroundGeolocation.NOTIFICATION_PRIORITY_MIN,
+             stopTimeout: 10,
+             /*logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
+             debug: true,*/
+             desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
+             distanceFilter: 5,
+             minimumActivityRecognitionConfidence:90,
+             allowIdenticalLocations: false,
+             triggerActivities: 'on_foot, walking, running, in_vehicle, on_bicycle',
+             maxDaysToPersist: 3,
+             persist: true,
+             heartbeatInterval: 60,
+             notificationTitle: 'My GPS Buddy',
+             notificationText: 'Using GPS',
+             notificationChannelName: 'My GPS Buddy',
+             stopOnTerminate: false,
+             startOnBoot: true,
+             foregroundService: true,
+             activityRecognitionInterval:100,
+             schedule: [
+                '1,2,3,4,5,6,7 24:00'
+              ],
+             forceReloadOnBoot: true,
+             forceReloadOnSchedule:true,
+             preventSuspend: true,
+             fastestLocationUpdateInterval:30000 ,
+             url: 'http://tracking.findplace2stay.com/index.php/api/place/savelocation',
+             method: 'POST',
+             batchSync: false,
+             autoSync: true,
+             params: {
+                 "useruid": userdetails.userid,
+                 "fcmtoken": userdetails.fcmtoken,
+                 "model": Model,
+                 "timezone": timeZone,
+                 "manufacturer": Manufacturer
+             }
+            }, () => {
+                BackgroundGeolocation.start();
+            });
+         
+    }
     async requestLocationPermission() {
         let self= this;
         const chckLocationPermission = PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION);
+       
         if (chckLocationPermission === PermissionsAndroid.RESULTS.GRANTED) {
-            alert("You've access for the location");
+            this.geoLocationSetup();
         } else {
             try {
                 const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
                 if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-                    BackgroundGeolocation.on('heartbeat', function () {
-                        self.updateToken();
-                       
-                    });
-
-                       BackgroundGeolocation.on('http', function(response) {
-                        console.log("1");
-                        }, function(response) {console.log(response)
-           
-                });
-                       
-                     BackgroundGeolocation.ready({
-            
-                         locationAuthorizationAlert: {
-                             titleWhenNotEnabled: "Location services not enabled",
-                             titleWhenOff: "Location services is off",
-                             instructions: "You must enable in location services",
-                             cancelButton: "Cancel",
-                             settingsButton: "Settings"
-                         },
-                         reset:true,
-                         locationAuthorizationRequest: "Always",
-                         notificationPriority: BackgroundGeolocation.NOTIFICATION_PRIORITY_MIN,
-                         stopTimeout: 10,
-                         /*logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
-                         debug: true,*/
-                         desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
-                         distanceFilter: 10,
-                         //minimumActivityRecognitionConfidence:1,
-                         allowIdenticalLocations: false,
-                         //desiredOdometerAccuracy:10,
-                         //fastestLocationUpdateInterval:1,
-                         maxDaysToPersist: 3,
-                         heartbeatInterval: 60,
-                         notificationTitle: 'My GPS Buddy',
-                         notificationText: 'Using GPS',
-                         notificationChannelName: 'My GPS Buddy',
-                         stopOnTerminate: false,
-                         startOnBoot: true,
-                         foregroundService: true,
-                         forceReloadOnBoot: true,
-                         preventSuspend: true,
-                         url: 'http://tracking.findplace2stay.com/index.php/api/place/savelocation',
-                         method: 'POST',
-                         batchSync: false,
-                         autoSync: true,
-                         params: {
-                             "useruid": userdetails.userid,
-                             "fcmtoken": userdetails.fcmtoken,
-                             "model": Model,
-                             "timezone": timeZone,
-                             "manufacturer": Manufacturer
-                         }
-                        }, () => {
-                            BackgroundGeolocation.start();
-                        });
-                     
+                    this.geoLocationSetup();
                 } else {
                     alert("You don't have access for the location");
                 }
@@ -166,18 +178,16 @@ class HomePlaces extends Component {
 
 
      componentWillMount() {
-
+        this.forceUpdate();
         this.requestLocationPermission();
+      
        
-     
-        
 
        
     }
        
    
     componentDidMount() {
-       
         let self = this;
         AppState.addEventListener('change', this._handleAppStateChange);
         this.setState({isPageReady:true,memberReady: true,appState:'active' })
@@ -221,7 +231,6 @@ class HomePlaces extends Component {
         AppState.removeEventListener('change', this._handleAppStateChange);
         BackgroundGeolocation.removeListeners();
         this.map = null;
-       
     }
     _handleAppStateChange = (nextAppState) => {
         this.setState({appState: nextAppState});
@@ -453,10 +462,10 @@ class HomePlaces extends Component {
                     source={require('../../images/marker.png')} />
                 <Text style={styles.markerText}>{marker.firstname}</Text>
 
-                <MapView.Callout  tooltip={false}  onPress={() => this.props.navigation.navigate("RealTimeLocation", { uid: marker.uid, name: marker.firstname })}  >
+                <MapView.Callout  tooltip={false}  onPress={() => this.props.navigation.navigate("CreatePlace", { coordinates:marker.coordinates,address:marker.address})}  >
                     <View style={globalStyle.callOutFix} >
                     <Text numberOfLines={2} style={globalStyle.callOutText}>{marker.address}</Text>
-                        
+                    <Button style={globalStyle.calloutButton}><Text style={{fontSize:10,color:'white'}}> ADD PLACE </Text></Button>
                   
 
                     </View>
@@ -677,6 +686,7 @@ class HomePlaces extends Component {
         )
     }
     render() {
+     
             if(!this.state.isPageReady){
                 return this.loading();
              }else{

@@ -67,6 +67,7 @@ class PlaceView extends Component {
             let count = 0;
             let cnt = 0;
             count = this.props.members.length;
+            console.log(this.props.members)
             let x = 0;
             if (count > 0) {
                 await this.props.members.forEach(data => {
@@ -136,7 +137,7 @@ class PlaceView extends Component {
                             <Left style={globalStyle.listLeft}>
 
                                 <View style={globalStyle.listAvatarContainer} >
-                                     {item.emptyphoto === "1" ? <Text style={{fontSize:23,color:'white'}}>{item.firstletter}</Text> :
+                                     {item.emptyphoto === "1" ? <Text style={{fontSize:23,color:'#16a085'}}>{item.firstletter}</Text> :
                                     <Thumbnail style={globalStyle.listAvatar} source={{ uri: item.avatar }} />
                                 }
 

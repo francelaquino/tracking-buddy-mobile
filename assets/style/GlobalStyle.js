@@ -84,10 +84,12 @@ module.exports = StyleSheet.create({
     calloutButton:{
         marginBottom: 5,
         width: '50%',
-        height:35,
+        height:25,
         alignSelf: "center",
         backgroundColor: '#009ad6',
         borderRadius: 5,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     cancelButton: {
         backgroundColor: 'gray',
@@ -474,7 +476,7 @@ module.exports = StyleSheet.create({
     },
     callOutFix: {
         width: 160,
-        height: 50,
+        height: 70,
         alignItems: 'center',
         flexDirection: 'column',
         justifyContent: 'center',
@@ -634,7 +636,9 @@ module.exports = StyleSheet.create({
     }
     ,banner300x250:{
         width:'100%',
-        marginTop:10
+        marginTop:10,
+        justifyContent: 'center',
+        alignItems: 'center'
     }
   
 

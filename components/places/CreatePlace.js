@@ -74,7 +74,21 @@ class CreatePlace extends Component {
  
    
      componentDidMount(){
-         this.getCurrentPosition();
+         if(this.props.navigation.state.params.address==""){
+            this.getCurrentPosition();
+         }else{
+            this.setState({
+                region: {
+                    latitude: this.props.navigation.state.params.coordinates.latitude,
+                    longitude: this.props.navigation.state.params.coordinates.longitude,
+                    latitudeDelta: LATITUDE_DELTA,
+                    longitudeDelta: LONGITUDE_DELTA,
+                },
+                address: this.props.navigation.state.params.address,
+                isMapReady: true,
+            })
+        }
+       
 
 
     }
