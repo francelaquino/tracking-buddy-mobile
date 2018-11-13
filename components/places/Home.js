@@ -120,7 +120,7 @@ class HomePlaces extends Component {
              /*logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
              debug: true,*/
              desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
-             distanceFilter: 5,
+             distanceFilter: 10,
              minimumActivityRecognitionConfidence:90,
              allowIdenticalLocations: false,
              triggerActivities: 'on_foot, walking, running, in_vehicle, on_bicycle',
@@ -134,11 +134,7 @@ class HomePlaces extends Component {
              startOnBoot: true,
              foregroundService: true,
              activityRecognitionInterval:100,
-             schedule: [
-                '1,2,3,4,5,6,7 24:00'
-              ],
              forceReloadOnBoot: true,
-             forceReloadOnSchedule:true,
              preventSuspend: true,
              fastestLocationUpdateInterval:30000 ,
              url: 'http://tracking.findplace2stay.com/index.php/api/place/savelocation',
@@ -235,9 +231,9 @@ class HomePlaces extends Component {
     _handleAppStateChange = (nextAppState) => {
         this.setState({appState: nextAppState});
         if(nextAppState=="active"){
-            this.connectToFirebase();
+           // this.connectToFirebase();
         }else{
-            this.firebaseConnection.off('value');
+           // this.firebaseConnection.off('value');
         }
       }
 
@@ -391,7 +387,7 @@ class HomePlaces extends Component {
 
     initialize() {
         if(this.state.appState=="active"){
-            this.connectToFirebase();
+           // this.connectToFirebase();
             this.setState({ isLoading: false })
         }
 
