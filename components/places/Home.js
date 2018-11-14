@@ -21,6 +21,7 @@ import firebase from 'react-native-firebase';
 import type {  RemoteMessage, Notification, NotificationOpen } from 'react-native-firebase';
 import AnimatedHideView from 'react-native-animated-hide-view';
 import axios from 'axios';
+import BackgroundFetch from "react-native-background-fetch";
 var settings = require('../../components/shared/Settings');
 
 const {screenHeight, screenWidth} = Dimensions.get('window');
@@ -97,20 +98,24 @@ class HomePlaces extends Component {
             self.updateToken();
            
         });
-        BackgroundGeolocation.on('motionchange', function () {
-            ToastAndroid.showWithGravityAndOffset("move", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
+      
+
+     /*  BackgroundGeolocation.on('motionchange', function () {
+            console.log("motionchange");
+            BackgroundGeolocation.stop();
           });
           BackgroundGeolocation.on('activitychange', function () {
-            ToastAndroid.showWithGravityAndOffset("change", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
+            console.log("activitychange");
           });
-
-          /* BackgroundGeolocation.on('http', function(response) {
+          
+ 
+           BackgroundGeolocation.on('http', function(response) {
             console.log("1");
             }, function(response) {console.log(response)
 
     });*/
            
-         BackgroundGeolocation.ready({
+         BackgroundGeolocation.configure({
 
              locationAuthorizationAlert: {
                  titleWhenNotEnabled: "Location services not enabled",
@@ -122,27 +127,28 @@ class HomePlaces extends Component {
              reset:true,
              locationAuthorizationRequest: "Always",
              notificationPriority: BackgroundGeolocation.NOTIFICATION_PRIORITY_MIN,
-             stopTimeout: 10,
+             stopTimeout: 5,
              /*logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
              debug: true,*/
              desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
-             distanceFilter: 1,
-             //minimumActivityRecognitionConfidence:90,
+             distanceFilter: 10,
+             minimumActivityRecognitionConfidence:90,
              allowIdenticalLocations: false,
-             //triggerActivities: 'on_foot, walking, running, in_vehicle, on_bicycle',
+             triggerActivities: 'on_foot, walking, running, in_vehicle, on_bicycle',
              maxDaysToPersist: 3,
              persist: true,
-             heartbeatInterval: 60,
+             heartbeatInterval: 120,
              notificationTitle: 'My GPS Buddy',
              notificationText: 'Using GPS',
              notificationChannelName: 'My GPS Buddy',
              stopOnTerminate: false,
              startOnBoot: true,
+             //enableHeadless: true,
              foregroundService: true,
-             //activityRecognitionInterval:100,
+             stationaryRadius:5,
+             //stopOnStationary:true,
              forceReloadOnBoot: true,
              preventSuspend: true,
-             //fastestLocationUpdateInterval:30000 ,
              url: 'http://tracking.findplace2stay.com/index.php/api/place/savelocation',
              method: 'POST',
              batchSync: false,
@@ -157,7 +163,8 @@ class HomePlaces extends Component {
             }, () => {
                
             });
-            //BackgroundGeolocation.stop();
+           BackgroundGeolocation.start();
+           
          
     }
     async requestLocationPermission() {
@@ -183,7 +190,7 @@ class HomePlaces extends Component {
      componentWillMount() {
         this.forceUpdate();
         //this.requestLocationPermission();
-        this.geoLocationSetup();
+       // this.geoLocationSetup();
       
        
 
@@ -192,6 +199,20 @@ class HomePlaces extends Component {
        
    
     componentDidMount() {
+        BackgroundFetch.configure({
+            minimumFetchInterval: 15, // <-- minutes (15 is minimum allowed)
+            stopOnTerminate: false,   // <-- Android-only,
+            startOnBoot: true         // <-- Android-only
+          }, () => {
+            console.log("[js] Received background-fetch event");
+            this.geoLocationSetup();
+          
+          }, (error) => {
+            console.log("[js] RNBackgroundFetch failed to start");
+          });
+      
+         
+
         let self = this;
         AppState.addEventListener('change', this._handleAppStateChange);
         this.setState({isPageReady:true,memberReady: true,appState:'active' })
