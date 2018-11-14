@@ -97,6 +97,12 @@ class HomePlaces extends Component {
             self.updateToken();
            
         });
+        BackgroundGeolocation.on('motionchange', function () {
+            ToastAndroid.showWithGravityAndOffset("move", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
+          });
+          BackgroundGeolocation.on('activitychange', function () {
+            ToastAndroid.showWithGravityAndOffset("change", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
+          });
 
           /* BackgroundGeolocation.on('http', function(response) {
             console.log("1");
@@ -120,10 +126,10 @@ class HomePlaces extends Component {
              /*logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
              debug: true,*/
              desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
-             distanceFilter: 10,
-             minimumActivityRecognitionConfidence:90,
+             distanceFilter: 1,
+             //minimumActivityRecognitionConfidence:90,
              allowIdenticalLocations: false,
-             triggerActivities: 'on_foot, walking, running, in_vehicle, on_bicycle',
+             //triggerActivities: 'on_foot, walking, running, in_vehicle, on_bicycle',
              maxDaysToPersist: 3,
              persist: true,
              heartbeatInterval: 60,
@@ -133,10 +139,10 @@ class HomePlaces extends Component {
              stopOnTerminate: false,
              startOnBoot: true,
              foregroundService: true,
-             activityRecognitionInterval:100,
+             //activityRecognitionInterval:100,
              forceReloadOnBoot: true,
              preventSuspend: true,
-             fastestLocationUpdateInterval:30000 ,
+             //fastestLocationUpdateInterval:30000 ,
              url: 'http://tracking.findplace2stay.com/index.php/api/place/savelocation',
              method: 'POST',
              batchSync: false,
@@ -149,8 +155,9 @@ class HomePlaces extends Component {
                  "manufacturer": Manufacturer
              }
             }, () => {
-                BackgroundGeolocation.start();
+               
             });
+            //BackgroundGeolocation.stop();
          
     }
     async requestLocationPermission() {
@@ -175,7 +182,8 @@ class HomePlaces extends Component {
 
      componentWillMount() {
         this.forceUpdate();
-        this.requestLocationPermission();
+        //this.requestLocationPermission();
+        this.geoLocationSetup();
       
        
 
@@ -231,9 +239,9 @@ class HomePlaces extends Component {
     _handleAppStateChange = (nextAppState) => {
         this.setState({appState: nextAppState});
         if(nextAppState=="active"){
-           // this.connectToFirebase();
+            this.connectToFirebase();
         }else{
-           // this.firebaseConnection.off('value');
+            this.firebaseConnection.off('value');
         }
       }
 
@@ -387,7 +395,7 @@ class HomePlaces extends Component {
 
     initialize() {
         if(this.state.appState=="active"){
-           // this.connectToFirebase();
+            this.connectToFirebase();
             this.setState({ isLoading: false })
         }
 
