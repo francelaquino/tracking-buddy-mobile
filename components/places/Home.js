@@ -89,6 +89,14 @@ class HomePlaces extends Component {
                }).catch(function (error) {
            });
         });
+
+      /*  BackgroundGeolocation.stop();
+        console.log("heart");
+            console.log("stop");
+            setTimeout(()=>{
+                BackgroundGeolocation.start();
+                console.log("start")
+            },10000);*/
       
     }
   
@@ -96,24 +104,12 @@ class HomePlaces extends Component {
         let self = this;
         BackgroundGeolocation.on('heartbeat', function () {
             self.updateToken();
+         
            
         });
       
 
-     /*  BackgroundGeolocation.on('motionchange', function () {
-            console.log("motionchange");
-            BackgroundGeolocation.stop();
-          });
-          BackgroundGeolocation.on('activitychange', function () {
-            console.log("activitychange");
-          });
-          
- 
-           BackgroundGeolocation.on('http', function(response) {
-            console.log("1");
-            }, function(response) {console.log(response)
-
-    });*/
+    
            
          BackgroundGeolocation.configure({
 
@@ -137,16 +133,15 @@ class HomePlaces extends Component {
              triggerActivities: 'on_foot, walking, running, in_vehicle, on_bicycle',
              maxDaysToPersist: 3,
              persist: true,
-             heartbeatInterval: 120,
+             heartbeatInterval: 3000,
              notificationTitle: 'My GPS Buddy',
              notificationText: 'Using GPS',
              notificationChannelName: 'My GPS Buddy',
              stopOnTerminate: false,
+             enableHeadless: true,
              startOnBoot: true,
-             //enableHeadless: true,
              foregroundService: true,
              stationaryRadius:5,
-             //stopOnStationary:true,
              forceReloadOnBoot: true,
              preventSuspend: true,
              url: 'http://tracking.findplace2stay.com/index.php/api/place/savelocation',
@@ -179,6 +174,7 @@ class HomePlaces extends Component {
                 if (granted === PermissionsAndroid.RESULTS.GRANTED) {
                     this.geoLocationSetup();
                 } else {
+
                     alert("You don't have access for the location");
                 }
             } catch (err) {
@@ -188,32 +184,15 @@ class HomePlaces extends Component {
 
 
      componentWillMount() {
-        this.forceUpdate();
-        //this.requestLocationPermission();
-       // this.geoLocationSetup();
-      
-       
-
+        this.requestLocationPermission();
        
     }
        
    
     componentDidMount() {
-        BackgroundFetch.configure({
-            minimumFetchInterval: 15, // <-- minutes (15 is minimum allowed)
-            stopOnTerminate: false,   // <-- Android-only,
-            startOnBoot: true         // <-- Android-only
-          }, () => {
-            console.log("[js] Received background-fetch event");
-            this.geoLocationSetup();
-          
-          }, (error) => {
-            console.log("[js] RNBackgroundFetch failed to start");
-          });
-      
-         
-
         let self = this;
+
+        
         AppState.addEventListener('change', this._handleAppStateChange);
         this.setState({isPageReady:true,memberReady: true,appState:'active' })
         setTimeout(()=>{
@@ -288,7 +267,9 @@ class HomePlaces extends Component {
 
 
      fitToMap() {
-        
+        if(this.map==null){
+            return false;
+        }
         this.setState({ isFloatingMenuVisible:false})
         let coordinates = [];
         if (this.props.members.length == 1) {
