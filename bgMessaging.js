@@ -20,9 +20,6 @@ export default async (notification: RemoteMessage) => {
 
     firebase.notifications().displayNotification(notificationMessage);
 
-    setInterval(async function myTimer() {
-        console.log("1");
-     }, 6000);
 
     return Promise.resolve();
 }

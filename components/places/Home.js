@@ -90,13 +90,7 @@ class HomePlaces extends Component {
            });
         });
 
-      /*  BackgroundGeolocation.stop();
-        console.log("heart");
-            console.log("stop");
-            setTimeout(()=>{
-                BackgroundGeolocation.start();
-                console.log("start")
-            },10000);*/
+     
       
     }
   
@@ -108,10 +102,22 @@ class HomePlaces extends Component {
            
         });
       
+         /*  BackgroundGeolocation.on('http', function(response) {
+            var status = response.status;
+            var success = response.success;
+            var responseText = response.responseText;
+            console.log(response)
+          }, function(response) {
+            var success = response.success;
+            var status = response.status;
+              var responseText = response.responseText;
+              console.log(response)
+            });
+      */
 
     
            
-         BackgroundGeolocation.configure({
+         BackgroundGeolocation.ready({
 
              locationAuthorizationAlert: {
                  titleWhenNotEnabled: "Location services not enabled",
@@ -127,8 +133,8 @@ class HomePlaces extends Component {
              /*logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
              debug: true,*/
              desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
-             distanceFilter: 10,
-             minimumActivityRecognitionConfidence:90,
+             distanceFilter: 20,
+             autoSyncThreshold:10,
              allowIdenticalLocations: false,
              triggerActivities: 'on_foot, walking, running, in_vehicle, on_bicycle',
              maxDaysToPersist: 3,
@@ -138,15 +144,15 @@ class HomePlaces extends Component {
              notificationText: 'Using GPS',
              notificationChannelName: 'My GPS Buddy',
              stopOnTerminate: false,
-             enableHeadless: true,
+             //enableHeadless: true,
              startOnBoot: true,
              foregroundService: true,
-             stationaryRadius:5,
+             stationaryRadius:10,
              forceReloadOnBoot: true,
              preventSuspend: true,
-             url: 'http://tracking.findplace2stay.com/index.php/api/place/savelocation',
+             url: 'http://tracking.findplace2stay.com/index.php/api/place/savelocationbatch',
              method: 'POST',
-             batchSync: false,
+             batchSync: true,
              autoSync: true,
              params: {
                  "useruid": userdetails.userid,
@@ -184,7 +190,8 @@ class HomePlaces extends Component {
 
 
      componentWillMount() {
-        this.requestLocationPermission();
+       // this.requestLocationPermission();
+       this.geoLocationSetup();
        
     }
        
@@ -239,9 +246,9 @@ class HomePlaces extends Component {
     _handleAppStateChange = (nextAppState) => {
         this.setState({appState: nextAppState});
         if(nextAppState=="active"){
-            this.connectToFirebase();
+            //this.connectToFirebase();
         }else{
-            this.firebaseConnection.off('value');
+           // this.firebaseConnection.off('value');
         }
       }
 
@@ -397,7 +404,7 @@ class HomePlaces extends Component {
 
     initialize() {
         if(this.state.appState=="active"){
-            this.connectToFirebase();
+           // this.connectToFirebase();
             this.setState({ isLoading: false })
         }
 

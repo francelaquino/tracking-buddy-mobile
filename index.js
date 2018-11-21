@@ -8,7 +8,7 @@ import { Provider } from 'react-redux';
 import store from './store';
 import { Stack }  from './components/shared/Navigation';
 import BackgroundGeolocation from "react-native-background-geolocation";
-
+/*
 let StartTracking = async () => {
     return new Promise((resolve) => {
         setTimeout(async()=>{
@@ -32,7 +32,7 @@ let HeadlessTask = async (event) => {
       
     }
   }
-
+*/
 
 const tracking =()=>(
     <Provider store={store}>
@@ -45,4 +45,4 @@ AppRegistry.registerComponent('trackingbuddyv3', () => tracking);
 
 AppRegistry.registerHeadlessTask('RNFirebaseBackgroundMessage', () => bgMessaging); 
 
-BackgroundGeolocation.registerHeadlessTask(HeadlessTask);
+//BackgroundGeolocation.registerHeadlessTask(HeadlessTask);
