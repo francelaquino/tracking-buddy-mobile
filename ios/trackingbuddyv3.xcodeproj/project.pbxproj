@@ -42,6 +42,13 @@
 		60B4439503964981BB03B939 /* libRCTOneSignal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D65441C9BCFA4EFB9CB31358 /* libRCTOneSignal.a */; };
 		ED5FA6A8C4314DAF9EFB43FD /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EE025522BA3849189ED86995 /* libRNDeviceInfo.a */; };
 		7FA688398F0C468287E65493 /* libRNDeviceInfo-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D11A3249D8F4B53858A354B /* libRNDeviceInfo-tvOS.a */; };
+		8405432F4A8B49C5A712E240 /* libRNBackgroundGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E74EB69977A49EFBD62ABBB /* libRNBackgroundGeolocation.a */; };
+		1FD82307218040FDB3FE3B02 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E59531103FD470C8242934F /* libsqlite3.tbd */; };
+		EFE614FE15564508BC29C96D /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 43D6FEDDCCCD4905A7646BD9 /* libz.tbd */; };
+		6FD5A12CD341400CBBC83BDD /* TSLocationManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 592762B8373A4DAEA9E4BF66 /* TSLocationManager.framework */; };
+		3EA02CC2E7D5497780C04694 /* libRNBackgroundFetch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EF613916FAF4472A97F5925C /* libRNBackgroundFetch.a */; };
+		4ABFAAF13DD14546805FE91A /* TSBackgroundFetch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02AB77E1AEC3446D81075111 /* TSBackgroundFetch.framework */; };
+		E19A096F6EA941638CB346B9 /* RNBackgroundFetch+AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C04CB89F040D4520995039F0 /* RNBackgroundFetch+AppDelegate.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -356,6 +363,15 @@
 		F759451082AE43558D62F7B2 /* RNDeviceInfo.xcodeproj */ = {isa = PBXFileReference; name = "RNDeviceInfo.xcodeproj"; path = "../node_modules/react-native-device-info/ios/RNDeviceInfo.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		EE025522BA3849189ED86995 /* libRNDeviceInfo.a */ = {isa = PBXFileReference; name = "libRNDeviceInfo.a"; path = "libRNDeviceInfo.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		2D11A3249D8F4B53858A354B /* libRNDeviceInfo-tvOS.a */ = {isa = PBXFileReference; name = "libRNDeviceInfo-tvOS.a"; path = "libRNDeviceInfo-tvOS.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		4D14C723DB05415C8E1261CC /* RNBackgroundGeolocation.xcodeproj */ = {isa = PBXFileReference; name = "RNBackgroundGeolocation.xcodeproj"; path = "../node_modules/react-native-background-geolocation-android/ios/RNBackgroundGeolocation.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		5E74EB69977A49EFBD62ABBB /* libRNBackgroundGeolocation.a */ = {isa = PBXFileReference; name = "libRNBackgroundGeolocation.a"; path = "libRNBackgroundGeolocation.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		7E59531103FD470C8242934F /* libsqlite3.tbd */ = {isa = PBXFileReference; name = "libsqlite3.tbd"; path = "usr/lib/libsqlite3.tbd"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = sourcecode.text-based-dylib-definition; explicitFileType = undefined; includeInIndex = 0; };
+		43D6FEDDCCCD4905A7646BD9 /* libz.tbd */ = {isa = PBXFileReference; name = "libz.tbd"; path = "usr/lib/libz.tbd"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = sourcecode.text-based-dylib-definition; explicitFileType = undefined; includeInIndex = 0; };
+		592762B8373A4DAEA9E4BF66 /* TSLocationManager.framework */ = {isa = PBXFileReference; name = "TSLocationManager.framework"; path = "../node_modules/react-native-background-geolocation-android/ios/RNBackgroundGeolocation/TSLocationManager.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
+		74166A8DFEA940909EA4A199 /* RNBackgroundFetch.xcodeproj */ = {isa = PBXFileReference; name = "RNBackgroundFetch.xcodeproj"; path = "../node_modules/react-native-background-fetch/ios/RNBackgroundFetch.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		EF613916FAF4472A97F5925C /* libRNBackgroundFetch.a */ = {isa = PBXFileReference; name = "libRNBackgroundFetch.a"; path = "libRNBackgroundFetch.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		02AB77E1AEC3446D81075111 /* TSBackgroundFetch.framework */ = {isa = PBXFileReference; name = "TSBackgroundFetch.framework"; path = "../node_modules/react-native-background-fetch/ios/RNBackgroundFetch/TSBackgroundFetch.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
+		C04CB89F040D4520995039F0 /* RNBackgroundFetch+AppDelegate.m */ = {isa = PBXFileReference; name = "RNBackgroundFetch+AppDelegate.m"; path = "../node_modules/react-native-background-fetch/ios/RNBackgroundFetch/RNBackgroundFetch+AppDelegate.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -388,6 +404,12 @@
 				A7074C1CE1634EDCA357B898 /* libRNFirebase.a in Frameworks */,
 				60B4439503964981BB03B939 /* libRCTOneSignal.a in Frameworks */,
 				ED5FA6A8C4314DAF9EFB43FD /* libRNDeviceInfo.a in Frameworks */,
+				8405432F4A8B49C5A712E240 /* libRNBackgroundGeolocation.a in Frameworks */,
+				1FD82307218040FDB3FE3B02 /* libsqlite3.tbd in Frameworks */,
+				EFE614FE15564508BC29C96D /* libz.tbd in Frameworks */,
+				6FD5A12CD341400CBBC83BDD /* TSLocationManager.framework in Frameworks */,
+				3EA02CC2E7D5497780C04694 /* libRNBackgroundFetch.a in Frameworks */,
+				4ABFAAF13DD14546805FE91A /* TSBackgroundFetch.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -507,6 +529,7 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				C04CB89F040D4520995039F0 /* RNBackgroundFetch+AppDelegate.m */,
 			);
 			name = trackingbuddyv3;
 			sourceTree = "<group>";
@@ -538,6 +561,10 @@
 			isa = PBXGroup;
 			children = (
 				2D16E6891FA4F8E400B85C8A /* libReact.a */,
+				7E59531103FD470C8242934F /* libsqlite3.tbd */,
+				43D6FEDDCCCD4905A7646BD9 /* libz.tbd */,
+				592762B8373A4DAEA9E4BF66 /* TSLocationManager.framework */,
+				02AB77E1AEC3446D81075111 /* TSBackgroundFetch.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -579,6 +606,8 @@
 				B3DC8716AD1D4CC9A2EDB57A /* RNFirebase.xcodeproj */,
 				B53E89EF05AB43229F0C5DAC /* RCTOneSignal.xcodeproj */,
 				F759451082AE43558D62F7B2 /* RNDeviceInfo.xcodeproj */,
+				4D14C723DB05415C8E1261CC /* RNBackgroundGeolocation.xcodeproj */,
+				74166A8DFEA940909EA4A199 /* RNBackgroundFetch.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -722,6 +751,13 @@
 						CreatedOnToolsVersion = 8.2.1;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 2D02E47A1E0B4A5D006451C7;
+					};
+					13B07F861A680F5B00A75B9A = {
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = true;
+							};
+						};
 					};
 				};
 			};
@@ -1138,6 +1174,7 @@
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				E19A096F6EA941638CB346B9 /* RNBackgroundFetch+AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1205,6 +1242,8 @@
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/trackingbuddyv3.app/trackingbuddyv3";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1212,6 +1251,12 @@
 					"$(SRCROOT)\..\node_modules\react-native-firebase\ios\RNFirebase/**",
 					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-device-info\ios\RNDeviceInfo",
+					"$(SRCROOT)\..\node_modules\react-native-background-geolocation-android\ios\RNBackgroundGeolocation/**",
+					"$(SRCROOT)\..\node_modules\react-native-background-fetch\ios\RNBackgroundFetch/**",
+				);
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/..\node_modules\react-native-background-geolocation-android\ios/**",
+					"$(PROJECT_DIR)/..\node_modules\react-native-background-fetch\ios/**",
 				);
 			};
 			name = Debug;
@@ -1232,6 +1277,8 @@
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/trackingbuddyv3.app/trackingbuddyv3";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1239,6 +1286,12 @@
 					"$(SRCROOT)\..\node_modules\react-native-firebase\ios\RNFirebase/**",
 					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-device-info\ios\RNDeviceInfo",
+					"$(SRCROOT)\..\node_modules\react-native-background-geolocation-android\ios\RNBackgroundGeolocation/**",
+					"$(SRCROOT)\..\node_modules\react-native-background-fetch\ios\RNBackgroundFetch/**",
+				);
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/..\node_modules\react-native-background-geolocation-android\ios/**",
+					"$(PROJECT_DIR)/..\node_modules\react-native-background-fetch\ios/**",
 				);
 			};
 			name = Release;
@@ -1264,6 +1317,12 @@
 					"$(SRCROOT)\..\node_modules\react-native-firebase\ios\RNFirebase/**",
 					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-device-info\ios\RNDeviceInfo",
+					"$(SRCROOT)\..\node_modules\react-native-background-geolocation-android\ios\RNBackgroundGeolocation/**",
+					"$(SRCROOT)\..\node_modules\react-native-background-fetch\ios\RNBackgroundFetch/**",
+				);
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/..\node_modules\react-native-background-geolocation-android\ios/**",
+					"$(PROJECT_DIR)/..\node_modules\react-native-background-fetch\ios/**",
 				);
 			};
 			name = Debug;
@@ -1288,6 +1347,12 @@
 					"$(SRCROOT)\..\node_modules\react-native-firebase\ios\RNFirebase/**",
 					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-device-info\ios\RNDeviceInfo",
+					"$(SRCROOT)\..\node_modules\react-native-background-geolocation-android\ios\RNBackgroundGeolocation/**",
+					"$(SRCROOT)\..\node_modules\react-native-background-fetch\ios\RNBackgroundFetch/**",
+				);
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/..\node_modules\react-native-background-geolocation-android\ios/**",
+					"$(PROJECT_DIR)/..\node_modules\react-native-background-fetch\ios/**",
 				);
 			};
 			name = Release;
@@ -1317,6 +1382,8 @@
 				TVOS_DEPLOYMENT_TARGET = 9.2;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1324,6 +1391,12 @@
 					"$(SRCROOT)\..\node_modules\react-native-firebase\ios\RNFirebase/**",
 					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-device-info\ios\RNDeviceInfo",
+					"$(SRCROOT)\..\node_modules\react-native-background-geolocation-android\ios\RNBackgroundGeolocation/**",
+					"$(SRCROOT)\..\node_modules\react-native-background-fetch\ios\RNBackgroundFetch/**",
+				);
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/..\node_modules\react-native-background-geolocation-android\ios/**",
+					"$(PROJECT_DIR)/..\node_modules\react-native-background-fetch\ios/**",
 				);
 			};
 			name = Debug;
@@ -1353,6 +1426,8 @@
 				TVOS_DEPLOYMENT_TARGET = 9.2;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1360,6 +1435,12 @@
 					"$(SRCROOT)\..\node_modules\react-native-firebase\ios\RNFirebase/**",
 					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-device-info\ios\RNDeviceInfo",
+					"$(SRCROOT)\..\node_modules\react-native-background-geolocation-android\ios\RNBackgroundGeolocation/**",
+					"$(SRCROOT)\..\node_modules\react-native-background-fetch\ios\RNBackgroundFetch/**",
+				);
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/..\node_modules\react-native-background-geolocation-android\ios/**",
+					"$(PROJECT_DIR)/..\node_modules\react-native-background-fetch\ios/**",
 				);
 			};
 			name = Release;
@@ -1388,6 +1469,8 @@
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1395,6 +1478,12 @@
 					"$(SRCROOT)\..\node_modules\react-native-firebase\ios\RNFirebase/**",
 					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-device-info\ios\RNDeviceInfo",
+					"$(SRCROOT)\..\node_modules\react-native-background-geolocation-android\ios\RNBackgroundGeolocation/**",
+					"$(SRCROOT)\..\node_modules\react-native-background-fetch\ios\RNBackgroundFetch/**",
+				);
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/..\node_modules\react-native-background-geolocation-android\ios/**",
+					"$(PROJECT_DIR)/..\node_modules\react-native-background-fetch\ios/**",
 				);
 			};
 			name = Debug;
@@ -1423,6 +1512,8 @@
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1430,6 +1521,12 @@
 					"$(SRCROOT)\..\node_modules\react-native-firebase\ios\RNFirebase/**",
 					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-device-info\ios\RNDeviceInfo",
+					"$(SRCROOT)\..\node_modules\react-native-background-geolocation-android\ios\RNBackgroundGeolocation/**",
+					"$(SRCROOT)\..\node_modules\react-native-background-fetch\ios\RNBackgroundFetch/**",
+				);
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/..\node_modules\react-native-background-geolocation-android\ios/**",
+					"$(PROJECT_DIR)/..\node_modules\react-native-background-fetch\ios/**",
 				);
 			};
 			name = Release;

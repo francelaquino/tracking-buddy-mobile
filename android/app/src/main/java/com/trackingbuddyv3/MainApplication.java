@@ -4,6 +4,8 @@ import android.app.Application;
 import com.transistorsoft.rnbackgroundgeolocation.*;
 import com.transistorsoft.rnbackgroundfetch.RNBackgroundFetchPackage;
 import com.facebook.react.ReactApplication;
+import com.transistorsoft.rnbackgroundfetch.RNBackgroundFetchPackage;
+import com.transistorsoft.rnbackgroundgeolocation.RNBackgroundGeolocation;
 import io.invertase.firebase.admob.RNFirebaseAdMobPackage; 
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 
@@ -34,6 +36,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNBackgroundFetchPackage(),
+            new RNBackgroundGeolocation(),
              new RNFirebaseAdMobPackage() ,
             new RNDeviceInfo(),
             new RNFirebasePackage(),
@@ -41,8 +45,6 @@ public class MainApplication extends Application implements ReactApplication {
 			new RNFirebaseStoragePackage(),
 			new RNFirebaseDatabasePackage(),
             new RNFirebaseAuthPackage(),
-           new RNBackgroundGeolocation(),
-           new RNBackgroundFetchPackage(),
 		   new RNFirebaseMessagingPackage(),
 		    new RNFirebaseNotificationsPackage(),
         new ImagePickerPackage()

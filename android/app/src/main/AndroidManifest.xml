@@ -55,6 +55,8 @@
     android:name=".SingleTaskActivity"
     android:label="singleTask launchMode"
     android:launchMode="singleTask"/>
+    <meta-data android:name="com.transistorsoft.locationmanager.license" android:value="505d1036a7e724c8f3acb91a23250625d86a32f7963ff350e73bb1296f25d1c7" />
+
     </application>
 
 </manifest>

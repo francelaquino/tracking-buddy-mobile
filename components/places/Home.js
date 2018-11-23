@@ -16,7 +16,7 @@ import { connect } from 'react-redux';
 import Moment from 'moment';
 import DeviceInfo from 'react-native-device-info';
 import { displayHomeMember } from '../../redux/actions/memberActions';
-import BackgroundGeolocation from "react-native-background-geolocation";
+import BackgroundGeolocation from 'react-native-background-geolocation-android';
 import firebase from 'react-native-firebase';
 import type {  RemoteMessage, Notification, NotificationOpen } from 'react-native-firebase';
 import AnimatedHideView from 'react-native-animated-hide-view';
@@ -468,6 +468,7 @@ class HomePlaces extends Component {
         const memberMarkers = this.props.members.map(marker => (
             <MapView.Marker key={marker.uid}
                 identifier={marker.uid}
+                onLoad={() => this.forceUpdate()}
                 ref={ref => { this.markers[marker.uid] = ref }}
                 coordinate={marker.coordinates}
                 title={marker.firstname}>

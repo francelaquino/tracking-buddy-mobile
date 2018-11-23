@@ -16,7 +16,7 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 import Moment from 'moment';
 import { displayHomeMember, displayMember, updateToken } from '../../redux/actions/memberActions';
-import BackgroundGeolocation from "react-native-background-geolocation";
+import BackgroundGeolocation from 'react-native-background-geolocation-android';
 import firebase from 'react-native-firebase';
 import type {  RemoteMessage, Notification, NotificationOpen } from 'react-native-firebase';
 var settings = require('../../components/shared/Settings');

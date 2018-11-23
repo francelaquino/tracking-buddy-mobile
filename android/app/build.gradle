@@ -142,8 +142,9 @@ dependencies {
     compile "com.facebook.react:react-native:+"  // From node_modules
 	 compile project(':react-native-device-info')
 	
-    implementation project(':react-native-background-geolocation')
-    implementation project(':react-native-background-fetch')
+     compile project(':react-native-background-geolocation-android')
+    compile project(':react-native-background-fetch')
+
 
     implementation project(':react-native-maps')
 

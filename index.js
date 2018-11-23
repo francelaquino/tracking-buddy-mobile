@@ -7,7 +7,6 @@ import { View,StatusBar, AppRegistry } from 'react-native';
 import { Provider } from 'react-redux';
 import store from './store';
 import { Stack }  from './components/shared/Navigation';
-import BackgroundGeolocation from "react-native-background-geolocation";
 /*
 let StartTracking = async () => {
     return new Promise((resolve) => {

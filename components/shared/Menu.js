@@ -8,7 +8,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import BackgroundGeolocation from "react-native-background-geolocation";
+import BackgroundGeolocation from 'react-native-background-geolocation-android';
 
 var globalStyle = require('../../assets/style/GlobalStyle');
 var userdetails = require('../../components/shared/userDetails');
