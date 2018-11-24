@@ -55,8 +55,8 @@ class HomePlaces extends Component {
             isFloatingMenuVisible:false,
             mapMode:'standard',
             groupname: '',
-            isMapReady:false,
             isPageReady:false,
+            loadOnce:true,
             invitationcode:'',
             isLoading: true,
             memberReady: false,
@@ -133,8 +133,8 @@ class HomePlaces extends Component {
              /*logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
              debug: true,*/
              desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
-             distanceFilter: 20,
-             autoSyncThreshold:10,
+             distanceFilter: 10,
+             autoSyncThreshold:5,
              allowIdenticalLocations: false,
              triggerActivities: 'on_foot, walking, running, in_vehicle, on_bicycle',
              maxDaysToPersist: 3,
@@ -147,7 +147,7 @@ class HomePlaces extends Component {
              //enableHeadless: true,
              startOnBoot: true,
              foregroundService: true,
-             stationaryRadius:10,
+             stationaryRadius:5,
              forceReloadOnBoot: true,
              preventSuspend: true,
              url: 'http://tracking.findplace2stay.com/index.php/api/place/savelocationbatch',
@@ -165,6 +165,7 @@ class HomePlaces extends Component {
                
             });
            BackgroundGeolocation.start();
+          
            
          
     }
@@ -246,9 +247,9 @@ class HomePlaces extends Component {
     _handleAppStateChange = (nextAppState) => {
         this.setState({appState: nextAppState});
         if(nextAppState=="active"){
-            //this.connectToFirebase();
+            this.connectToFirebase();
         }else{
-           // this.firebaseConnection.off('value');
+            this.firebaseConnection.off('value');
         }
       }
 
@@ -404,7 +405,7 @@ class HomePlaces extends Component {
 
     initialize() {
         if(this.state.appState=="active"){
-           // this.connectToFirebase();
+            this.connectToFirebase();
             this.setState({ isLoading: false })
         }
 
@@ -416,11 +417,16 @@ class HomePlaces extends Component {
         this.firebaseConnection.on("value", function (snapshot) {
                 self.props.displayHomeMember().then(res => {
                         if (self.props.members.length <= 0) {
-                            self.centerToUserMarker();
+                            if(self.state.loadOnce){
+                                self.centerToUserMarker();
+
+                            }
                         }else{
-                            self.fitToMap();
+                            if(self.state.loadOnce){
+                                self.fitToMap();
+                            }
                         }
-                        self.setState({ memberReady: true, isLoading: false })
+                        self.setState({ memberReady: true, isLoading: false,loadOnce:false })
 
                 });
         });

@@ -426,57 +426,21 @@ export const displayLocationsList = (useruid,date) => dispatch => {
 };
 
 export const displayLocationsMap = (useruid, date) => dispatch => {
-    let locations = [];
-    let count = 0;
-    let cnt = 0;
-    let x = 1;
-    let label = 0;
     return new Promise(async (resolve) => {
         try {
             await axios.get(settings.baseURL + 'place/getLocationHistoryMap/' + useruid + '/' + date)
                 .then(function (res) {
-                    count = res.data.results.length;
-                    label = res.data.results.length;
-                    if (count > 0) {
-                        res.data.results.forEach(data => {
-                            
-                            locations.push({
-                                id: x,
-                                label: label,
-                                address: data.address,
-                                datemovement: data.datemovement,
-                                activitytype: data.activitytype,
-                                coordinates: {
-                                    longitude: data.longitude,
-                                    latitude: data.latitude
-                                },
-                            });
-
-                            cnt++;
-                            x++;
-                            label--;
-                            if (cnt >= count) {
-                                dispatch({
-                                    type: DISPLAY_LOCATION_MAP,
-                                    payload: locations
-                                });
-                                resolve(true)
-                            }
-                        })
-                    } else {
                         dispatch({
                             type: DISPLAY_LOCATION_MAP,
-                            payload: []
-                        });
-                        resolve(true)
-                    }
+                            payload: res.data.results
+                            });
+                            resolve(true)
 
                     if (res.data.results.length <= 0) {
                         ToastAndroid.showWithGravityAndOffset("No location history found", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
                     }
 
                 }).catch(function (error) {
-                    console.log(error)
                     dispatch({
                         type: DISPLAY_LOCATION_MAP,
                         payload: []

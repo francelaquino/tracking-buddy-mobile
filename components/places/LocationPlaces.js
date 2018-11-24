@@ -25,16 +25,6 @@ var globalStyle = require('../../assets/style/GlobalStyle');
 const screen = Dimensions.get('window');
 const ASPECT_RATIO = screen.width / screen.height;
 
-const LATITUDE = 27.141473
-const LONGITUDE = 49.563482
-const centerOffset = { x: 0.5, y: 1 };
-const anchor = { x: 0.5, y: 0.1 };
-
-var LATITUDE_DELTA = .010;
-var LONGITUDE_DELTA = .010;
-var cnt = 0;
-var plot;
-var coordinates = [];
 
 const advert = firebase.admob().interstitial('ca-app-pub-3378338881762914/1693535138');
 
@@ -50,30 +40,10 @@ class LocationPlaces extends Component {
         this.state = {
             visible:false,
             useruid: '',
-            speed: 200,
-            speed_normal: false,
-            speed_slow: false,
-            speed_fast:true,
-            addresslist: [],
-            isReady:false,
             name:'',
-            coordinate: new MapView.AnimatedRegion({
-                latitude: LATITUDE,
-                longitude: LONGITUDE,
-            }),
-            polyline: [],
-            route: [],
-            index:0,
-            address: '',
-            datemovement: '',
-            activitytype:'',
-            route:'',
+            isBusy:true,
             pageStyle:'map',
-            loading: false,
             mapMode: 'standard',
-            isBusy: false,
-            loadOnce:true,
-            playMode:'',
             dateFilter: Moment(new Date).format("YYYY-MM-DD").toString(),
             dateDisplay: Moment(new Date).format('MMMM DD, YYYY'),
         };
@@ -82,15 +52,9 @@ class LocationPlaces extends Component {
     }
 
    
-    componentWillUnmount() {
-        this.setState({ isReady: false })
-        this.map = null;
-        clearInterval(plot);
-    }
 
     componentWillMount() {
-        this.setState({ isReady:true, useruid: this.props.navigation.state.params.uid, name: this.props.navigation.state.params.name })
-        this.map = null;
+        this.setState({ loading:true, useruid: this.props.navigation.state.params.uid, name: this.props.navigation.state.params.name })
         
     }
     componentDidMount() {
@@ -104,19 +68,17 @@ class LocationPlaces extends Component {
 
         
     initialize() {
-        this.setState({ isReady:true })
+        
         this.props.displayLocationsMap(this.state.useruid, this.state.dateFilter).then(res => {
-            this.setState({ isBusy: false, addresslist: this.props.locationsmap })
             if(this.props.locationsmap.length>0){
                 setTimeout(() => {
-                    this.fitToMap();
-                    if (this.state.loadOnce == true) {
-                        ToastAndroid.showWithGravityAndOffset("Autoplay after 3 seconds", ToastAndroid.SHORT, ToastAndroid.CENTER, 25, 50);
-                        this.setState({ loadOnce:false})
-                    }
-                    setTimeout(() => {
-                        this.startRoute();
-                    }, 4000);
+                    this.map.animateToRegion({
+                        latitude: this.props.locationsmap[this.props.locationsmap.length-1].latitude,
+                        longitude: this.props.locationsmap[this.props.locationsmap.length-1].longitude,
+                        latitudeDelta: 0.005,
+                        longitudeDelta: 0.005
+                    })
+                    this.setState({ isBusy:false })
                 }, 100);
             }
         })
@@ -126,8 +88,7 @@ class LocationPlaces extends Component {
     }
 
     async onDateChange(date) {
-        coordinates = []
-        await this.setState({ isBusy: true, dateDisplay: Moment(date).format('MMMM DD, YYYY'), dateFilter: date, polyline: coordinates, route:'' }) 
+        await this.setState({ isBusy: true, dateDisplay: Moment(date).format('MMMM DD, YYYY'), dateFilter: date }) 
         this.props.displayLocationsMap(this.state.useruid, this.state.dateFilter).then(res => {
             this.setState({ isBusy: false })
         })
@@ -145,181 +106,25 @@ class LocationPlaces extends Component {
                 }, 100);
             } else {
                 if (this.state.route == "play") {
-                    clearInterval(plot);
                     this.setState({ route: '' });
                 }
             }
         })
       
     }
-    
-    startRoute() {
-        let self = this;
-        if (this.state.isReady == true) {
-            ToastAndroid.showWithGravityAndOffset("Play", ToastAndroid.SHORT, ToastAndroid.CENTER, 25, 50);
-           
-            if (this.state.route == '') {
-                this.setState({ polyline: coordinates })
-            }
-            this.setState({ route: 'play', playMode:'play' });
-            plot = setInterval(async function myTimer() {
-                if (self.map != null) {
-                    const coord = {
-                        id: cnt,
-                        coordinates: {
-                            latitude: self.props.locationsmap[cnt].coordinates.latitude,
-                            longitude: self.props.locationsmap[cnt].coordinates.longitude,
-                            latitudeDelta: LATITUDE_DELTA,
-                            longitudeDelta: LONGITUDE_DELTA,
-                        }
-                    }
-                    coordinates = coordinates.concat(coord.coordinates);
-
-                    await self.setState({ polyline: coordinates, address: self.props.locationsmap[cnt].address, datemovement: self.props.locationsmap[cnt].datemovement, activitytype: self.props.locationsmap[cnt].activitytype })
-
-                    await self.map.animateToRegion({
-                        latitude: self.props.locationsmap[cnt].coordinates.latitude,
-                        longitude: self.props.locationsmap[cnt].coordinates.longitude,
-                        latitudeDelta: LATITUDE_DELTA,
-                        longitudeDelta: LONGITUDE_DELTA,
-                    })
-
-                    cnt++;
-                    if (cnt >= self.props.locationsmap.length) {
-                        cnt = 0;
-                        clearInterval(plot);
-                        coordinates = [];
-                        self.setState({ route: '', address: '' });
-                        ToastAndroid.showWithGravityAndOffset("End", ToastAndroid.SHORT, ToastAndroid.CENTER, 25, 50);
-                    }
-                }
-            }, this.state.speed);
-        }
-        
-    }
+   
     
     goBack() {
         this.props.navigation.goBack()
-        clearInterval(plot);
         cnt = 0;
         coordinates = [];
     }
-    async endRoute() {
-        ToastAndroid.showWithGravityAndOffset("End", ToastAndroid.SHORT, ToastAndroid.CENTER, 25, 50);
-        if (this.state.route == "play") {
-            clearInterval(plot);
-        }
-        let self = this;
-        coordinates = [];
-        let i = 0;
-        for (i = 0; i < this.props.locationsmap.length; i++) {
-
-            const coord = {
-                id: i,
-                coordinates: {
-                    latitude: self.props.locationsmap[i].coordinates.latitude,
-                    longitude: self.props.locationsmap[i].coordinates.longitude,
-                    latitudeDelta: LATITUDE_DELTA,
-                    longitudeDelta: LONGITUDE_DELTA,
-                }
-            }
-            coordinates = coordinates.concat(coord.coordinates);
-
-            
-
-
-        }
-        
-        await self.setState({ polyline: coordinates })
-        cnt = 0;
-        coordinates = [];
-        this.setState({ route: '', address: '', playMode:'end' });
-        setTimeout(() => {
-            self.fitToMap();
-        }, 100);
-    }
-
-    pauseRoute() {
-        ToastAndroid.showWithGravityAndOffset("Pause", ToastAndroid.SHORT, ToastAndroid.CENTER, 25, 50);
-        if (this.state.route == "play") {
-            clearInterval(plot);
-            this.setState({ route: '', playMode:'pause' });
-        }
-        
-    }
-    loading(){
-        return (
-          <Loading/>
-        )
-    }
+    
      
 
-    fitToMap() {
-        
-        let coordinates = [];
-         if (this.props.locationsmap.length == 1) {
-             this.map.animateToRegion({
-                 latitude: this.props.locationsmap[0].coordinates.latitude,
-                 longitude: this.props.locationsmap[0].coordinates.longitude,
-                 latitudeDelta: .005,
-                 longitudeDelta: .005
-             })
-
-         } else if (this.props.locationsmap.length > 1) {
-
-             for (let i = 0; i < this.props.locationsmap.length; i++) {
-                 const coord = {
-                     coordinates: {
-                         latitude: this.props.locationsmap[i].coordinates.latitude,
-                         longitude: this.props.locationsmap[i].coordinates.longitude,
-                         latitudeDelta: .005,
-                         longitudeDelta: .005
-                     }
-                 }
-
-                 coordinates = coordinates.concat(coord.coordinates);
-             }
-             this.map.fitToCoordinates(coordinates, { edgePadding: { top: 10, right: 10, bottom: 10, left: 10 }, animated: false })
-
-        }
-
-       
-
-
-    }
 
 
 
-    
-    zoomIn() {
-        if (LATITUDE_DELTA > 0) {
-            LATITUDE_DELTA = LATITUDE_DELTA - .002;
-            LONGITUDE_DELTA = LONGITUDE_DELTA - .002;
-        }
-    }
-    zoomOut() {
-        if (LATITUDE_DELTA < 15) {
-            LATITUDE_DELTA = LATITUDE_DELTA + .002;
-            LONGITUDE_DELTA = LONGITUDE_DELTA + .002;
-        }
-    }
-    
-    changeSpeed(speed) {
-        this.setState({ speed })
-        console.log(speed)
-        this.setState({ speed_fast: false, speed_normal: false, speed_slow:false})
-        if (speed == 200) {
-            this.setState({ speed_fast:true })
-        } else if (speed == 1000) {
-            this.setState({ speed_normal: true })
-        } else if (speed == 3000) {
-            this.setState({ speed_slow: true })
-        }
-    }
-    showSpeedWindow() {
-        this.setState({ visible: true })
-        this.endRoute();
-    }
     searchFilterFunction = text => {
         if (text != "") {
             this.setState({ addresslist: [] })
@@ -392,14 +197,18 @@ class LocationPlaces extends Component {
         const markers = this.props.locationsmap.map((marker) => (
             <MapView.Marker
                 key={marker.id}
-                ref={ref => { this.markers[marker.id] = ref }}
                 coordinate={marker.coordinates}
                 anchor={{ x: 0.5, y: 0.5 }}
                 zIndex={4}
+                style={{
+                    transform: [{rotate: `${marker.heading}deg`}],
+                    width: 20,
+                    height: 20
+                  }}
                >
+ <Image style={styles.marker}
+                    source={require('../../images/direction.png')} />
 
-                <View style={{ borderColor: '#377ab9', borderWidth: 2, backgroundColor: '#377ab9', width: 8, height: 8, borderRadius: 4, opacity:.6 }}>
-                </View>
               
                
             </MapView.Marker>
@@ -415,13 +224,14 @@ class LocationPlaces extends Component {
                         provider={PROVIDER_GOOGLE}
                         showsCompass={false}>
                         
-
+                        {markers}
+                
                        
                         <MapView.Polyline 
                             miterLimit={50}
                             geodesic={true}
                         style={{ zIndex: 99999 }}
-                        coordinates={this.state.polyline}
+                        coordinates={this.props.locationsmap}
                         strokeWidth={3}
                             strokeColor="#1785f9"
                            />
@@ -443,32 +253,12 @@ class LocationPlaces extends Component {
 
 
 
-                            <Text style={globalStyle.mapMenuLabel}>Zoom In </Text>
-                            <TouchableOpacity onPress={() => this.showSpeedWindow()} style={globalStyle.mapMenuCircleMap}>
-                                <View style={globalStyle.mapMenuCircleContainer}>
-                                    <SimpleLineIcons size={23} style={{ color: 'white' }} name="graph" />
-                                </View>
-                            </TouchableOpacity>
-                            <Text style={globalStyle.mapMenuLabel}>Change Speed </Text>
-                                <TouchableOpacity onPress={() => this.fitToMap()} style={globalStyle.mapMenuCircleMap} >
-                                    <View style={globalStyle.mapMenuCircleContainer}>
-                                        <SimpleLineIcons size={23} style={{ color: 'white' }} name="size-actual" />
-                                    </View>
-                            </TouchableOpacity>
-                            <Text style={globalStyle.mapMenuLabel}>Fit to Map </Text>
+                            
+                            
+                           
 
-                                <TouchableOpacity onPress={() => this.zoomIn()} style={globalStyle.mapMenuCircleMap}>
-                                    <View style={globalStyle.mapMenuCircleContainer}>
-                                        <SimpleLineIcons size={23} style={{ color: 'white' }} name="magnifier-add" />
-                                    </View>
-                            </TouchableOpacity>
-                            <Text style={globalStyle.mapMenuLabel}>Zoom In </Text>
-                                <TouchableOpacity onPress={() => this.zoomOut()} style={globalStyle.mapMenuCircleMap}>
-                                    <View style={globalStyle.mapMenuCircleContainer}>
-                                        <SimpleLineIcons size={23} style={{ color: 'white' }} name="magnifier-remove" />
-                                    </View>
-                            </TouchableOpacity>
-                            <Text style={globalStyle.mapMenuLabel}>Zoom Out </Text>
+                              
+                             
                             </View>
                         }
                        
@@ -477,62 +267,12 @@ class LocationPlaces extends Component {
                 </View>
                
                
-                
-                {this.state.playMode != ''  &&
-                    <View style={styles.controlContainer} >
-
-                    <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                        {this.state.route == '' &&
-                            <View>
-                            <TouchableOpacity onPress={() => this.startRoute()} style={globalStyle.mapMenuCircleControl} >
-                                    <View style={globalStyle.mapMenuCircleContainer}>
-                                        <SimpleLineIcons size={20} style={{ color: 'white' }} name="control-play" />
-                                    </View>
-                            </TouchableOpacity>
-                            <Text style={[globalStyle.mapMenuLabel, { fontSize:13 }]}>Play </Text>
-                            </View>
-                        }
-                        {this.state.route == 'play' &&
-                            <View>
-                            <TouchableOpacity onPress={() => this.pauseRoute()} style={globalStyle.mapMenuCircleControl} >
-                                    <View style={globalStyle.mapMenuCircleContainer}>
-                                        <SimpleLineIcons size={20} style={{ color: 'white' }} name="control-pause" />
-                                    </View>
-                                </TouchableOpacity>
-                            <Text style={[globalStyle.mapMenuLabel, { fontSize: 13 }]}>Pause </Text>
-                            </View>
-                        }
-                        <View>
-                            <TouchableOpacity onPress={() => this.endRoute()} style={globalStyle.mapMenuCircleControl} >
-                                <View style={globalStyle.mapMenuCircleContainer}>
-                                <SimpleLineIcons size={20} style={{ color: 'white' }} name="control-end" />
-                                </View>
-                            </TouchableOpacity>
-                            <Text style={[globalStyle.mapMenuLabel, { fontSize: 13 }]}>End </Text>
-
-                            </View>
-
-                           
-                        </View>
-
-                    </View>
-                }
+              
             </View >
 
             )
     }
-    async renderRoute() {
-        return this.props.locationsmap.map((r) => (
-            <MapView.Marker
-                key={r.id}
-                coordinate={r.coordinates}
-            >
-
-            </MapView.Marker>
-        ));
-
-
-    }
+    
     
     setDate(newDate) {
         this.setState({ chosenDate: Moment(newDate).format('DD-MMM-YYYY')  });
@@ -589,53 +329,7 @@ class LocationPlaces extends Component {
                          this.renderMap() 
                 }
                 
-                <SlidingUpPanel
-                    allowDragging={false}
-                    visible={this.state.visible}
-                    onRequestClose={() => this.setState({ visible: false })}>
-                    <View style={styles.container}>
-                        <Content padder>
-                            <ListItem button onPress={() => this.changeSpeed( 200)}>
-                                <Left>
-                                    <Text>Fast</Text>
-                                </Left>
-                                <Right>
-                                    <Radio selected={this.state.speed_fast} />
-                                </Right>
-                            </ListItem>
-                            <ListItem button onPress={() => this.changeSpeed( 1000)}>
-                                <Left>
-                                    <Text>Normal</Text>
-                                </Left>
-                                <Right>
-                                    <Radio selected={this.state.speed_normal} />
-                                </Right>
-                            </ListItem>
-                            <ListItem button onPress={() => this.changeSpeed( 3000)} >
-                                <Left>
-                                    <Text>Slow</Text>
-                                </Left>
-                                <Right >
-                                    <Radio selected={this.state.speed_slow} />
-                                </Right>
-                            </ListItem>
-                            
-
-                       
-
-                        
-
-                        <Item style={{ borderBottomWidth: 0 }}>
-                           
-                            <Button
-                                onPress={() => this.setState({ visible: false })}
-                                bordered light full style={globalStyle.secondaryButton}>
-                                <Text style={{ color: 'white' }}>Close</Text>
-                            </Button>
-                        </Item>
-                        </Content>
-                    </View>
-                </SlidingUpPanel>
+                
             </View>
         )
     }
@@ -664,7 +358,6 @@ class LocationPlaces extends Component {
                     </Header>
 
                     {
-                        this.state.loading ? this.loading() :
                             this.ready()
                     }
 
@@ -739,29 +432,8 @@ const styles = StyleSheet.create({
         borderBottomColor:'#efebef',
         
     },
-    controlContainer: {
-        height: 75,
-        width: '100%',
-        position: 'absolute',
-        bottom:5,
-        alignItems: 'center',
-        //bottom: 0,
-        backgroundColor: 'transparent',
-        alignItems: 'center'
-    },
-    addressContainer: {
-        height: 55,
-        width: '100%',
-        alignItems: 'center',
-        //bottom: 0,
-        flexDirection: 'row',
-        //position: 'absolute',
-        backgroundColor: '#2ecc71',
-        alignItems: 'center',
-        borderTopWidth: 1,
-        borderTopColor:'#ecf0f1',
-
-    },
+    
+   
     container: {
         width: '100%',
         flex: 1,
@@ -774,7 +446,6 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => ({
     locationslist: state.fetchLocation.locationslist,
     locationsmap: state.fetchLocation.locationsmap,
-    isLoading: state.fetchLocation.isLoading,
   })
   
 LocationPlaces = connect(mapStateToProps, {  displayLocationsMap})(LocationPlaces);
