@@ -6,7 +6,6 @@ const initialState = {
     locations: [],
     locationslist: [],
     locationsmap: [],
-    locationstrack: [],
     location: [],
     messages:[],
     details:[],
@@ -32,12 +31,7 @@ export default function(state=initialState,action){
                 locationsmap: action.payload,
                 isLoading: false,
             };
-        case DISPLAY_LOCATION_TRACK:
-            return {
-                ...state,
-                locationstrack: action.payload,
-                isLoading: false,
-            };
+       
         case DISPLAY_LOCATION_LIST:
             return {
                 ...state,

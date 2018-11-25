@@ -5,7 +5,7 @@ import { Radio, Separator, Root, Container, Header, Body, Title, Item, Input, La
 import { connect } from 'react-redux';
 import DatePicker from 'react-native-datepicker'
 import Entypo from 'react-native-vector-icons/Entypo';
-import {  displayLocationsMap } from '../../redux/actions/locationActions';
+import {  displayLocationsMap,displayLocationsList } from '../../redux/actions/locationActions';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MapView, { Marker, Polyline,  PROVIDER_GOOGLE } from 'react-native-maps';
@@ -36,9 +36,7 @@ class LocationPlaces extends Component {
     constructor(props) {
         super(props)
         this.map = null;
-        this.markers = [];
         this.state = {
-            visible:false,
             useruid: '',
             name:'',
             isBusy:true,
@@ -68,6 +66,8 @@ class LocationPlaces extends Component {
 
         
     initialize() {
+        this.props.displayLocationsList(this.state.useruid, this.state.dateFilter).then(res => {
+           
         
         this.props.displayLocationsMap(this.state.useruid, this.state.dateFilter).then(res => {
             if(this.props.locationsmap.length>0){
@@ -80,8 +80,11 @@ class LocationPlaces extends Component {
                     })
                     this.setState({ isBusy:false })
                 }, 100);
+            }else{
+                this.setState({ isBusy:false })
             }
         })
+    })
         
         
 
@@ -89,39 +92,23 @@ class LocationPlaces extends Component {
 
     async onDateChange(date) {
         await this.setState({ isBusy: true, dateDisplay: Moment(date).format('MMMM DD, YYYY'), dateFilter: date }) 
-        this.props.displayLocationsMap(this.state.useruid, this.state.dateFilter).then(res => {
-            this.setState({ isBusy: false })
+        this.props.displayLocationsList(this.state.useruid, this.state.dateFilter).then(res => {
+            this.props.displayLocationsMap(this.state.useruid, this.state.dateFilter).then(res => {
+                this.setState({ isBusy: false })
+            })
         })
+      
     }
 
     
     async changePageStyle(style) {
 
-        await this.setState({ pageStyle: style, isBusy: true });
-        this.props.displayLocationsMap(this.state.useruid, this.state.dateFilter).then(res => {
-            this.setState({ isBusy: false })
-            if (style == "map") {
-                setTimeout(() => {
-                    this.fitToMap();
-                }, 100);
-            } else {
-                if (this.state.route == "play") {
-                    this.setState({ route: '' });
-                }
-            }
-        })
+         this.setState({ pageStyle: style});
+        
       
     }
    
     
-    goBack() {
-        this.props.navigation.goBack()
-        cnt = 0;
-        coordinates = [];
-    }
-    
-     
-
 
 
 
@@ -156,17 +143,17 @@ class LocationPlaces extends Component {
                     <View style={globalStyle.container}>
                         <List>
             <FlatList
+             keyExtractor={item => item.address}
             style={{flex:1}}
-                keyExtractor={item => item.id.toString()}
-                                    data={this.state.addresslist}
-                                    renderItem={({ item }) => (
-                                        <ListItem icon key={item.id.toString()} button avatar style={globalStyle.listItem} onPress={() => { this.props.navigation.navigate("LocationDetails", { location: item }) }}>
+                                    data={this.props.locationslist}
+                                    renderItem={({ item , index }) => (
+                                        <ListItem icon key={index} button avatar style={globalStyle.listItem} onPress={() => { this.props.navigation.navigate("LocationDetails", { location: item }) }}>
                         <Left style={globalStyle.listLeft}>
                             <SimpleLineIcons size={30} style={{ color: '#16a085', position:'absolute',top:10, }} name='location-pin' />
                            </Left>
                     <Body style={globalStyle.listBody} >
                         <Text numberOfLines={1} style={globalStyle.listHeading}>{item.address}</Text>
-                            <Text note numberOfLines={1} >{item.datemovement} / {item.activitytype}</Text>
+                        <Text note numberOfLines={1} >{item.datemovement} </Text>
                         </Body>
                         <Right style={globalStyle.listRight} >
                             <SimpleLineIcons style={globalStyle.listRightOptionIcon} name='arrow-right' />
@@ -344,7 +331,7 @@ class LocationPlaces extends Component {
                     <Header style={globalStyle.header} hasSegment>
                         <StatusBar backgroundColor="#149279" />
                         <Left style={globalStyle.headerLeft} >
-                            <Button transparent onPress={() => { this.goBack(); }} >
+                            <Button transparent onPress={() => { this.props.navigation.goBack() }} >
                                 <Ionicons size={30} style={{ color: 'white' }} name='ios-arrow-back' />
 
                             </Button>
@@ -448,7 +435,7 @@ const mapStateToProps = state => ({
     locationsmap: state.fetchLocation.locationsmap,
   })
   
-LocationPlaces = connect(mapStateToProps, {  displayLocationsMap})(LocationPlaces);
+LocationPlaces = connect(mapStateToProps, {  displayLocationsMap, displayLocationsList})(LocationPlaces);
   
 export default LocationPlaces;
 

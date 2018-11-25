@@ -387,8 +387,10 @@ export const getPlaceNotification = (placeid, userid) => async dispatch => {
 export const displayLocationsList = (useruid,date) => dispatch => {
     return new Promise(async (resolve) => {
         try {
-            await axios.get(settings.baseURL + 'place/getLocationHistoryMap/' + useruid +'/'+date)
+            await axios.get(settings.baseURL + 'place/getLocationHistoryList/' + useruid +'/'+date)
                 .then(function (res) {
+console.log(res.data.results)
+                    
                                 dispatch({
                                     type: DISPLAY_LOCATION_LIST,
                                     payload: res.data.results
@@ -401,7 +403,6 @@ export const displayLocationsList = (useruid,date) => dispatch => {
                     
                         
                 }).catch(function (error) {
-
                     dispatch({
                         type: DISPLAY_LOCATION_LIST,
                         payload: []
@@ -411,7 +412,6 @@ export const displayLocationsList = (useruid,date) => dispatch => {
                 });
 
         } catch (e) {
-
             dispatch({
                 type: DISPLAY_LOCATION_LIST,
                 payload: []
@@ -450,7 +450,6 @@ export const displayLocationsMap = (useruid, date) => dispatch => {
                 });
 
         } catch (e) {
-
             dispatch({
                 type: DISPLAY_LOCATION_MAP,
                 payload: []
@@ -464,48 +463,6 @@ export const displayLocationsMap = (useruid, date) => dispatch => {
 
 };
 
-
-export const displayLocationsTrack = (useruid, date) => dispatch => {
-    return new Promise(async (resolve) => {
-        try {
-            await axios.get(settings.baseURL + 'place/getLocationHistoryTrack/' + useruid + '/' + date)
-                .then(function (res) {
-                        res.data.results.forEach(data => {
-                                dispatch({
-                                    type: DISPLAY_LOCATION_TRACK,
-                                    payload: res.data.results
-                                });
-                                resolve(true)
-                    })
-
-                    if (res.data.results.length <= 0) {
-                        ToastAndroid.showWithGravityAndOffset("No location history found", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
-                    }
-                   
-                }).catch(function (error) {
-
-                    dispatch({
-                        type: DISPLAY_LOCATION_TRACK,
-                        payload: []
-                    });
-                    resolve(false)
-                    ToastAndroid.showWithGravityAndOffset("Something went wrong. Please try again.", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
-                });
-
-        } catch (e) {
-
-            dispatch({
-                type: DISPLAY_LOCATION_TRACK,
-                payload: []
-            });
-            resolve(false)
-            ToastAndroid.showWithGravityAndOffset("Something went wrong. Please try again.", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
-        }
-    });
-
-
-
-};
 
 
 export const getLocationDetails = (id) => async dispatch => {
