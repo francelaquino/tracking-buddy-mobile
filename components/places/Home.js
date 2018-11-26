@@ -102,7 +102,7 @@ class HomePlaces extends Component {
            
         });
       
-         /*  BackgroundGeolocation.on('http', function(response) {
+           BackgroundGeolocation.on('http', function(response) {
             var status = response.status;
             var success = response.success;
             var responseText = response.responseText;
@@ -113,7 +113,6 @@ class HomePlaces extends Component {
               var responseText = response.responseText;
               console.log(response)
             });
-      */
 
     
            
@@ -130,8 +129,6 @@ class HomePlaces extends Component {
              locationAuthorizationRequest: "Always",
              notificationPriority: BackgroundGeolocation.NOTIFICATION_PRIORITY_MIN,
              stopTimeout: 5,
-             /*logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
-             debug: true,*/
              desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
              distanceFilter: 10,
              autoSyncThreshold:5,
@@ -169,29 +166,9 @@ class HomePlaces extends Component {
            
          
     }
-    async requestLocationPermission() {
-        let self= this;
-        const chckLocationPermission = PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION);
-       
-        if (chckLocationPermission === PermissionsAndroid.RESULTS.GRANTED) {
-            this.geoLocationSetup();
-        } else {
-            try {
-                const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
-                if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-                    this.geoLocationSetup();
-                } else {
-
-                    alert("You don't have access for the location");
-                }
-            } catch (err) {
-            }
-        }
-    };
-
+    
 
      componentWillMount() {
-       // this.requestLocationPermission();
        this.geoLocationSetup();
        
     }

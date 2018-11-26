@@ -52,7 +52,7 @@ class LocationsMember extends Component {
                 data={this.props.members}
                 renderItem={({ item }) => (
 
-                    <ListItem key={item.uid} icon button avatar style={globalStyle.listItem} onPress={() => { this.props.navigation.navigate("LocationPlaces", { uid: item.uid, name: item.firstname })}}>
+                    <ListItem key={item.uid} icon button avatar style={globalStyle.listItem} onPress={() => { this.props.navigation.navigate("LocationHistory", { uid: item.uid, name: item.firstname })}}>
                             <Left style={globalStyle.listLeft}>
                                 <View style={globalStyle.listAvatarContainer} >
                                

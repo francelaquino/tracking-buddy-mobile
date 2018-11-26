@@ -26,6 +26,7 @@ import LocationsMember from '../places/LocationsMember';
 import PlaceView from '../places/PlaceView';
 import RealTimeLocation from '../places/RealTimeLocation';
 import LocationPlaces from '../places/LocationPlaces';
+import LocationHistory from '../places/LocationHistory';
 import LocationDetails from '../places/LocationDetails';
 import LocationView from '../places/LocationView';
 import HomeSettings from '../settings/HomeSettings';
@@ -123,6 +124,14 @@ export const Stack = createStackNavigator({
 
     LocationPlaces: {
         screen: LocationPlaces,
+        headerMode: 'none',
+        navigationOptions: {
+            header: null
+        }
+    },
+
+    LocationHistory: {
+        screen: LocationHistory,
         headerMode: 'none',
         navigationOptions: {
             header: null
